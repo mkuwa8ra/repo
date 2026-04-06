@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>中小企業診断士 反復学習アプリ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap');
+
+  :root {
+    --bg: #0d0f1a;
+    --surface: #151829;
+    --surface2: #1e2238;
+    --surface3: #252b45;
+    --border: #2e3557;
+    --accent: #4f8cff;
+    --accent2: #7c5cff;
+    --correct: #2ecc8a;
+    --wrong: #ff4f6e;
+    --warn: #f5a623;
+    --text: #e8ecff;
+    --text2: #8b93b8;
+    --text3: #555f8a;
+    --gold: #ffd166;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG decoration */
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 20% 20%, rgba(79,140,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(124,92,255,0.06) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .app { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; min-height: 100vh; }
+
+  /* ===== SCREEN ===== */
+  .screen { display: none; padding: 20px 16px 100px; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* ===== HOME ===== */
+  .home-header { padding: 40px 0 32px; text-align: center; }
+  .home-logo { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
+  .home-title { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 26px; font-weight: 900; line-height: 1.3; color: var(--text); }
+  .home-title span { color: var(--gold); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 24px 0; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 24px; font-weight: 900; color: var(--accent); }
+  .stat-label { font-size: 10px; color: var(--text2); margin-top: 2px; letter-spacing: 1px; }
+
+  .category-list { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .category-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 14px;
+    transition: all 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .category-card:active { transform: scale(0.98); }
+  .category-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--card-color, var(--accent));
+    border-radius: 2px 0 0 2px;
+  }
+  .cat-icon { font-size: 24px; flex-shrink: 0; }
+  .cat-info { flex: 1; }
+  .cat-name { font-weight: 700; font-size: 15px; margin-bottom: 3px; }
+  .cat-count { font-size: 12px; color: var(--text2); }
+  .cat-progress { margin-top: 6px; height: 3px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+  .cat-progress-fill { height: 100%; border-radius: 2px; background: var(--card-color, var(--accent)); transition: width 0.4s; }
+  .cat-arrow { color: var(--text3); font-size: 16px; }
+
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 3px; color: var(--text2); text-transform: uppercase; margin: 28px 0 12px; }
+
+  .mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mode-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .mode-btn:active { transform: scale(0.97); }
+  .mode-btn.special { background: linear-gradient(135deg, rgba(79,140,255,0.15), rgba(124,92,255,0.15)); border-color: rgba(79,140,255,0.4); }
+  .mode-btn-icon { font-size: 22px; margin-bottom: 6px; }
+  .mode-btn-name { font-size: 13px; font-weight: 700; }
+  .mode-btn-desc { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+  /* ===== QUIZ SCREEN ===== */
+  .quiz-header { display: flex; align-items: center; gap: 12px; padding: 16px 0; }
+  .back-btn { width: 38px; height: 38px; background: var(--surface); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0; }
+  .quiz-meta { flex: 1; }
+  .quiz-category-tag { font-size: 10px; color: var(--accent); font-weight: 700; letter-spacing: 2px; }
+  .quiz-progress-wrap { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .quiz-progress-bar { flex: 1; height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+  .quiz-progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.3s; }
+  .quiz-count { font-size: 11px; color: var(--text2); white-space: nowrap; }
+
+  .streak-badge {
+    background: linear-gradient(135deg, var(--gold), #ff9f43);
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 12px; font-weight: 700; color: #000;
+    display: none; align-items: center; gap: 4px;
+  }
+  .streak-badge.show { display: flex; }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin: 8px 0 16px;
+    min-height: 120px;
+    position: relative;
+  }
+  .question-difficulty { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; margin-bottom: 12px; padding: 3px 8px; border-radius: 20px; font-weight: 700; letter-spacing: 1px; }
+  .diff-easy { background: rgba(46,204,138,0.15); color: var(--correct); }
+  .diff-med { background: rgba(245,166,35,0.15); color: var(--warn); }
+  .diff-hard { background: rgba(255,79,110,0.15); color: var(--wrong); }
+
+  .question-text { font-size: 16px; line-height: 1.7; font-weight: 500; }
+  .question-num { font-size: 11px; color: var(--text3); position: absolute; top: 14px; right: 16px; }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex; align-items: flex-start; gap: 12px;
+    text-align: left; color: var(--text);
+    font-size: 14px; line-height: 1.5;
+    transition: all 0.15s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .choice-btn:active { transform: scale(0.99); }
+  .choice-btn:hover { border-color: var(--accent); background: rgba(79,140,255,0.08); }
+  .choice-label {
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 50%; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+    transition: all 0.15s;
+    margin-top: 1px;
+  }
+  .choice-btn.correct { border-color: var(--correct); background: rgba(46,204,138,0.1); }
+  .choice-btn.correct .choice-label { background: var(--correct); border-color: var(--correct); color: #000; }
+  .choice-btn.wrong { border-color: var(--wrong); background: rgba(255,79,110,0.1); }
+  .choice-btn.wrong .choice-label { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+  .choice-btn.disabled { pointer-events: none; opacity: 0.5; }
+  .choice-btn.correct, .choice-btn.wrong { pointer-events: none; opacity: 1; }
+
+  /* Answer reveal */
+  .answer-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px;
+    margin-top: 14px;
+    display: none;
+    animation: slideUp 0.3s ease;
+  }
+  .answer-panel.show { display: block; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .answer-result-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .result-icon { font-size: 22px; }
+  .result-text { font-weight: 700; font-size: 16px; }
+  .result-text.correct-text { color: var(--correct); }
+  .result-text.wrong-text { color: var(--wrong); }
+
+  .explanation-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+  .explanation-text { font-size: 13px; line-height: 1.8; color: var(--text2); }
+  .explanation-text strong { color: var(--text); }
+
+  .next-btn {
+    width: 100%; margin-top: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--radius-sm);
+    color: #fff; font-size: 15px; font-weight: 700;
+    padding: 16px; cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 1px;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 20px rgba(79,140,255,0.3);
+  }
+  .next-btn:active { opacity: 0.85; }
+
+  /* ===== RESULT SCREEN ===== */
+  .result-screen { padding: 40px 16px 100px; text-align: center; }
+  .result-big-icon { font-size: 64px; margin-bottom: 16px; }
+  .result-title { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+  .result-score-row { display: flex; justify-content: center; gap: 8px; align-items: baseline; margin: 20px 0; }
+  .result-score-big { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 56px; font-weight: 900; color: var(--gold); }
+  .result-score-denom { font-size: 24px; color: var(--text2); }
+  .result-percent { font-size: 16px; color: var(--text2); }
+
+  .result-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0; text-align: center; }
+  .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 12px; }
+  .result-card-num { font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 28px; font-weight: 900; }
+  .result-card-label { font-size: 11px; color: var(--text2); margin-top: 3px; }
+  .correct-color { color: var(--correct); }
+  .wrong-color { color: var(--wrong); }
+
+  .result-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--radius-sm);
+    color: #fff; font-size: 15px; font-weight: 700;
+    padding: 16px; cursor: pointer; width: 100%;
+    font-family: 'Noto Sans JP', sans-serif;
+    box-shadow: 0 4px 20px rgba(79,140,255,0.3);
+  }
+  .btn-secondary {
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text); font-size: 15px; font-weight: 700;
+    padding: 16px; cursor: pointer; width: 100%;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  /* ===== REVIEW SCREEN ===== */
+  .review-list { display: flex; flex-direction: column; gap: 12px; }
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .review-item:active { transform: scale(0.98); }
+  .review-item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .review-correct-badge { padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+  .review-badge-ok { background: rgba(46,204,138,0.15); color: var(--correct); }
+  .review-badge-ng { background: rgba(255,79,110,0.15); color: var(--wrong); }
+  .review-q { font-size: 14px; line-height: 1.6; color: var(--text); margin-bottom: 8px; }
+  .review-a { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .review-a span { color: var(--accent); font-weight: 700; }
+
+  /* ===== PROGRESS SCREEN ===== */
+  .progress-section { margin-bottom: 24px; }
+  .progress-cat-name { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+  .progress-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .progress-bar-bg { flex: 1; height: 10px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.6s; }
+  .progress-pct { font-size: 12px; color: var(--text2); min-width: 36px; text-align: right; }
+
+  .weak-area-list { display: flex; flex-direction: column; gap: 8px; }
+  .weak-item {
+    background: var(--surface);
+    border-left: 3px solid var(--wrong);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .weak-item-q { color: var(--text); margin-bottom: 4px; }
+  .weak-item-count { font-size: 11px; color: var(--wrong); }
+
+  /* ===== NAV BAR ===== */
+  .nav-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 500px;
+    background: rgba(21,24,41,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-around;
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 16px; cursor: pointer; color: var(--text3); transition: color 0.2s; }
+  .nav-item.active { color: var(--accent); }
+  .nav-icon { font-size: 20px; }
+  .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--surface3); border: 1px solid var(--border);
+    border-radius: 40px; padding: 10px 20px;
+    font-size: 13px; font-weight: 700;
+    z-index: 200; opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none; align-items: center; justify-content: center;
+    z-index: 300; padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    width: 100%; max-width: 360px;
+    text-align: center;
+  }
+  .modal-title { font-size: 20px; font-weight: 900; margin-bottom: 10px; }
+  .modal-desc { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 20px; }
+  .modal-btn { width: 100%; margin-top: 8px; }
+
+  /* Confetti */
+  .confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; }
+  .confetti-piece {
+    position: absolute; width: 8px; height: 8px; border-radius: 2px;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== HOME SCREEN ===== -->
+  <div class="screen active" id="screen-home">
+    <div class="home-header">
+      <div class="home-logo">診断士 Study App</div>
+      <div class="home-title">中小企業診断士<br><span>反復学習</span>トレーニング</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">解答済み</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-correct">0%</div>
+        <div class="stat-label">正答率</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-streak">0</div>
+        <div class="stat-label">連続正解</div>
+      </div>
+    </div>
+
+    <div class="section-title">📚 カテゴリ別</div>
+    <div class="category-list" id="category-list"></div>
+
+    <div class="section-title">🎯 学習モード</div>
+    <div class="mode-row">
+      <div class="mode-btn special" onclick="startMode('random')">
+        <div class="mode-btn-icon">🎲</div>
+        <div class="mode-btn-name">ランダム</div>
+        <div class="mode-btn-desc">全問題から出題</div>
+      </div>
+      <div class="mode-btn" onclick="startMode('weak')">
+        <div class="mode-btn-icon">💪</div>
+        <div class="mode-btn-name">苦手克服</div>
+        <div class="mode-btn-desc">間違えた問題を重点</div>
+      </div>
+      <div class="mode-btn" onclick="startMode('unseen')">
+        <div class="mode-btn-icon">🆕</div>
+        <div class="mode-btn-name">未回答</div>
+        <div class="mode-btn-desc">まだ解いてない問題</div>
+      </div>
+      <div class="mode-btn" onclick="startMode('hard')">
+        <div class="mode-btn-icon">🔥</div>
+        <div class="mode-btn-name">難問チャレンジ</div>
+        <div class="mode-btn-desc">難易度★★★のみ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ SCREEN ===== -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-header">
+      <div class="back-btn" onclick="goHome()">←</div>
+      <div class="quiz-meta">
+        <div class="quiz-category-tag" id="quiz-cat-tag">企業経営理論</div>
+        <div class="quiz-progress-wrap">
+          <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-prog-fill"></div></div>
+          <div class="quiz-count" id="quiz-count">1 / 10</div>
+        </div>
+      </div>
+      <div class="streak-badge" id="streak-badge">🔥 <span id="streak-count">0</span></div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-num" id="q-num">Q1</div>
+      <div class="question-difficulty" id="q-diff"></div>
+      <div class="question-text" id="q-text"></div>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="answer-panel" id="answer-panel">
+      <div class="answer-result-row">
+        <div class="result-icon" id="result-icon"></div>
+        <div class="result-text" id="result-text"></div>
+      </div>
+      <div class="explanation-label">解 説</div>
+      <div class="explanation-text" id="explanation-text"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ →</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULT SCREEN ===== -->
+  <div class="screen" id="screen-result">
+    <div class="result-screen">
+      <div class="result-big-icon" id="result-big-icon">🎉</div>
+      <div class="result-title" id="result-title">お疲れさまでした！</div>
+      <div class="result-score-row">
+        <div class="result-score-big" id="result-score">0</div>
+        <div class="result-score-denom" id="result-denom">/ 10</div>
+      </div>
+      <div class="result-percent" id="result-pct">正答率 0%</div>
+
+      <div class="result-cards">
+        <div class="result-card">
+          <div class="result-card-num correct-color" id="res-correct">0</div>
+          <div class="result-card-label">✅ 正解</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num wrong-color" id="res-wrong">0</div>
+          <div class="result-card-label">❌ 不正解</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num" style="color:var(--accent)" id="res-time">0s</div>
+          <div class="result-card-label">⏱ 平均時間</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num" style="color:var(--gold)" id="res-streak">0</div>
+          <div class="result-card-label">🔥 最長連続</div>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn-primary" onclick="showReview()">📋 解答を確認する</button>
+        <button class="btn-primary" onclick="restartSame()" style="background: linear-gradient(135deg,#2ecc8a,#27ae60)">🔄 もう一度（同じ問題）</button>
+        <button class="btn-secondary" onclick="goHome()">🏠 ホームへ戻る</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== REVIEW SCREEN ===== -->
+  <div class="screen" id="screen-review">
+    <div style="padding: 20px 0 16px; display:flex; align-items:center; gap:12px;">
+      <div class="back-btn" onclick="showScreen('screen-result')">←</div>
+      <div style="font-size:18px; font-weight:700;">解答一覧</div>
+    </div>
+    <div class="review-list" id="review-list"></div>
+  </div>
+
+  <!-- ===== PROGRESS SCREEN ===== -->
+  <div class="screen" id="screen-progress">
+    <div style="padding: 24px 0 8px;">
+      <div class="home-logo">進捗管理</div>
+      <div style="font-size:22px; font-weight:900; margin-top:6px;">学習の進捗状況</div>
+    </div>
+
+    <div class="section-title">📊 カテゴリ別正答率</div>
+    <div id="progress-bars"></div>
+
+    <div class="section-title">⚠️ 苦手問題</div>
+    <div class="weak-area-list" id="weak-list"></div>
+
+    <div style="height:20px;"></div>
+    <button class="btn-secondary" onclick="confirmReset()">🗑 学習データをリセット</button>
+  </div>
+
+  <!-- NAV BAR -->
+  <div class="nav-bar">
+    <div class="nav-item active" id="nav-home" onclick="navTo('home')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item" id="nav-progress" onclick="navTo('progress')">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">進捗</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="modal-reset">
+  <div class="modal">
+    <div class="modal-title">⚠️ リセット確認</div>
+    <div class="modal-desc">すべての学習データを削除します。この操作は取り消せません。本当によろしいですか？</div>
+    <button class="btn-primary modal-btn" onclick="doReset()" style="background: linear-gradient(135deg,#ff4f6e,#c0392b)">削除する</button>
+    <button class="btn-secondary modal-btn" onclick="closeModal('modal-reset')">キャンセル</button>
+  </div>
+</div>
+
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<script>
+// ===================== QUESTION DATA =====================
+const QUESTIONS = [
+  // ===== 企業経営理論 =====
+  {
+    id: 1, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 1, // 1=easy 2=med 3=hard
+    text: 'ポーターのファイブフォース分析において、既存企業間の競争が激化しやすい条件として最も適切なものはどれか？',
+    choices: ['製品差別化が進んでいる', '業界全体の成長が鈍い', 'スイッチングコストが高い', '参入障壁が低い'],
+    correct: 1,
+    explanation: '業界の成長が鈍い場合、限られたパイを奪い合うため既存企業間の競争が激化します。差別化が進んでいる場合や、スイッチングコストが高い場合は、むしろ競争が緩和される要因となります。'
+  },
+  {
+    id: 2, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 1,
+    text: 'ポーターの3つの基本戦略のうち、業界でトップ企業となり大量生産によるコスト削減を狙う戦略はどれか？',
+    choices: ['差別化戦略', 'コストリーダーシップ戦略', '集中戦略', 'コスト集中戦略'],
+    correct: 1,
+    explanation: 'コストリーダーシップ戦略は業界最大量の生産により、規模の経済や経験曲線効果を活かして製造コストを他社より低く抑える戦略です。「価格」ではなく「コスト」に重点が置かれている点が重要です。'
+  },
+  {
+    id: 3, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 2,
+    text: '売り手の交渉力が高まる要因として、正しいものはどれか？',
+    choices: ['買い手の数が少ない', '売り手が将来の競争相手になり得る', '代替品が豊富に存在する', '製品の差別化が困難'],
+    correct: 1,
+    explanation: '売り手が垂直統合（フォワード統合）を行い将来の競争相手になる可能性がある場合、売り手の交渉力は高まります。また、売り手の数が少ない場合や、スイッチングコストが高い場合も売り手の交渉力が高まります。'
+  },
+  {
+    id: 4, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 2,
+    text: 'バリューチェーンにおける「主活動」に含まれないものはどれか？',
+    choices: ['購買物流', '製造', '技術開発', 'サービス'],
+    correct: 2,
+    explanation: 'バリューチェーンにおいて、主活動は購買物流・製造・出荷物流・マーケティング販売・サービスの5つです。技術開発は支援活動（全般管理・人事労務管理・技術開発・調達活動）に含まれます。'
+  },
+  {
+    id: 5, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 3,
+    text: 'ハーフィンダール・ハーシュマン指数（HHI）に関する記述として正しいものはどれか？',
+    choices: ['各企業の市場シェアを3乗して合計する', '値が低いほど市場集中度が高い', '各企業の市場シェアを2乗して合計する', '値が高いほど競争が激しい'],
+    correct: 2,
+    explanation: 'HHIは各企業の市場シェアを2乗して合計します。独占度が高いほど値は高くなり（最大10000）、多くの企業がひしめく競争市場では値が低くなります。'
+  },
+  {
+    id: 6, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 2,
+    text: '参入障壁となる要因として不適切なものはどれか？',
+    choices: ['規模の経済', 'ネットワーク効果', '特許・独自技術', '高い撤退障壁'],
+    correct: 3,
+    explanation: '参入障壁は新規参入者を防ぐ要因です。高い撤退障壁は、業界から撤退しにくくする要因であり、これは既存企業が競争を続けざるを得ない要因となりますが、参入障壁ではありません。'
+  },
+  {
+    id: 7, category: '企業経営理論', subcat: '競争戦略',
+    difficulty: 1,
+    text: '差別化戦略のリスクとして最も適切なものはどれか？',
+    choices: ['技術革新による低コスト代替品の出現', '他社による差別化製品の模倣', 'ターゲット市場の縮小', '規模の経済の喪失'],
+    correct: 1,
+    explanation: '差別化戦略のリスクは、せっかく差別化した製品やサービスが他社に模倣されてしまうことです。技術革新による低コスト代替品はコストリーダーシップ戦略のリスク、ターゲット縮小は集中戦略のリスクです。'
+  },
+  {
+    id: 8, category: '企業経営理論', subcat: 'MOT・イノベーション',
+    difficulty: 1,
+    text: 'イノベーションのジレンマとはどのような現象か？',
+    choices: ['破壊的イノベーションに対応しすぎて既存顧客を失う', 'リーダー企業が既存製品のインクリメンタルイノベーションに注力するあまりラディカルイノベーションに対応できなくなる', 'オープンイノベーションにより技術が外部流出する', 'イノベーションへの過剰投資により収益が悪化する'],
+    correct: 1,
+    explanation: 'イノベーションのジレンマは、リーダー企業が既存顧客からの要望に応えようとして既存製品の漸進的（インクリメンタル）改善に注力するあまり、既存製品を否定するような革新的（ラディカル）イノベーションに対応できなくなる現象です。'
+  },
+  {
+    id: 9, category: '企業経営理論', subcat: 'MOT・イノベーション',
+    difficulty: 2,
+    text: 'オープンイノベーションのメリットとして適切でないものはどれか？',
+    choices: ['開発コストの軽減', '開発スピードのアップ', '技術流出リスクの排除', '多様な視点の獲得'],
+    correct: 2,
+    explanation: 'オープンイノベーションは自社のアイデアや技術が外部に流出するリスクがあります。「技術流出リスクの排除」はむしろデメリットとなる要素であり、メリットではありません。オープン＆クローズ戦略でどの部分を公開するか慎重に判断する必要があります。'
+  },
+  {
+    id: 10, category: '企業経営理論', subcat: 'MOT・イノベーション',
+    difficulty: 2,
+    text: '技術革新のS字カーブに関する記述として正しいものはどれか？',
+    choices: ['ラディカルイノベーションはS字状の成長を表す', 'インクリメンタルイノベーションは既存のS字カーブと異なる新たなS字カーブの登場', '初期は成果が出にくく途中から急激に向上し最終的に鈍化する', '横軸は成果、縦軸は投入資源を取る'],
+    correct: 2,
+    explanation: 'S字カーブは横軸に時間・費用等の投入資源、縦軸に成果をとります。研究開始初期は成果が出にくく、一定地点を超えると急激に向上し、最終的に成果の伸びが鈍化するS字型を描きます。インクリメンタルイノベーションがS字状成長、ラディカルイノベーションが新たなS字カーブの登場です。'
+  },
+  {
+    id: 11, category: '企業経営理論', subcat: 'M&A・提携',
+    difficulty: 1,
+    text: 'M&Aにおけるデューデリジェンスとはどれか？',
+    choices: ['敵対的買収への防衛策', '買収企業の資産価値・収益性を統合的に調査・査定すること', '株式公開買付のこと', '外部経営陣による買収'],
+    correct: 1,
+    explanation: 'デューデリジェンスとは、M&A時に企業の資産価値を適正に評価し収益性やリスクなどを統合的に調査・査定するプロセスです。統合時に短期間での意思決定となった場合、デューデリジェンスが不十分となるリスクがあります。'
+  },
+  {
+    id: 12, category: '企業経営理論', subcat: 'M&A・提携',
+    difficulty: 2,
+    text: 'ポイズンピルとはどのような防衛策か？',
+    choices: ['既存株主に事前に新株予約権を付与し、敵対的買収時に新株を大量発行して買収者の持株比率を下げる', '重要な決議事項に拒否権を行使できる黄金株を発行する', '経営陣が自社株を買い取りMBOを実施する', 'ホワイトナイトに増資する'],
+    correct: 0,
+    explanation: 'ポイズンピルは、既存株主に事前に新株予約権を発行しておき、敵対的買収が仕掛けられると大量に新株を発行して買収者の持株比率を下げる防衛策です。黄金株は「拒否権付種類株式」と呼ばれ別の防衛策です。'
+  },
+  {
+    id: 13, category: '企業経営理論', subcat: 'M&A・提携',
+    difficulty: 2,
+    text: 'LBO（Leveraged Buy Out）の説明として正しいものはどれか？',
+    choices: ['現在の経営陣が株式を購入して経営権を取得', '外部経営陣が買収して経営権を取得', '買収予定の会社を担保に借入を行いその資金で買収する', '価格・株数・期間を公開して市場外で株式を買付する'],
+    correct: 2,
+    explanation: 'LBO（レバレッジド・バイアウト）は、買収予定の会社を担保に借入金を調達し、その資金で買収を行う手法です。少ない自己資金で大きな買収を可能にしますが、その分財務リスクも高まります。'
+  },
+  {
+    id: 14, category: '企業経営理論', subcat: 'M&A・提携',
+    difficulty: 1,
+    text: '戦略的提携（アライアンス）のデメリットとして最も適切なものはどれか？',
+    choices: ['組織文化の調整コストが高い', '企業の独立性が失われる', '提携解消後に技術流出のリスクがある', '短期間での事業参入が難しい'],
+    correct: 2,
+    explanation: '戦略的提携は契約に基づく提携のため解消が容易であり、解消後に自社の技術やノウハウが流出するリスクがあります。組織文化調整コストはM&Aのデメリット、独立性喪失もM&Aのデメリットです。'
+  },
+  {
+    id: 15, category: '企業経営理論', subcat: '組織構造',
+    difficulty: 1,
+    text: 'バーナードが組織の成立条件として挙げた3要素として正しいものはどれか？',
+    choices: ['共通の目的・コミュニケーション・規律', '共通の目的・貢献意欲・コミュニケーション', '分業・統合調整・コミュニケーション', '権限・責任・報告'],
+    correct: 1,
+    explanation: 'バーナードは組織の成立条件として①共通の目的、②お互いの貢献意欲、③コミュニケーションの3要素を挙げています。これらが揃って初めて組織が成立すると考えました。'
+  },
+  {
+    id: 16, category: '企業経営理論', subcat: '組織構造',
+    difficulty: 2,
+    text: '命令統一性の原則が崩れやすい組織構造はどれか？',
+    choices: ['事業部制組織', 'マトリクス組織', '機能別組織', 'カンパニー制組織'],
+    correct: 1,
+    explanation: 'マトリクス組織は機能軸と製品・プロジェクト軸の2つの指揮命令系統が存在するため、ワンマン・ツーボス状態になりやすく、命令統一性の原則（1人の部下に指示できるのは1人の上司のみ）が崩れやすい組織形態です。'
+  },
+  {
+    id: 17, category: '企業経営理論', subcat: '組織構造',
+    difficulty: 2,
+    text: 'グレシャムの法則（経営における）の説明として正しいものはどれか？',
+    choices: ['悪貨は良貨を駆逐する', '経営者が定型的業務に忙殺され非定型的業務が後回しになる', '規則への固執で環境変化に対応できなくなる', '部下の数が増えると管理効率が低下する'],
+    correct: 1,
+    explanation: 'グレシャムの法則（経営版）は、経営者や管理者が定型的意思決定（日常業務処理）に忙殺されることで、非定型的意思決定（将来計画の策定等）が後回しになり、将来の計画策定が事実上消滅してしまう現象です。'
+  },
+  {
+    id: 18, category: '企業経営理論', subcat: '組織構造',
+    difficulty: 1,
+    text: '官僚制の逆機能における「目的の置換」の説明として正しいものはどれか？',
+    choices: ['規則の順守に固執して環境変化に対応できなくなること', '目的と手段が逆転してしまうこと', '規則や手続きが煩雑になりすぎて効率が低下すること', '部署の利益を優先するようになること'],
+    correct: 1,
+    explanation: '目的の置換は、本来手段であるルールや手続きが目的化してしまうことです。形式主義（規則への固執）、繫文縟礼（手続きの煩雑化）、セクショナリズム（部署利益の優先）とともに、官僚制の逆機能を構成します。'
+  },
+  {
+    id: 19, category: '企業経営理論', subcat: '組織構造',
+    difficulty: 3,
+    text: '組織のライフサイクルで「精巧化段階」の特徴として正しいものはどれか？',
+    choices: ['創業者の創造性が重視され管理活動が軽視される', '人的資源の開発と権限委譲が課題となる', '規則やシステムの導入で官僚制化が進む', '組織設立当初の社会的使命が忘れられる傾向があり再活性化が課題'],
+    correct: 3,
+    explanation: '精巧化段階は組織の最終仕上げ段階で、官僚制の逆機能に対応し柔軟性を確保しようとします。この段階では設立当初の組織の社会的使命が忘れられやすく、組織の再活性化が課題となります。'
+  },
+  {
+    id: 20, category: '企業経営理論', subcat: '組織行動',
+    difficulty: 2,
+    text: '集団思考（グループシンク）が発生しやすい条件として正しいものはどれか？',
+    choices: ['集団の凝集性が低い場合', '外部からの意見を積極的に取り入れる場合', '集団の凝集性が高くライバルが存在する場合', '多様なメンバーで構成されている場合'],
+    correct: 2,
+    explanation: '集団思考（集団浅慮）は、集団の凝集性が高く結束力が強い場合や、ライバルが存在する場合に発生しやすくなります。対策として、あえて批判役を設けるデビルズアドボケートや外部意見の取り込みが有効です。'
+  },
+  {
+    id: 21, category: '企業経営理論', subcat: '組織行動',
+    difficulty: 2,
+    text: 'リスキーシフトの説明として正しいものはどれか？',
+    choices: ['集団での意思決定の方が個人より保守的になる傾向', '集団での意思決定の方が個人よりリスクの高い判断をしてしまう傾向', '個人での意思決定が集団より極端になる傾向', 'リスクの高い業務を下位に委譲する傾向'],
+    correct: 1,
+    explanation: 'グループシフトは集団での意思決定が個人より極端になる現象です。その中でも特によりリスクの高い判断をしてしまうことをリスキーシフト、より保守的な判断をしてしまうことをコーシャスシフトといいます。'
+  },
+  {
+    id: 22, category: '企業経営理論', subcat: '組織行動',
+    difficulty: 3,
+    text: '社会的手抜きが発生しやすい条件として正しいものはどれか？',
+    choices: ['個人の貢献が明確に評価される場合', '集団が小さく互いを監視できる場合', '個人の貢献と集団の成果の関係が曖昧な場合', '報酬が個人ごとに設定されている場合'],
+    correct: 2,
+    explanation: '社会的手抜きは、集団の中で働くときに単独で働くときほど努力しなくなる現象です。個人の貢献と集団の成果の関係が曖昧な場合（例：大人数でのロープ引き）に生じやすく、評価システムの設計が重要です。'
+  },
+
+  // ===== 財務・会計 =====
+  {
+    id: 23, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 1,
+    text: 'キャッシュフロー計算書（CF計算書）の3つの区分として正しいものはどれか？',
+    choices: ['営業CF・投資CF・資本CF', '営業CF・投資CF・財務CF', '本業CF・投資CF・調達CF', '運用CF・財務CF・特別CF'],
+    correct: 1,
+    explanation: 'CF計算書は①営業活動によるCF（本業の現金増減）、②投資活動によるCF（固定資産等の取得・売却）、③財務活動によるCF（借入・社債等の財務活動）の3区分で構成されます。'
+  },
+  {
+    id: 24, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 1,
+    text: '健全な企業のCF計算書の状態として最も適切なものはどれか？',
+    choices: ['営業CFがマイナスで投資CFがプラス', '営業CFがプラスで投資CFがマイナス', '営業CF・投資CF・財務CFすべてがプラス', '財務CFのみプラスで他がマイナス'],
+    correct: 1,
+    explanation: '健全な企業は本業での現金獲得を意味する営業CFがプラスで、成長投資を行っている投資CFがマイナスの状態が理想的です。営業CFがマイナスは本業で現金を稼げていない不健全な状態を示します。'
+  },
+  {
+    id: 25, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '間接法によるCF計算書の営業CFの作成において、税引前当期純利益からのスタートで最初に加算する調整項目として正しいものはどれか？',
+    choices: ['売上債権の増加額（マイナス）', '減価償却費（プラス）', '棚卸資産の増加額（マイナス）', '前払費用の増加額（マイナス）'],
+    correct: 1,
+    explanation: '間接法では税引前当期純利益からスタートし、最初に非資金費用の修正を行います。減価償却費は実際に現金支出がない費用（非資金費用）なので、P/Lで費用計上された分をCF計算書でプラスして戻します。'
+  },
+  {
+    id: 26, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '間接法のCF計算書において、売上債権（受取手形・売掛金）が増加した場合の処理として正しいものはどれか？',
+    choices: ['営業CFにプラスして加算する', '営業CFからマイナスして減算する', '投資CFにマイナスとして処理する', '財務CFにプラスとして処理する'],
+    correct: 1,
+    explanation: '売上債権は資産（B/Sの左側・借方）です。資産の増加は現金の流出を意味するため、CF計算書ではマイナスします。「B/Sの左側（借方・資産）の増加は－、右側（貸方・負債）の増加は＋」と覚えましょう。'
+  },
+  {
+    id: 27, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 3,
+    text: '直接法のCF計算書で営業収入を計算する式として正しいものはどれか？',
+    choices: ['売上高＋売上債権増加額＋前受金増加額', '売上高－売上債権増加額＋前受金増加額－当期貸倒額', '売上高＋仕入債務増加額－棚卸資産増加額', '売上高－未収利息増加額＋前受利息増加額'],
+    correct: 1,
+    explanation: '直接法の営業収入は「売上高－売上債権増加額＋前受金増加額－当期貸倒額」で計算します。売上債権増加は現金未回収なのでマイナス、前受金増加は現金先回収なのでプラス、貸倒はそもそも回収できないのでマイナスです。'
+  },
+  {
+    id: 28, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '投資CFの計算式として正しいものはどれか？',
+    choices: ['固定資産取得支出のみ', '有形固定資産の取得・売却＋有価証券の取得・売却＋貸付・回収の合計', '営業CFと財務CFの差額', '資本金の増減額'],
+    correct: 1,
+    explanation: '投資CFは①有形固定資産の取得（－）・売却（＋）、②有価証券の取得（－）・売却（＋）、③貸付（－）・回収（＋）の合計で求めます。設備投資を行っている成長企業では投資CFがマイナスとなります。'
+  },
+  {
+    id: 29, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 3,
+    text: '財務CFがプラスになる活動として正しいものはどれか？',
+    choices: ['借入金の返済', '社債の償還', '株式の発行による資金調達', '配当金の支払い'],
+    correct: 2,
+    explanation: '財務CFは株式発行（＋）、社債発行（＋）、社債償還（－）、借入金借入（＋）、借入金返済（－）、配当金支払い（－）で構成されます。資金を調達するとプラス、返済・支払いはマイナスになります。'
+  },
+  {
+    id: 30, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '現金同等物に該当するものとして正しいものはどれか？',
+    choices: ['満期まで6ヶ月の定期預金', '株式の短期保有', '取得日から満期まで3ヶ月以内のコマーシャルペーパー', '外貨預金'],
+    correct: 2,
+    explanation: '現金同等物は取得日から満期日または償還日までの期間が3ヶ月以内の短期投資で、簡単に換金でき価格変動リスクが極めて少ないものです。コマーシャルペーパー（3ヶ月以内）、譲渡性預金などが該当します。'
+  },
+  {
+    id: 31, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 1,
+    text: '間接法と直接法について正しいものはどれか？',
+    choices: ['直接法は作成が容易でB/S・P/Lの値を使って作れる', '間接法は税引前当期純利益からスタートする', '直接法の方が小計以降の計算が異なる', '間接法はキャッシュの流れを詳細に把握できる'],
+    correct: 1,
+    explanation: '間接法は税引前当期純利益からスタートし、B/S・P/Lの値を使って作成するため作りやすく経営分析にも活用しやすい方法です。直接法は主要取引ごとにCF総額を表し詳細なキャッシュの流れを把握できますが、作成に手間がかかります。'
+  },
+  {
+    id: 32, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '運転資本の計算式として正しいものはどれか？',
+    choices: ['流動資産－流動負債', '売上債権＋棚卸資産－仕入債務', '営業CF÷売上高', '現金＋有価証券'],
+    correct: 1,
+    explanation: '運転資本は「売上債権＋棚卸資産－仕入債務」で求めます。なお「流動資産－流動負債」は正味運転資本です。運転資本が増えるということは手元の現金が減ることを意味し、追加の資金調達が必要になる可能性があります。'
+  },
+  {
+    id: 33, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 3,
+    text: '間接法のCF計算書作成において、税引前当期純利益を営業利益に戻す際の計算式として正しいものはどれか？',
+    choices: ['税引前当期純利益＋営業外損益＋特別損益', '税引前当期純利益－(営業外収益－営業外費用)－(特別利益－特別損失)', '税引前当期純利益＋減価償却費', '税引前当期純利益×(1－税率)'],
+    correct: 1,
+    explanation: '税引前当期純利益を営業利益に戻すには、営業外と特別損益を除く必要があります。計算式は「税引前当期純利益－(営業外収益－営業外費用)－(特別利益－特別損失)」です。つまり税引前純利益からプラス要素を引き、マイナス要素を足し戻します。'
+  },
+  {
+    id: 34, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 3,
+    text: '仕入債務（支払手形・買掛金）が増加した場合、間接法CF計算書での処理として正しいものはどれか？',
+    choices: ['営業CFからマイナスする', '営業CFにプラスする', '投資CFにプラスする', '財務CFにマイナスする'],
+    correct: 1,
+    explanation: '仕入債務は負債（B/Sの右側・貸方）です。負債の増加は「まだ現金を支払っていない」ことを意味するため、CF計算書ではプラスします。「B/Sの左側（資産）の増加は－、右側（負債）の増加は＋」のルールを適用します。'
+  },
+  {
+    id: 35, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '直接法のCF計算書において「仕入支出」の計算式として正しいものはどれか？',
+    choices: ['売上原価＋棚卸資産増加額－仕入債務増加額＋前払金増加額', '売上原価－棚卸資産増加額＋仕入債務増加額', '売上原価＋仕入債務増加額', '当期仕入高＋前受金増加額'],
+    correct: 0,
+    explanation: '仕入支出は「売上原価＋棚卸資産増加額－仕入債務増加額＋前払金増加額」で計算します。棚卸資産増加は実際に仕入れたがまだ費用化していない分（プラス）、仕入債務増加はまだ現金を払っていない分（マイナス）として調整します。'
+  },
+  {
+    id: 36, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 2,
+    text: '営業CFの計算（小計以降）で利息の支払額の計算式として正しいものはどれか？',
+    choices: ['支払利息＋前払利息増加額－未払利息増加額', '支払利息－前払利息増加額＋未払利息増加額', '受取利息＋受取配当金', '支払利息÷(1＋税率)'],
+    correct: 0,
+    explanation: 'CF計算書は実際の現金の出入りを記載するため経過勘定を考慮します。利息の支払額は「支払利息＋前払利息増加額（先払い分）－未払利息増加額（まだ払っていない分）」で計算します。'
+  },
+  {
+    id: 37, category: '財務・会計', subcat: 'CF計算書',
+    difficulty: 1,
+    text: '正味運転資本の計算式として正しいものはどれか？',
+    choices: ['売上債権＋棚卸資産－仕入債務', '流動資産－流動負債', '固定資産－固定負債', '当座資産－流動負債'],
+    correct: 1,
+    explanation: '正味運転資本は「流動資産－流動負債」で求めます。1年以内に現金として利用可能な額がどれだけあるかを表し、値が大きいほど資金繰りが安定していることを示します。'
+  },
+];
+
+// ===================== APP STATE =====================
+const STATE_KEY = 'diagnostic_qa_v2';
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STATE_KEY)) || {};
+  } catch { return {}; }
+}
+
+function saveState(st) {
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(st)); } catch {}
+}
+
+let appState = loadState();
+// Structure: { answers: {qId: {correct:bool, times:int}}, totalAnswered:int, correctCount:int, streak:int, bestStreak:int }
+if (!appState.answers) appState.answers = {};
+if (!appState.totalAnswered) appState.totalAnswered = 0;
+if (!appState.correctCount) appState.correctCount = 0;
+if (!appState.streak) appState.streak = 0;
+if (!appState.bestStreak) appState.bestStreak = 0;
+
+// ===================== QUIZ STATE =====================
+let currentQueue = [];
+let currentIdx = 0;
+let sessionCorrect = 0;
+let sessionWrong = 0;
+let sessionHistory = []; // {q, chosen, correct}
+let questionStartTime = 0;
+let sessionTimes = [];
+let sessionStreak = 0;
+let sessionBestStreak = 0;
+let answered = false;
+
+// ===================== HOME =====================
+function renderHome() {
+  // Stats
+  const total = appState.totalAnswered;
+  const pct = total > 0 ? Math.round(appState.correctCount / total * 100) : 0;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-correct').textContent = pct + '%';
+  document.getElementById('stat-streak').textContent = appState.bestStreak;
+
+  // Categories
+  const cats = {};
+  QUESTIONS.forEach(q => {
+    if (!cats[q.category]) cats[q.category] = { total: 0, answered: 0, correct: 0 };
+    cats[q.category].total++;
+    const a = appState.answers[q.id];
+    if (a) { cats[q.category].answered++; if (a.correct) cats[q.category].correct++; }
+  });
+
+  const catColors = { '企業経営理論': '#4f8cff', '財務・会計': '#2ecc8a' };
+  const catIcons = { '企業経営理論': '📋', '財務・会計': '💰' };
+
+  const catList = document.getElementById('category-list');
+  catList.innerHTML = '';
+  Object.entries(cats).forEach(([name, data]) => {
+    const color = catColors[name] || '#4f8cff';
+    const icon = catIcons[name] || '📚';
+    const pct = data.answered > 0 ? Math.round(data.correct / data.answered * 100) : 0;
+    const progPct = Math.round(data.answered / data.total * 100);
+    catList.innerHTML += `
+      <div class="category-card" style="--card-color:${color}" onclick="startCategory('${name}')">
+        <div class="cat-icon">${icon}</div>
+        <div class="cat-info">
+          <div class="cat-name">${name}</div>
+          <div class="cat-count">${data.total}問 ・ 正答率 ${pct}%</div>
+          <div class="cat-progress"><div class="cat-progress-fill" style="width:${progPct}%"></div></div>
+        </div>
+        <div class="cat-arrow">›</div>
+      </div>`;
+  });
+}
+
+// ===================== START QUIZ =====================
+function startCategory(cat) {
+  const qs = QUESTIONS.filter(q => q.category === cat);
+  startQuiz(shuffle([...qs]));
+}
+
+function startMode(mode) {
+  let qs;
+  if (mode === 'random') {
+    qs = shuffle([...QUESTIONS]);
+  } else if (mode === 'weak') {
+    const weakIds = Object.entries(appState.answers)
+      .filter(([id, a]) => !a.correct || a.times > 1)
+      .map(([id]) => parseInt(id));
+    qs = QUESTIONS.filter(q => weakIds.includes(q.id));
+    if (qs.length === 0) { showToast('苦手問題はまだありません 👍'); return; }
+    qs = shuffle(qs);
+  } else if (mode === 'unseen') {
+    const seenIds = Object.keys(appState.answers).map(Number);
+    qs = QUESTIONS.filter(q => !seenIds.includes(q.id));
+    if (qs.length === 0) { showToast('未回答問題はありません！全問制覇！🎉'); return; }
+    qs = shuffle(qs);
+  } else if (mode === 'hard') {
+    qs = shuffle(QUESTIONS.filter(q => q.difficulty === 3));
+    if (qs.length === 0) { showToast('難問が見つかりません'); return; }
+  }
+  startQuiz(qs);
+}
+
+function startQuiz(qs) {
+  currentQueue = qs.slice(0, 20); // max 20 per session
+  currentIdx = 0;
+  sessionCorrect = 0;
+  sessionWrong = 0;
+  sessionHistory = [];
+  sessionTimes = [];
+  sessionStreak = 0;
+  sessionBestStreak = 0;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (currentIdx >= currentQueue.length) { showResult(); return; }
+  answered = false;
+  const q = currentQueue[currentIdx];
+  questionStartTime = Date.now();
+
+  // Progress
+  const prog = ((currentIdx) / currentQueue.length) * 100;
+  document.getElementById('quiz-prog-fill').style.width = prog + '%';
+  document.getElementById('quiz-count').textContent = `${currentIdx + 1} / ${currentQueue.length}`;
+  document.getElementById('quiz-cat-tag').textContent = q.category + ' › ' + q.subcat;
+  document.getElementById('q-num').textContent = `Q${currentIdx + 1}`;
+
+  // Difficulty badge
+  const diffEl = document.getElementById('q-diff');
+  if (q.difficulty === 1) { diffEl.className = 'question-difficulty diff-easy'; diffEl.textContent = '★ 基礎'; }
+  else if (q.difficulty === 2) { diffEl.className = 'question-difficulty diff-med'; diffEl.textContent = '★★ 標準'; }
+  else { diffEl.className = 'question-difficulty diff-hard'; diffEl.textContent = '★★★ 応用'; }
+
+  document.getElementById('q-text').textContent = q.text;
+
+  // Choices
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  q.choices.forEach((c, i) => {
+    choicesEl.innerHTML += `
+      <button class="choice-btn" onclick="selectChoice(${i})">
+        <div class="choice-label">${labels[i]}</div>
+        <div>${c}</div>
+      </button>`;
+  });
+
+  // Hide answer panel
+  document.getElementById('answer-panel').classList.remove('show');
+
+  // Streak badge
+  const badge = document.getElementById('streak-badge');
+  if (sessionStreak >= 3) {
+    badge.classList.add('show');
+    document.getElementById('streak-count').textContent = sessionStreak;
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
+function selectChoice(idx) {
+  if (answered) return;
+  answered = true;
+  const elapsed = Math.round((Date.now() - questionStartTime) / 1000);
+  sessionTimes.push(elapsed);
+
+  const q = currentQueue[currentIdx];
+  const isCorrect = idx === q.correct;
+
+  // Update buttons
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((btn, i) => {
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === idx && !isCorrect) btn.classList.add('wrong');
+    else btn.classList.add('disabled');
+  });
+
+  // Update state
+  if (!appState.answers[q.id]) appState.answers[q.id] = { correct: false, times: 0 };
+  appState.answers[q.id].times++;
+  appState.answers[q.id].correct = isCorrect;
+  appState.totalAnswered++;
+  if (isCorrect) appState.correctCount++;
+
+  if (isCorrect) {
+    sessionCorrect++;
+    sessionStreak++;
+    appState.streak = (appState.streak || 0) + 1;
+    if (sessionStreak > sessionBestStreak) sessionBestStreak = sessionStreak;
+    if (appState.streak > (appState.bestStreak || 0)) appState.bestStreak = appState.streak;
+  } else {
+    sessionWrong++;
+    sessionStreak = 0;
+    appState.streak = 0;
+  }
+
+  saveState(appState);
+  sessionHistory.push({ q, chosen: idx, correct: isCorrect });
+
+  // Show answer panel
+  const panel = document.getElementById('answer-panel');
+  panel.classList.add('show');
+  document.getElementById('result-icon').textContent = isCorrect ? '✅' : '❌';
+  document.getElementById('result-text').textContent = isCorrect ? '正解！' : '不正解';
+  document.getElementById('result-text').className = 'result-text ' + (isCorrect ? 'correct-text' : 'wrong-text');
+  document.getElementById('explanation-text').innerHTML = q.explanation.replace(/【(.+?)】/g, '<strong>【$1】</strong>');
+
+  // Next button text
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.textContent = currentIdx + 1 >= currentQueue.length ? '結果を見る →' : '次の問題へ →';
+
+  // Streak badge update
+  const badge = document.getElementById('streak-badge');
+  if (sessionStreak >= 3) {
+    badge.classList.add('show');
+    document.getElementById('streak-count').textContent = sessionStreak;
+  }
+
+  // Confetti on correct
+  if (isCorrect && sessionStreak > 0 && sessionStreak % 5 === 0) spawnConfetti();
+}
+
+function nextQuestion() {
+  currentIdx++;
+  renderQuestion();
+}
+
+// ===================== RESULT =====================
+function showResult() {
+  const total = currentQueue.length;
+  const pct = Math.round(sessionCorrect / total * 100);
+  const avgTime = sessionTimes.length > 0 ? Math.round(sessionTimes.reduce((a, b) => a + b, 0) / sessionTimes.length) : 0;
+
+  document.getElementById('result-score').textContent = sessionCorrect;
+  document.getElementById('result-denom').textContent = '/ ' + total;
+  document.getElementById('result-pct').textContent = `正答率 ${pct}%`;
+  document.getElementById('res-correct').textContent = sessionCorrect;
+  document.getElementById('res-wrong').textContent = sessionWrong;
+  document.getElementById('res-time').textContent = avgTime + 's';
+  document.getElementById('res-streak').textContent = sessionBestStreak;
+
+  if (pct >= 80) {
+    document.getElementById('result-big-icon').textContent = '🏆';
+    document.getElementById('result-title').textContent = '素晴らしい成績！';
+    spawnConfetti();
+  } else if (pct >= 60) {
+    document.getElementById('result-big-icon').textContent = '👍';
+    document.getElementById('result-title').textContent = 'よく頑張りました！';
+  } else {
+    document.getElementById('result-big-icon').textContent = '📚';
+    document.getElementById('result-title').textContent = '復習を頑張ろう！';
+  }
+
+  showScreen('screen-result');
+  renderHome();
+}
+
+function showReview() {
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  sessionHistory.forEach((h, i) => {
+    const badge = h.correct ? '<span class="review-correct-badge review-badge-ok">✅ 正解</span>' : '<span class="review-correct-badge review-badge-ng">❌ 不正解</span>';
+    list.innerHTML += `
+      <div class="review-item">
+        <div class="review-item-header">${badge}<span style="font-size:11px;color:var(--text3)">Q${i + 1}</span></div>
+        <div class="review-q">${h.q.text}</div>
+        <div class="review-a">正解: <span>${h.q.choices[h.q.correct]}</span></div>
+        <div class="review-a" style="margin-top:6px;font-size:11px;">${h.q.explanation}</div>
+      </div>`;
+  });
+  showScreen('screen-review');
+}
+
+function restartSame() {
+  const qs = [...currentQueue];
+  startQuiz(shuffle(qs));
+}
+
+// ===================== PROGRESS =====================
+function renderProgress() {
+  // Category progress bars
+  const cats = {};
+  QUESTIONS.forEach(q => {
+    if (!cats[q.category]) cats[q.category] = { total: 0, correct: 0, answered: 0 };
+    cats[q.category].total++;
+    const a = appState.answers[q.id];
+    if (a) { cats[q.category].answered++; if (a.correct) cats[q.category].correct++; }
+  });
+
+  const barsEl = document.getElementById('progress-bars');
+  barsEl.innerHTML = '';
+  Object.entries(cats).forEach(([name, data]) => {
+    const pct = data.answered > 0 ? Math.round(data.correct / data.answered * 100) : 0;
+    const coverage = Math.round(data.answered / data.total * 100);
+    barsEl.innerHTML += `
+      <div class="progress-section">
+        <div class="progress-cat-name">${name}（${data.answered}/${data.total}問解答済み）</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+          <div class="progress-pct">${pct}%</div>
+        </div>
+      </div>`;
+  });
+
+  // Weak areas
+  const weakEl = document.getElementById('weak-list');
+  const weakQs = QUESTIONS.filter(q => {
+    const a = appState.answers[q.id];
+    return a && (!a.correct || a.times >= 2);
+  }).sort((a, b) => (appState.answers[b.id]?.times || 0) - (appState.answers[a.id]?.times || 0)).slice(0, 8);
+
+  if (weakQs.length === 0) {
+    weakEl.innerHTML = '<div style="color:var(--text2);font-size:14px;padding:16px 0;">苦手問題はまだありません 🎉</div>';
+  } else {
+    weakEl.innerHTML = weakQs.map(q => {
+      const a = appState.answers[q.id];
+      return `<div class="weak-item">
+        <div class="weak-item-q">${q.text.substring(0, 50)}...</div>
+        <div class="weak-item-count">回答回数: ${a?.times || 0}回</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ===================== NAVIGATION =====================
+function navTo(name) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'home') { showScreen('screen-home'); renderHome(); }
+  else if (name === 'progress') { showScreen('screen-progress'); renderProgress(); }
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  navTo('home');
+}
+
+// ===================== UTILS =====================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function confirmReset() { document.getElementById('modal-reset').classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function doReset() {
+  appState = { answers: {}, totalAnswered: 0, correctCount: 0, streak: 0, bestStreak: 0 };
+  saveState(appState);
+  closeModal('modal-reset');
+  renderHome();
+  renderProgress();
+  showToast('データをリセットしました');
+}
+
+function spawnConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  const colors = ['#4f8cff', '#7c5cff', '#2ecc8a', '#ffd166', '#ff4f6e', '#fff'];
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + '%';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+    el.style.animationDelay = Math.random() * 0.5 + 's';
+    el.style.width = el.style.height = (Math.random() * 6 + 5) + 'px';
+    wrap.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+// ===================== INIT =====================
+renderHome();
+</script>
+</body>
+</html>
