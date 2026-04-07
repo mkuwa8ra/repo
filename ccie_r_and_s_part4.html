@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CCIE 習得用テキスト：Part IV QoS</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        h1 { border-bottom: 3px solid #673ab7; color: #673ab7; padding-bottom: 10px; }
+        h2 { border-left: 5px solid #673ab7; padding-left: 10px; background: #f3e5f5; margin-top: 30px; }
+        h3 { color: #d32f2f; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .citation { color: #666; font-size: 0.85em; vertical-align: super; margin-left: 2px; }
+        .important { font-weight: bold; color: #d32f2f; }
+        nav { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>CCIE 習得用学習テキスト：Part IV QoS</h1>
+
+<nav>
+    <strong>【目次】</strong>
+    <ul>
+        <li><a href="#chapter12">Chapter 12: Classification and Marking</a></li>
+        <li><a href="#chapter13">Chapter 13: Congestion Management and Avoidance</a></li>
+        <li><a href="#chapter14">Chapter 14: Shaping, Policing, and Link Fragmentation</a></li>
+    </ul>
+</nav>
+
+<section id="chapter12">
+    <h2>Chapter 12: Classification and Marking</h2>
+    <p>分類とマーキングの目的は、複雑な識別プロセスを一度だけ行い、パケットに特定の値をマークすることで、後続のQoSツールがそのマークを見るだけで迅速に処理を決定できるようにすることです[1]。</p>
+
+    <h3>1. QoSマーキングに使用されるフィールド</h3>
+    <p>IPヘッダーやレイヤ2ヘッダーには、QoS用にマーク可能なフィールドがいくつか存在します[2]。</p>
+    <ul>
+        <li><strong>IP Precedence (IPP):</strong> IPヘッダーのToSバイトの上位3ビットを使用します[2, 3]。</li>
+        <li><strong>DSCP (Differentiated Services Code Point):</strong> ToSバイトを再定義した「DSフィールド」の上位6ビットを使用し、よりきめ細かなサービスレベルを定義できます[3, 4]。</li>
+        <li><strong>Class Selector (CS):</strong> IPPとの後方互換性を保つためのDSCP値のセットです[5, 6]。</li>
+        <li><strong>Assured Forwarding (AF):</strong> 4つのクラスと3段階の破棄優先度を定義する12個のDSCP値です（例：AF41）[7, 8]。</li>
+        <li><strong>Expedited Forwarding (EF):</strong> 低遅延が求められるトラフィック（VoIPなど）向けのDSCP値（101110 / 10進数46）です[4, 8]。</li>
+        <li><strong>CoS (Class of Service):</strong> 802.1QやISLなどのトランクヘッダーに含まれる3ビットのフィールドです[9, 10]。</li>
+    </ul>
+
+    <h3>2. Cisco Modular QoS CLI (MQC)</h3>
+    <p>CiscoはQoS設定を統合し簡素化するために、MQCを導入しました[11, 12]。以下の3つの主要な要素で構成されます。</p>
+    <ul>
+        <li><strong>Class Map (class-map):</strong> トラフィックを分類するための条件を定義します[13, 14]。</li>
+        <li><strong>Policy Map (policy-map):</strong> 分類されたクラスに対して実行するQoSアクション（マーキングやキューイングなど）を定義します[13, 15]。</li>
+        <li><strong>Service Policy (service-policy):</strong> ポリシーマップをインターフェースの入力または出力に適用します[13, 15]。</li>
+    </ul>
+
+    <h3>3. NBAR (Network-Based Application Recognition)</h3>
+    <p>NBARは、動的なポート番号を使用するアプリケーションや、HTTPのURL、ホスト名などの深いパケットインスペクションを必要とする分類に使用されます[16, 17]。MQCの <code>match protocol</code> コマンドを使用することで、NBARによる識別が有効になります[17, 18]。</p>
+
+    <h3>4. 高度なマーキング機能</h3>
+    <ul>
+        <li><strong>QoS Pre-classification:</strong> VPNトンネル（GREやIPsec）で暗号化される前の元のパケットヘッダーをメモリに保持し、カプセル化後の出力インターフェースで適切なQoS処理を行えるようにする機能です[19, 20]。</li>
+        <li><strong>Policy Routing (PBR) によるマーキング:</strong> 宛先IPアドレス以外の情報に基づいてルートを変更すると同時に、IPPやToSバイト全体をマークすることも可能です[21, 22]。</li>
+    </ul>
+
+    <h3>5. Cisco AutoQoS</h3>
+    <p>Ciscoのベストプラクティスに基づいたQoS設定を自動生成するマクロです[23]。設定ミスを減らし、導入を高速化できます[23]。VoIP用（AutoQoS for VoIP）とエンタープライズ用（AutoQoS for the Enterprise）の2種類があります[24, 25]。</p>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! Class Map の定義（URLに"important"を含むHTTPを識別）
+class-map http-important
+ match protocol http url "*important*"
+
+! Policy Map の定義（識別したトラフィックをAF21にマーキング）
+policy-map QoS-POLICY
+ class http-important
+  set ip dscp af21
+ class class-default
+  set ip dscp default
+
+! インターフェースへの適用（入力パケットに対して実行）
+interface GigabitEthernet0/1
+ service-policy input QoS-POLICY
+    </pre>
+</section>
+<section id="chapter13">
+    <h2>Chapter 13: Congestion Management and Avoidance</h2>
+    <p>輻輳管理（キューイング）は、デバイスから送信されるのを待機しているパケットをどのように管理するかを定義します [1]。本章では、ルーターにおけるCBWFQやLLQ、スイッチにおけるSRR、そして輻輳回避技術であるWREDについて学びます。</p>
+
+    <h3>1. Cisco ルーターのキューイング概念</h3>
+    <p>ルーターには、物理的な送出の直前に位置する<strong>ハードウェアキュー（TXリング）</strong>と、その手前でパケットを整理する<strong>ソフトウェアキュー</strong>の2段階が存在します [2, 3]。</p>
+    <ul>
+        <li><strong>ハードウェアキュー:</strong> 常にFIFO（先入れ先出し）で動作します。このキューを短く設定することで、ソフトウェアキューによる優先制御をより迅速に反映させることができます [2, 3]。</li>
+        <li><strong>ソフトウェアキュー:</strong> ネットワーク管理者がQoSツール（CBWFQなど）を適用する場所です。インターフェースが輻輳したときにのみアクティブになります [2, 4]。</li>
+    </ul>
+
+    <h3>2. CBWFQ と LLQ</h3>
+    <p>現代のCiscoルーターで最も一般的に使用されるキューイングツールです。</p>
+    <ul>
+        <li><strong>CBWFQ (Class-Based Weighted Fair Queuing):</strong> 
+            <ul>
+                <li>MQCを使用して最大64のクラスを定義できます [5, 6]。</li>
+                <li>各クラスに対して、帯域幅の最小保証（<code>bandwidth</code>コマンド）を提供します [7, 8]。</li>
+            </ul>
+        </li>
+        <li><strong>LLQ (Low Latency Queuing):</strong>
+            <ul>
+                <li>CBWFQに<strong>厳格な優先順位（Strict Priority）キュー</strong>を追加したものです [6, 9]。</li>
+                <li><code>priority</code>コマンドで指定されたクラスは、他のどのキューよりも先に処理されます。音声（VoIP）などの遅延に敏感なトラフィックに不可欠です [9, 10]。</li>
+                <li>他のキューが枯渇（スタベーション）しないよう、優先クラスにはポリサーによる帯域制限が自動的に適用されます [6, 10]。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>3. WRED (Weighted Random Early Detection)</h3>
+    <p>キューが満杯になってからパケットを捨てる「テールドロップ」は、TCPのグローバル同期を引き起こし、ネットワーク効率を低下させます。これを回避するのがWREDです [11, 12]。</p>
+    <ul>
+        <li><strong>動作原理:</strong> キューの平均的な深さを監視し、閾値を超えるとパケットを<strong>ランダムに</strong>破棄し始めます [12-14]。</li>
+        <li><strong>重み付け:</strong> IP PrecedenceやDSCPの値に基づいて破棄の閾値を調整できます。重要度の高いパケットはより捨てられにくく設定します [15, 16]。</li>
+    </ul>
+
+    <h3>4. LANスイッチのキューイング (3560シリーズ)</h3>
+    <p>スイッチのQoSはASICで行われるため、ルーターとは異なる独自の仕組みを持ちます [17, 18]。</p>
+    <ul>
+        <li><strong>SRR (Shaped Round Robin):</strong> キュー間での帯域共有方法を制御します [19, 20]。
+            <ul>
+                <li><strong>共有モード (Shared):</strong> 設定された比率で帯域を分配しますが、空き帯域があれば他のキューがそれを利用できます [20, 21]。</li>
+                <li><strong>シェイピングモード (Shaped):</strong> キューが使用できる帯域に厳格な上限を設定します [20, 21]。</li>
+            </ul>
+        </li>
+        <li><strong>WTD (Weighted Tail Drop):</strong> スイッチにおけるテールドロップの拡張版で、CoSやDSCPの値に基づいてドロップ閾値を複数定義できます [17, 19, 22]。</li>
+    </ul>
+
+    <h3>5. RSVP (Resource Reservation Protocol)</h3>
+    <p>受信側から送信側へ、ネットワーク上のパスに沿って明示的に帯域を予約するためのシグナリングプロトコルです [1, 23]。</p>
+    <ul>
+        <li>フロー（宛先IP、ポート、プロトコル）単位でリソースを確保します [23]。</li>
+        <li>予約が完了すると、パス上のルーターは各インターフェースでそのフローのための帯域を維持します [23, 24]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! CBWFQ/LLQ の設定
+policy-map MY-QoS
+ class voice-class
+  priority 64             ! LLQ: 64kbpsの優先帯域
+ class critical-data
+  bandwidth percent 30    ! CBWFQ: インターフェース帯域の30%を保証
+ class class-default
+  fair-queue              ! デフォルトクラスでWFQを有効化
+
+! WRED の有効化 (CBWFQクラス内)
+ class critical-data
+  random-detect dscp-based
+
+! RSVP の設定 (インターフェース)
+interface Serial0/0
+ ip rsvp bandwidth 128 64 ! 全体で128k、1フロー最大64kを予約可能にする
+    </pre>
+</section>
+<section id="chapter14">
+    <h2>Chapter 14: Shaping, Policing, and Link Fragmentation</h2>
+    <p>シェイピングとポリシングは、トラフィックの送信レートを制限するためのツールです。本章では、パケットを遅延させるシェイピング、パケットを破棄または再マークするポリシング、および低速リンクでの遅延を軽減する断片化（LFI）について学びます [1, 2]。</p>
+
+    <h3>1. トラフィックシェイピングの概念</h3>
+    <p>シェイピングは、設定されたレートを超えるトラフィックをバッファ（シェイピングキュー）に保持し、平滑化して送出します [1]。</p>
+    <ul>
+        <li><strong>主要な用語 [1]:</strong>
+            <ul>
+                <li><strong>Tc (Time Interval):</strong> データを送信する時間間隔（ミリ秒）。公式：<code>Tc = Bc / シェイピングレート</code>。</li>
+                <li><strong>Bc (Committed Burst):</strong> 各Tcの開始時に送信可能なデータ量（ビット）。</li>
+                <li><strong>Be (Excess Burst):</strong> アイドル期間の後に、Bcを超えて送信できる追加のデータ量。</li>
+                <li><strong>CIR (Committed Information Rate):</strong> 契約上の基本帯域幅（bps）。</li>
+            </ul>
+        </li>
+        <li><strong>動作の仕組み:</strong> トークンバケットアルゴリズムを使用します。各Tcの開始時にバケットへBcトークンが補充され、送信時にトークンを消費します [1, 2]。</li>
+    </ul>
+
+    <h3>2. シェイピングの種類と設定</h3>
+    <ul>
+        <li><strong>Generic Traffic Shaping (GTS):</strong> インターフェース全体、またはACLで指定した特定のトラフィックをシェイピングします [2]。</li>
+        <li><strong>Class-Based Shaping (CB Shaping):</strong> MQCを使用して特定のクラスごとにシェイピングを適用します。Ciscoが推奨する最新の手法です [2]。
+            <ul>
+                <li><code>shape average</code>: 平均レートでのシェイピング。</li>
+                <li><code>shape peak</code>: Bc + Beを利用したピークレートでのシェイピング [2]。</li>
+            </ul>
+        </li>
+        <li><strong>Frame Relay Traffic Shaping (FRTS):</strong> フレームリレーネットワーク固有のシェイピング。BECN（後方向輻輳通知）を受けてレートを動的に下げる「適応型シェイピング」をサポートします [2]。</li>
+    </ul>
+
+    <h3>3. ポリシング (Policing) の概念と構成</h3>
+    <p>ポリシングは、トラフィックが契約レートを超えた瞬間に、パケットを即座に破棄するか、優先度を下げて再マーク（マークダウン）します。シェイピングとは異なり、パケットをバッファリングしません [2]。</p>
+    <ul>
+        <li><strong>CB Policing のカテゴリ [2, 3]:</strong>
+            <ul>
+                <li><strong>Conforming (適合):</strong> 契約レート内。通常はそのまま転送。</li>
+                <li><strong>Exceeding (超過):</strong> バースト許容範囲内だがレート超。再マークして転送、または破棄。</li>
+                <li><strong>Violating (違反):</strong> 完全にレート超。通常は破棄。</li>
+            </ul>
+        </li>
+        <li><strong>ポリサーのタイプ [2]:</strong>
+            <ul>
+                <li><strong>Single-Rate, Three-Color:</strong> 1つのレート（CIR）に基づき、Bc/Beバケットを使用して3色（適合/超過/違反）で判断。</li>
+                <li><strong>Two-Rate, Three-Color:</strong> 2つのレート（CIRとPIR）に基づき、より厳格なバースト管理を行う。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>4. リンク効率化ツール (LFI)</h3>
+    <p>シリアルリンクなどの低速なWANリンクにおいて、大きなデータパケットによる音声パケットの遅延（シリアライゼーション遅延）を防ぐ技術です [4]。</p>
+    <ul>
+        <li><strong>FRF.12:</strong> フレームリレー用の断片化。大きなデータフレームを分割し、その間に音声フレームを割り込ませます [5]。</li>
+        <li><strong>Multilink PPP (MLP) LFI:</strong> PPP環境での断片化。フラグメント間のインターリーブをサポートします [4]。</li>
+    </ul>
+
+    <h3>5. QoS のトラブルシューティング</h3>
+    <p>QoSが期待通りに動作しない場合は、以下の手順で確認します [3]。</p>
+    <ul>
+        <li><strong>show policy-map interface:</strong> 各クラスでパケットが正しく分類され、ドロップが発生しているか、または設定通りにマークされているかを確認します [3]。</li>
+        <li><strong>show ip nbar protocol-discovery:</strong> 特定のアプリケーション（CitrixやP2Pなど）が想定外のクラスに入っていないか、NBARの統計を確認します [3]。</li>
+        <li><strong>show traffic-shape:</strong> 現在のシェイピングレート、Tc、バッファの状態を確認します [3]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! CB Shaping の設定例
+policy-map SHAPE-POLICY
+ class class-default
+  shape average 128000 1280 0  ! レート 128k, Bc 1280bit, Be 0
+  service-policy LLQ-QUEUING   ! シェイピングキューにLLQを階層適用
+
+! CB Policing の設定例
+policy-map POLICE-POLICY
+ class HTTP-TRAFFIC
+  police cir 256000 bc 8000 be 8000
+   conform-action transmit
+   exceed-action set-dscp-transmit 0
+   violate-action drop
+    </pre>
+</section>
+</body>
+</html>

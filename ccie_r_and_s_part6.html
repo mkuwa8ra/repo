@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CCIE 習得用テキスト：Part VI IP Multicast</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        h1 { border-bottom: 3px solid #0288d1; color: #0288d1; padding-bottom: 10px; }
+        h2 { border-left: 5px solid #0288d1; padding-left: 10px; background: #e1f5fe; margin-top: 30px; }
+        h3 { color: #d32f2f; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .citation { color: #666; font-size: 0.85em; vertical-align: super; margin-left: 2px; }
+        .important { font-weight: bold; color: #d32f2f; }
+        nav { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>CCIE 習得用学習テキスト：Part VI IP Multicast</h1>
+
+<nav>
+    <strong>【目次】</strong>
+    <ul>
+        <li><a href="#chapter16">Chapter 16: Introduction to IP Multicasting</a></li>
+        <li><a href="#chapter17">Chapter 17: IP Multicast Routing</a></li>
+    </ul>
+</nav>
+
+<section id="chapter16">
+    <h2>Chapter 16: Introduction to IP Multicasting</h2>
+    <p>IPマルチキャストは、単一のソースから選択された複数の宛先へ、ネットワーク上で1つのデータストリームとしてメッセージを送信する技術です [1, 2]。ユニキャストのような重複送信や、ブロードキャストのような無差別な負荷を避け、スケーラブルなソリューションを提供します [1, 2]。</p>
+
+    <h3>1. マルチキャストIPアドレス</h3>
+    <p>マルチキャストは、IANAによって割り当てられた <strong>クラスD（224.0.0.0 ～ 239.255.255.255）</strong> のアドレスを使用します [2]。これらは「グループ」を表し、決してパケットの送信元（Source）アドレスとして使用されることはありません [2]。</p>
+    <ul>
+        <li><strong>恒久的なグループ (224.0.0.0 ～ 224.0.1.255):</strong> 
+            <ul>
+                <li><code>224.0.0.x</code>: ローカルリンク用。ルーターによって転送されません（例: <code>224.0.0.5</code> OSPFルーター）[2]。</li>
+                <li><code>224.0.1.x</code>: ネットワーク全体で転送される制御用（例: <code>224.0.1.39</code> Auto-RP）[2]。</li>
+            </ul>
+        </li>
+        <li><strong>Source-Specific Multicast (SSM) (232.0.0.0/8):</strong> ホストが特定のソースからのトラフィックのみを要求するために予約されています [2]。</li>
+        <li><strong>GLOPアドレッシング (233.0.0.0/8):</strong> 登録済みAS番号を持つ組織に256個のアドレスを割り当てます [2]。</li>
+        <li><strong>プライベートドメイン (239.0.0.0/8):</strong> 管理的スコープ。組織内でのみ使用可能なアドレスです [2]。</li>
+    </ul>
+
+    <h3>2. マルチキャストMACアドレスへのマッピング</h3>
+    <p>レイヤ3のマルチキャストIPアドレスは、NICが受信を判断できるようにレイヤ2のMACアドレスに変換されます [2]。</p>
+    <ul>
+        <li><strong>形式:</strong> <code>01-00-5E</code> で始まるOUIに、<strong>IPアドレスの下位23ビット</strong> を付加します [2]。</li>
+        <li><strong>重複の問題:</strong> IPアドレスの28ビットのうち5ビットが計算から除外されるため、<strong>32個の異なるIPアドレスが同じ1つのMACアドレスにマッピング</strong> されます [2]。</li>
+    </ul>
+
+    <h3>3. IGMP (Internet Group Management Protocol)</h3>
+    <p>ホストとローカルルーター間で「どのグループに参加したいか」を通信するためのプロトコルです [3]。</p>
+    <ul>
+        <li><strong>IGMPv2 (デフォルト):</strong> 
+            <ul>
+                <li><strong>Membership Query:</strong> ルーターがメンバーの存在を確認するために送信（224.0.0.1宛）[3]。</li>
+                <li><strong>Membership Report:</strong> ホストが参加を表明。<strong>Report Suppression（レポート抑制）</strong>機能により、同一グループの別ホストの報告を聞くと自身の報告を中止し、トラフィックを削減します [3]。</li>
+                <li><strong>Leave Group:</strong> ホストが退出を通知（224.0.0.2宛）。ルーターはこれを受けると「Group-Specific Query」を送り、他にメンバーがいないか最終確認します [3]。</li>
+            </ul>
+        </li>
+        <li><strong>IGMPv3:</strong> ソースフィルタリング（SSM）をサポートし、特定の配信元のみを指定できるようになりました [3]。</li>
+    </ul>
+
+    <h3>4. LANにおける最適化技術</h3>
+    <p>L2スイッチはデフォルトでマルチキャストを全ポートにフラッディングしてしまいます。これを抑制するためのツールが3つあります [3]。</p>
+    <ul>
+        <li><strong>CGMP (Cisco Group Management Protocol):</strong> Cisco独自のプロトコル。ルーターがスイッチに対し「このポートにこのグループのメンバーがいる」とメッセージ（GDA/USAペア）を送って制御します [3]。</li>
+        <li><strong>IGMP Snooping:</strong> 標準的な手法。スイッチがホストとルーター間のIGMPメッセージを「盗み聞き」して、自動的にポートを制限します [3]。</li>
+        <li><strong>RGMP (Router-Port Group Management Protocol):</strong> ルーター同士が接続されるポートにおいて、不要なマルチキャストトラフィックが流れないように制御します [3]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! マルチキャストルーティングの有効化
+ip multicast-routing
+
+! インターフェースでのPIM(Sparse-Mode)とIGMPの有効化
+interface FastEthernet0/0
+ ip pim sparse-mode
+ ip igmp version 2
+
+! IGMP Snoopingの有効化（スイッチ側、通常デフォルトで有効）
+ip igmp snooping
+    </pre>
+</section>
+<section id="chapter17">
+    <h2>Chapter 17: IP Multicast Routing</h2>
+    <p>マルチキャストルーティングは、送信元（Source）から複数の受信者（Group）へ効率的にパケットを届けるための仕組みです。本章では、基本的な転送ロジックであるRPFチェックから、PIMの各モード、およびRP（Rendezvous Point）の選定方法について学びます [1]。</p>
+
+    <h3>1. マルチキャストルーティングの基礎</h3>
+    <ul>
+        <li><strong>転送の課題:</strong> マルチキャストアドレスはユニキャストルーティングテーブルに存在しないため、通常の宛先ベースの転送ができません。また、パケットのコピーが必要になる点もユニキャストと異なります [2]。</li>
+        <li><strong>RPF (Reverse Path Forwarding) チェック:</strong> マルチキャストのループを防ぐための最も重要なチェックです。「パケットの<strong>送信元IPアドレス</strong>へのルート上のインターフェースからパケットが到着したか」を確認します。これに合格しないパケットは破棄されます [3, 4]。</li>
+        <li><strong>配信ツリーの種類:</strong>
+            <ul>
+                <li><strong>最短パスツリー (SPT / Source Tree):</strong> 送信元をルート（根）とするツリー。表記は <code>(S, G)</code> [5]。</li>
+                <li><strong>共有ツリー (Shared Tree / Root-Path Tree):</strong> RPをルートとするツリー。表記は <code>(*, G)</code> [6]。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>2. PIM Dense Mode (PIM-DM)</h3>
+    <p>「ネットワーク上の全サブネットに受信者がいる」と想定し、最初に全ポートへトラフィックを転送（Flood）したあと、不要な経路を削る方式です [7, 8]。</p>
+    <ul>
+        <li><strong>Prune（プルーニング）:</strong> 下位に受信者がいない場合、上位ルーターに「送るのを止めてくれ」とメッセージを送り、ツリーからその枝を削除します [9, 10]。</li>
+        <li><strong>State Refresh:</strong> Prune状態を維持するためのメッセージ。これが途切れると3分後に再びFloodが発生します [11, 12]。</li>
+        <li><strong>Graft（グラフト）:</strong> 新たに受信者が現れた際、Prune状態のリンクを即座に復旧させるために使用します [13, 14]。</li>
+    </ul>
+
+    <h3>3. PIM Sparse Mode (PIM-SM)</h3>
+    <p>「明示的な要求がない限り転送しない」方式です。トラフィックの集約点となる <strong>RP (Rendezvous Point)</strong> が不可欠です [15, 16]。</p>
+    <ul>
+        <li><strong>ソースの登録プロセス:</strong> 送信元に近いルーターがパケットをユニキャスト（Registerメッセージ）でRPにカプセル化して送り、登録を行います [17, 18]。</li>
+        <li><strong>SPTスイッチオーバー:</strong> デフォルトでは、最初のパケットを共有ツリー（RP経由）で受け取った後、受信側ルーターは送信元へのより効率的な最短パス（SPT）へ自動的に切り替えます [19, 20]。</li>
+    </ul>
+
+    <h3>4. RP（Rendezvous Point）の選定と冗長化</h3>
+    <p>PIM-SMにおいて、ルーターがどのRPを使用するかを決定する方法は主に4つあります [21]。</p>
+    <table>
+        <tr><th>方法</th><th>特徴</th></tr>
+        <tr><td>スタティックRP</td><td>各ルーターに手動でRPのIPアドレスを設定 [22]。</td></tr>
+        <tr><td>Auto-RP</td><td>Cisco独自。Mapping AgentがRP情報を224.0.1.40で広報 [23, 24]。</td></tr>
+        <tr><td>BSR (Bootstrap Router)</td><td>標準規格。BSRメッセージを全PIMルーターへフラッディング [25, 26]。</td></tr>
+        <tr><td>Anycast RP</td><td>複数のRPに同一IPを付与し、IGPで最短のRPへルーティング。MSDPと併用 [27, 28]。</td></tr>
+    </table>
+
+    <h3>5. 高度なトピック</h3>
+    <ul>
+        <li><strong>MSDP (Multicast Source Discovery Protocol):</strong> 異なるPIMドメインのRP間で送信元情報を共有するためのプロトコル。TCP 639番ポートを使用します [29, 30]。</li>
+        <li><strong>SSM (Source-Specific Multicast):</strong> 受信者が特定のソースとグループのペア <code>(S, G)</code> を指定して参加する方式。RPが不要になり、アドレスの重複問題も解消されます [31, 32]。</li>
+        <li><strong>Bidirectional PIM:</strong> 多数の送信元と受信者がいる環境で、RPへの登録プロセスを簡略化し、スケーラビリティを向上させます [26, 33]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! PIM Sparse Mode の基本設定
+ip multicast-routing
+ip pim rp-address 10.1.10.3  ! スタティックRPの設定 [34]
+
+interface GigabitEthernet0/1
+ ip pim sparse-mode  ! インターフェースでの有効化 [35]
+
+! Auto-RP Mapping Agent の設定
+ip pim send-rp-discovery Loopback0 scope 16 [36]
+
+! MSDP ピアの設定
+ip msdp peer 172.16.1.1 [37]
+    </pre>
+</section>
+</body>
+</html>

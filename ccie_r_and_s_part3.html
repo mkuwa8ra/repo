@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CCIE 習得用テキスト：Part III IP Routing</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        h1 { border-bottom: 3px solid #005a9c; color: #005a9c; padding-bottom: 10px; }
+        h2 { border-left: 5px solid #005a9c; padding-left: 10px; background: #eef; margin-top: 30px; }
+        h3 { color: #d32f2f; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .citation { color: #666; font-size: 0.85em; vertical-align: super; margin-left: 2px; }
+        .important { font-weight: bold; color: #d32f2f; }
+        nav { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>CCIE 習得用学習テキスト：Part III IP Routing</h1>
+
+<nav>
+    <strong>【目次】</strong>
+    <ul>
+        <li><a href="#chapter6">Chapter 6: IP Forwarding (Routing)</a></li>
+        <li><a href="#chapter7">Chapter 7: EIGRP</a></li>
+        <li><a href="#chapter8">Chapter 8: OSPF</a></li>
+        <li><a href="#chapter9">Chapter 9: Redistribution & Troubleshooting</a></li>
+        <li><a href="#chapter10">Chapter 10: Fundamentals of BGP Operations</a></li>
+        <li><a href="#chapter11">Chapter 11: BGP Routing Policies</a></li>
+    </ul>
+</nav>
+
+<section id="chapter6">
+    <h2>Chapter 6: IP Forwarding (Routing)</h2>
+    <p>IP転送（ルーティング）は、パケットを受信し、次に送る場所を決定して転送するプロセスです [1]。これは「データプレーン」と呼ばれ、実際のユーザーデータの転送を扱います [2]。</p>
+
+    <h3>1. IP転送のロジックとスイッチングパス</h3>
+    <p>ルーター内部でのパケット処理には、主に以下の3つの方式（スイッチングパス）があります [3-5]。</p>
+    <ul>
+        <li><strong>プロセススイッチング:</strong> CPUがすべてのパケットを処理する最も低速な方式です [6]。</li>
+        <li><strong>ファストスイッチング:</strong> 最初のパケットのみプロセススイッチングし、結果をキャッシュに保存して以降のパケットを高速化します [4]。</li>
+        <li><strong>Cisco Express Forwarding (CEF):</strong> トポロジ変更時にあらかじめ転送テーブルを構築しておく最も効率的な方式です。現在のCiscoルーターのデフォルトです [5, 7]。</li>
+    </ul>
+
+    <p><strong>CEFの主要なテーブル:</strong></p>
+    <ul>
+        <li><strong>FIB (Forwarding Information Base):</strong> ルーティングテーブルに基づいて構築される転送用テーブル。mtrieという特殊な構造で高速検索を可能にします [7]。</li>
+        <li><strong>Adjacency Table (隣接テーブル):</strong> FIBエントリから参照され、転送に必要なレイヤ2ヘッダー情報（MACアドレスなど）を保持します [7, 8]。</li>
+    </ul>
+
+    <h3>2. クラスレスルーティング vs クラスフルルーティング</h3>
+    <p>ルーティングの判断は <code>ip classless</code> コマンドによって制御されます [9]。</p>
+    <ul>
+        <li><strong>ip classless (デフォルト):</strong> 宛先への最適なルートがない場合、デフォルトルートを使用して転送します [10]。</li>
+        <li><strong>no ip classless:</strong> 宛先のクラスフルネットワークがルーティングテーブルにあるが、特定のサブネットへのルートがない場合、デフォルトルートを無視してパケットを破棄します [10]。</li>
+    </ul>
+
+    <h3>3. マルチレイヤスイッチング (MLS)</h3>
+    <p>スイッチがレイヤ3の宛先アドレスに基づいて転送を判断することを指します [9]。</p>
+    <ul>
+        <li><strong>SVI (Switched Virtual Interface):</strong> VLANにIPアドレスを付与した仮想インターフェース [11]。</li>
+        <li><strong>ルーテッドポート:</strong> <code>no switchport</code> コマンドでレイヤ2機能を無効にし、IPアドレスを直接設定した物理ポート [12, 13]。</li>
+    </ul>
+
+    <h3>4. ポリシーベースルーティング (PBR)</h3>
+    <p>宛先IPアドレスだけでなく、送信元アドレスやプロトコル、パケットサイズなどに基づいて転送先を決定する機能です [14]。</p>
+    <ul>
+        <li><code>ip policy route-map</code> コマンドをインターフェースに適用します [14]。</li>
+        <li><strong>主な set コマンド:</strong>
+            <ul>
+                <li><code>set ip next-hop</code>: 指定したネクストホップへ転送 [15]。</li>
+                <li><code>set ip default next-hop</code>: ルーティングテーブルに一致するルートがない場合のみ適用 [15, 16]。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>5. Performance Routing (PfR) / OER</h3>
+    <p>ネットワークの遅延やジッター、パケット損失などの実際のパフォーマンスに基づいて最適なパスを選択する技術です [17, 18]。</p>
+    <ul>
+        <li><strong>Master Controller (MC):</strong> ポリシーを管理し、判断を下すルーター [19, 20]。</li>
+        <li><strong>Border Router (BR):</strong> 実際のトラフィックを監視・制御し、MCと通信するルーター [20]。</li>
+        <li>パッシブモニタリング（NetFlow）とアクティブモニタリング（IP SLA）の両方をサポートします [18]。</li>
+    </ul>
+
+    <h3>6. GREトンネル</h3>
+    <p>異なるネットワーク間でIPv6やCLNSなどのトラフィックをIPv4ネットワーク越しにカプセル化して運ぶ技術です [21, 22]。</p>
+
+    <h3>基本設定・確認コマンド例</h3>
+    <pre>
+! CEFの有効化
+ip cef
+
+! ルーテッドポートの設定
+interface gigabitethernet 0/1
+ no switchport
+ ip address 10.1.1.1 255.255.255.0
+
+! PBRの設定
+access-list 101 permit tcp any any eq telnet
+route-map PBR_MAP permit 10
+ match ip address 101
+ set ip next-hop 192.168.1.1
+interface fa0/0
+ ip policy route-map PBR_MAP
+
+! CEFの確認
+show ip cef
+show adjacency
+    </pre>
+</section>
+<section id="chapter7">
+    <h2>Chapter 7: EIGRP</h2>
+    <p>EIGRP (Enhanced Interior Gateway Routing Protocol) は、Cisco独自の拡張ディスタンスベクタプロトコルであり、高速な収束（Convergence）を実現するために <strong>DUAL (Diffusing Update Algorithm)</strong> を使用します [1, 2]。</p>
+
+    <h3>1. EIGRPの基本動作と隣接関係</h3>
+    <p>EIGRPは、トランスポート層プロトコルとして <strong>IPプロトコル番号 88</strong> を直接使用します [3]。</p>
+    <ul>
+        <li><strong>隣接関係（Adjacency）の確立条件:</strong> [4]
+            <ul>
+                <li>認証（Authentication）の設定が一致していること。</li>
+                <li>AS番号（Autonomous System Number）が一致していること。</li>
+                <li>Helloパケットの送信元IPが、受信インターフェースのプライマリサブネット内にあること。</li>
+                <li><strong>K値（K-values）</strong>が一致していること。</li>
+            </ul>
+        </li>
+        <li><strong>Hello/Holdタイマー:</strong> デフォルトはLANで5秒/15秒、低速なWANで60秒/180秒です [5]。なお、OSPFとは異なり、<strong>Hello/Holdタイマーが一致しなくても隣接関係を確立できます</strong> [5]。</li>
+        <li><strong>RTP (Reliable Transport Protocol):</strong> Update、Query、Replyメッセージの確実な配信を保証するために使用されます [6, 7]。</li>
+    </ul>
+
+    <h3>2. メトリックの計算とトポロジテーブル</h3>
+    <p>デフォルトでは <strong>帯域幅（Bandwidth）</strong> と <strong>遅延（Delay）</strong> を使用して計算されます [8, 9]。公式は <code>256 * ((10^7 / 最小帯域幅) + 合計遅延)</code> です [10]。</p>
+    <ul>
+        <li><strong>Successor (サクセサ):</strong> 宛先への最適なルート [11]。</li>
+        <li><strong>Feasible Successor (フィージブルサクセサ):</strong> バックアップルート。<strong>フィージビリティ条件（Feasibility Condition）</strong>を満たす必要があります [12, 13]。</li>
+        <li><strong>FD (Feasible Distance):</strong> 自ルーターから宛先までの最小メトリック（サクセサのメトリック） [11]。</li>
+        <li><strong>RD (Reported Distance):</strong> 隣接ルーターが通知してきた、そのルーターから宛先までのメトリック [12, 14]。</li>
+        <li><strong>フィージビリティ条件:</strong> 「<strong>RD < 現在のFD</strong>」であること。これにより、バックアップパスがループフリーであることが保証されます [12]。</li>
+    </ul>
+
+    <h3>3. 収束（Convergence）とクエリ</h3>
+    <p>サクセサルートが消失し、フィージブルサクセサが存在しない場合、ルートの状態は <strong>Passive</strong> から <strong>Active</strong> に変化します [15, 16]。</p>
+    <ul>
+        <li><strong>クエリ（Query）:</strong> 隣接ルーターに対して代替パスの有無を問い合わせるマルチキャストメッセージです [15, 17]。</li>
+        <li><strong>Stuck-in-Active (SIA):</strong> クエリに対する応答（Reply）が一定時間内に返ってこない状態。この場合、応答のない隣接関係がリセットされます [2]。</li>
+        <li><strong>クエリ範囲の限定:</strong> [18, 19]
+            <ul>
+                <li><strong>ルート集約 (Summarization):</strong> 集約ルートを持つルーターがクエリに対して即座に応答することで、それ以上の拡散を防ぎます。</li>
+                <li><strong>EIGRPスタブ (Stub):</strong> スタブルータにはクエリが送信されなくなります。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>4. 高度な機能と設定</h3>
+    <ul>
+        <li><strong>不等コストロードバランシング:</strong> <code>variance [値]</code> コマンドを使用します [20]。<strong>フィージブルサクセサのみ</strong>がルーティングテーブルに追加される点に注意してください [21]。</li>
+        <li><strong>認証:</strong> <strong>MD5</strong> のみをサポートしています（クリアテキスト認証は不可） [22]。設定には <strong>key chain</strong> を使用します [23]。</li>
+        <li><strong>Passive-interface:</strong> 設定したインターフェースでのHelloの送受信を停止し、隣接関係の確立を防ぎますが、そのサブネット自体は広報されます [24]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! EIGRPの起動とAS番号の設定
+router eigrp 1
+ network 172.16.0.0 0.0.255.255
+ no auto-summary
+
+! スタブの設定（接続ルートと集約ルートのみ広報）
+ eigrp stub connected summary
+
+! 不等コストロードバランシングの設定
+ variance 2
+
+! インターフェース単位のメトリック調整
+interface fastethernet 0/0
+ delay 10  ! 単位は10マイクロ秒
+    </pre>
+</section>
+<section id="chapter8">
+    <h2>Chapter 8: OSPF</h2>
+    <p>OSPF (Open Shortest Path First) は、リンクステートルーティングプロトコルであり、ネットワークのトポロジ情報を正確に把握して最短パスを計算します [1, 2]。</p>
+
+    <h3>1. OSPF データベース交換のプロセス</h3>
+    <p>OSPFルーターは、以下の手順で隣接関係を築き、リンクステートデータベース (LSDB) を同期させます [3]。</p>
+    <ul>
+        <li><strong>ルーターID (RID) の選定:</strong> 32ビットの識別子。1. 手動設定、2. ループバックの最高IP、3. 物理インターフェースの最高IPの順で決定されます [4, 5]。</li>
+        <li><strong>Hello プロセス:</strong> ネイバーの発見と維持に使用されます。Helloインターバル（デフォルト10秒/30秒）とDeadインターバル（デフォルト4倍）が一致する必要があります [6, 7]。</li>
+        <li><strong>DR/BDRの選定:</strong> マルチアクセスネットワーク（イーサネットなど）では、LSAの交換を効率化するために <strong>代表ルーター (DR)</strong> と <strong>バックアップ代表ルーター (BDR)</strong> が選出されます [8, 9]。
+            <ul>
+                <li>優先度（Priority）が最も高いルーターがDRになります。タイの場合はRIDが比較されます [10]。</li>
+            </ul>
+        </li>
+        <li><strong>状態遷移:</strong> Down → Init → 2-Way (ネイバー成立) → ExStart → Exchange → Loading → Full (完全隣接) [11, 12]。</li>
+    </ul>
+
+    <h3>2. OSPF ネットワークタイプ</h3>
+    <p>インターフェースのメディアに応じて動作が異なります [13, 14]。</p>
+    <table>
+        <tr><th>ネットワークタイプ</th><th>DR/BDR選定</th><th>Hello/Dead</th><th>ネイバー設定</th></tr>
+        <tr><td>Broadcast</td><td>あり</td><td>10 / 40</td><td>不要</td></tr>
+        <tr><td>Point-to-Point</td><td>なし</td><td>10 / 40</td><td>不要</td></tr>
+        <tr><td>Non-broadcast (NBMA)</td><td>あり</td><td>30 / 120</td><td>必要 (static)</td></tr>
+        <tr><td>Point-to-Multipoint</td><td>なし</td><td>30 / 120</td><td>不要</td></tr>
+    </table>
+
+    <h3>3. LSA タイプとエリア設計</h3>
+    <p>OSPFはLSA (Link State Advertisement) を使用して情報を広報します。エリア設計によって、どのLSAが流れるかが決まります [15, 16]。</p>
+    <ul>
+        <li><strong>Type 1 (Router LSA):</strong> すべてのルーターが自身のリンク情報をエリア内に生成します [16, 17]。</li>
+        <li><strong>Type 2 (Network LSA):</strong> DRがマルチアクセスセグメントの情報をエリア内に生成します [16, 18]。</li>
+        <li><strong>Type 3 (Summary LSA):</strong> <strong>エリア境界ルーター (ABR)</strong> が他のエリアのルート情報を要約して伝播します [16, 19]。</li>
+        <li><strong>Type 4 (ASBR Summary LSA):</strong> ASBRまでのパスを他エリアへ通知します [20, 21]。</li>
+        <li><strong>Type 5 (AS External LSA):</strong> <strong>AS境界ルーター (ASBR)</strong> が外部から再配送されたルートを広報します [20, 21]。</li>
+        <li><strong>Type 7 (NSSA External LSA):</strong> NSSAエリア内で外部ルートを広報するために使用されます [20, 22]。</li>
+    </ul>
+
+    <h3>4. スタブエリアの種類</h3>
+    <p>エリア内のLSDBのサイズを抑制するために使用されます [23, 24]。</p>
+    <table>
+        <tr><th>エリアタイプ</th><th>Type 5 阻止</th><th>Type 3 阻止</th><th>再配送 (Type 7)</th></tr>
+        <tr><td>Stub Area</td><td>Yes</td><td>No</td><td>No</td></tr>
+        <tr><td>Totally Stubby Area</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+        <tr><td>NSSA</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Totally NSSA</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+    </table>
+
+    <h3>5. メトリック計算と特殊機能</h3>
+    <ul>
+        <li><strong>コスト計算:</strong> デフォルトでは <code>10^8 / 帯域幅(bps)</code> です [25, 26]。100Mbps以上のリンクを区別するためには <code>auto-cost reference-bandwidth</code> で基準値を変更する必要があります [25, 26]。</li>
+        <li><strong>仮想リンク (Virtual Link):</strong> エリア0に直接接続できないエリアをバックボーンに論理接続します。Transitエリアを通過しますが、スタブエリアを通過させることはできません [27, 28]。</li>
+        <li><strong>認証:</strong> タイプ0 (なし)、タイプ1 (クリアテキスト)、タイプ2 (MD5) をサポートします [29]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! OSPFの起動とルーターIDの設定
+router ospf 1
+ router-id 1.1.1.1
+ network 10.1.1.0 0.0.0.255 area 0
+ network 10.2.1.0 0.0.0.255 area 1
+
+! 参照帯域幅の変更 (10Gbps基準)
+ auto-cost reference-bandwidth 10000
+
+! 完全スタブエリアの設定 (ABR側)
+ area 1 stub no-summary
+
+! インターフェースでのコスト設定
+interface fastethernet 0/0
+ ip ospf cost 10
+
+! 仮想リンクの設定 (ABR間)
+router ospf 1
+ area 1 virtual-link 2.2.2.2  ! 相手のRIDを指定
+    </pre>
+</section>
+<section id="chapter9">
+    <h2>Chapter 9: IGP Route Redistribution, Route Summarization, Default Routing, and Troubleshooting</h2>
+    <p>この章では、複数のIGP（内部ゲートウェイプロトコル）を併用する際に不可欠な再配送（Redistribution）、ルート集約、デフォルトルーティング、および複雑なレイヤ3のトラブルシューティングについて学びます [1]。</p>
+
+    <h3>1. ルート制御のツール：Route Map と Prefix List</h3>
+    <p>再配送の際には、特定のルートのみを許可したり、属性を変更したりするためのツールが必要になります [2]。</p>
+    <ul>
+        <li><strong>Route Map:</strong> <code>match</code>コマンドで条件を指定し、<code>set</code>コマンドでメトリックやタグなどの属性を変更します [2, 3]。末尾には「暗黙の拒否（deny all）」が存在するため、許可しないルートを最後にパスさせるには明示的な<code>permit</code>節が必要です [4]。</li>
+        <li><strong>IP Prefix List:</strong> プレフィックス（ネットワークアドレス）とその長さ（サブネットマスク）の両方を効率的に照合できます [5, 6]。<code>ge</code>（〜以上）や<code>le</code>（〜以下）を使用することで、柔軟な範囲指定が可能です [6, 7]。</li>
+    </ul>
+
+    <h3>2. ルート再配送 (Route Redistribution)</h3>
+    <p>あるルーティングプロトコルの情報を別のプロトコルへ注入するプロセスです [8]。</p>
+    <ul>
+        <li><strong>基本ロジック:</strong> 再配送を行うルーターは、自身のルーティングテーブルにあるルート、または<code>network</code>コマンドで一致した接続サブネットを対象とします [9]。</li>
+        <li><strong>シードメトリック (Seed Metric):</strong> プロトコルごとにメトリックの単位が異なるため、再配送時には初期メトリックの設定が必要です [10]。
+            <ul>
+                <li>RIP/EIGRP: デフォルトでは無限大（到達不能）となるため、明示的な設定が必須です [10]。</li>
+                <li>OSPF: 他のIGPからはデフォルトで20、BGPからは1が割り当てられます [10, 11]。</li>
+            </ul>
+        </li>
+        <li><strong>アドミニストレーティブディスタンス (AD):</strong> 複数のプロトコルから同じルートを学習した場合、AD値が低い方が優先されます（Connected: 0, EIGRP: 90, OSPF: 110, RIP: 120 など） [12, 13]。</li>
+    </ul>
+
+    <h3>3. ルート集約 (Route Summarization)</h3>
+    <p>複数の個別ルートを1つの大きなプレフィックスにまとめ、ルーティングテーブルのサイズを削減します [14, 15]。</p>
+    <ul>
+        <li>集約ルートのメトリックは、通常、構成するサブネットの中で最小のものが採用されます [15]。</li>
+        <li><strong>Null0 へのルーティング:</strong> ループ防止のため、集約を行うルーター自身には集約ルートを宛先とする <code>Null0</code> へのルートが自動作成されます [15, 16]。</li>
+    </ul>
+
+    <h3>4. デフォルトルートの広報</h3>
+    <p>各プロトコルでデフォルトルート（0.0.0.0/0）を広報する方法は異なります [17]。</p>
+    <table>
+        <tr><th>プロトコル</th><th>主な方法</th></tr>
+        <tr><td>RIP</td><td><code>default-information originate</code>、<code>redistribute static</code>、<code>ip default-network</code> [17, 18]</td></tr>
+        <tr><td>EIGRP</td><td><code>redistribute static</code>、<code>ip default-network</code>、ルート集約 [17, 19, 20]</td></tr>
+        <tr><td>OSPF</td><td><code>default-information originate</code>（<code>always</code>オプションで自身のテーブルに無くても広報可能） [17, 21, 22]</td></tr>
+    </table>
+
+    <h3>5. レイヤ3 トラブルシューティング</h3>
+    <p>複雑なルーティングの問題を解決するには、体系的なアプローチと適切なコマンドの知識が求められます [23]。</p>
+    <ul>
+        <li><strong>確認コマンド:</strong>
+            <ul>
+                <li><code>show ip protocols</code>: 動作中のプロトコル設定、フィルタ、AD値などを確認 [24]。</li>
+                <li><code>show ip route [prefix]</code>: 特定のルートのネクストホップや学習ソースの詳細を表示 [25]。</li>
+                <li><code>debug ip routing</code>: ルーティングテーブルへの追加・削除をリアルタイムで追跡 [26, 27]。</li>
+            </ul>
+        </li>
+        <li><strong>ループの検知:</strong> <code>ping</code>や<code>traceroute</code>での異常な挙動や、<code>debug</code>での頻繁なルートの学習と削除（フラッピング）が最初の手がかりになります [28, 29]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! OSPFへの再配送（サブネットを含む）
+router ospf 1
+ redistribute eigrp 100 subnets metric 50
+
+! EIGRPへの再配送とシードメトリックの設定
+router eigrp 100
+ redistribute ospf 1 metric 10000 100 255 1 1500
+
+! OSPFでのデフォルトルート強制広報
+router ospf 1
+ default-information originate always
+
+! 特定のルートのみを再配送するRoute Map
+access-list 10 permit 10.1.1.0 0.0.0.255
+route-map MY_FILTER permit 10
+ match ip address 10
+ set metric 100
+    </pre>
+</section>
+<section id="chapter10">
+    <h2>Chapter 10: Fundamentals of BGP Operations</h2>
+    <p>BGP (Border Gateway Protocol) はインターネットの基盤となるパスベクタプロトコルであり、自律システム (AS) 間でルーティング情報を交換するために使用されます。本章では、ネイバー関係の構築、BGPテーブルへのルート注入、およびiBGPの制約を克服する技術について学びます。</p>
+
+    <h3>1. BGP ネイバー関係の構築</h3>
+    <p>BGPはトランスポート層に <strong>TCP ポート 179</strong> を使用して信頼性の高い通信を行います [1]。ネイバー状態が <strong>Established</strong> に達して初めてルートの更新（Update）が可能になります [2, 3]。</p>
+    <ul>
+        <li><strong>iBGP (Internal BGP):</strong> 同一AS内のルーター間でのピアリング [4]。
+            <ul>
+                <li>デフォルトでは、iBGPで学習したルートを他のiBGPピアへ転送しません（スプリットホライズン）。これを解決するにはフルメッシュ構成、ルートリフレクタ、またはコンフェデレーションが必要です [5, 6]。</li>
+            </ul>
+        </li>
+        <li><strong>eBGP (External BGP):</strong> 異なるAS間のルーター間でのピアリング [4]。
+            <ul>
+                <li>デフォルトの <strong>TTL は 1</strong> です。ループバックアドレスでピアリングを行う場合は <code>ebgp-multihop</code> 設定が必要です [7]。</li>
+            </ul>
+        </li>
+        <li><strong>主要なメッセージタイプ:</strong> Open（開始）、Keepalive（維持）、Update（更新）、Notification（エラー通知） [8, 9]。</li>
+    </ul>
+
+    <h3>2. BGP テーブルへのルート注入</h3>
+    <p>BGPテーブルにルートを入れるには、主に以下の方法があります。</p>
+    <ul>
+        <li><strong>network コマンド:</strong> IPルーティングテーブル（RIB）に <strong>完全に一致するプレフィックスとマスク</strong> のルートが存在する場合のみ、BGPテーブルに注入されます [10, 11]。</li>
+        <li><strong>Redistribution (再配送):</strong> IGPやスタティックルートをBGPに注入します。ORIGIN属性は <strong>Incomplete (?)</strong> となります [12-14]。</li>
+        <li><strong>aggregate-address コマンド:</strong> 手動のルート集約を行います。<code>as-set</code> オプションを使用すると、集約前のルートに含まれていたAS番号情報を保持し、ループを防止できます [15-17]。</li>
+    </ul>
+
+    <h3>3. パス属性 (Path Attributes)</h3>
+    <p>BGPはメトリックの代わりに複数の属性を使用してベストパスを決定します [18]。</p>
+    <ul>
+        <li><strong>AS_PATH:</strong> ルートが通過したAS番号のリスト。ループ検知に使用され、自AS番号が含まれるアップデートは破棄されます [19, 20]。</li>
+        <li><strong>NEXT_HOP:</strong> 宛先へ到達するためのネクストホップIP。eBGPピアへ送る際は自身のIPに変更されますが、iBGPピアへ送る際はデフォルトで <strong>変更されません</strong>（必要に応じて <code>next-hop-self</code> を使用します） [21-23]。</li>
+        <li><strong>ORIGIN:</strong> ルートの起源。IGP (i)、EGP (e)、Incomplete (?) の3種類があります [13, 24]。</li>
+    </ul>
+
+    <h3>4. スケーラビリティ：ルートリフレクタとコンフェデレーション</h3>
+    <p>iBGPのフルメッシュ要件（ピア数 N*(N-1)/2）による負荷を軽減するための技術です [6]。</p>
+    <ul>
+        <li><strong>ルートリフレクタ (Route Reflector):</strong> 特定のルーター（RR）がクライアントから受け取ったルートを他のピアに「反射」することを許可します [25, 26]。
+            <ul>
+                <li>ループ防止のため <code>CLUSTER_LIST</code> と <code>ORIGINATOR_ID</code> 属性を使用します [27]。</li>
+            </ul>
+        </li>
+        <li><strong>コンフェデレーション (Confederation):</strong> 1つの大きなASを小さなサブASに分割します [28, 29]。
+            <ul>
+                <li>外部からは1つのASとして見えますが、内部では eBGPに近い動作（AS_CONFED_SEQの使用）をします [20, 30, 31]。</li>
+            </ul>
+        </li>
+        <li><strong>同期 (Synchronization):</strong> IGPがそのルートを知るまでBGPルートを有効にしない古いルール。現在は <code>no synchronization</code> が一般的です [32]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! 基本的なBGP設定とネイバー
+router bgp 123
+ neighbor 1.1.1.1 remote-as 123
+ neighbor 1.1.1.1 update-source Loopback0
+ neighbor 1.1.1.1 next-hop-self
+ !
+ address-family vpnv4
+  neighbor 1.1.1.1 activate
+  neighbor 1.1.1.1 send-community
+ exit-address-family
+
+! ルート集約（AS_SET情報を含む）
+ aggregate-address 10.0.0.0 255.0.0.0 as-set summary-only
+
+! ルートリフレクタの設定（サーバ側）
+ neighbor 2.2.2.2 route-reflector-client
+    </pre>
+</section>
+<section id="chapter11">
+    <h2>Chapter 11: BGP Routing Policies</h2>
+    <p>BGPルーティングポリシーは、ルートのフィルタリングと、どのルートを「ベストパス」として選択するかを制御するためのルールを定義します [1]。本章では、フィルタリングツール、AS_PATHの正規表現、BGPベストパス決定プロセス、およびコミュニティ属性について詳細に学びます。</p>
+
+    <h3>1. ルートフィルタリングツール</h3>
+    <p>BGPアップデートは、NLRI（ネットワーク情報）またはパス属性に基づいてフィルタリングできます [2]。</p>
+    <ul>
+        <li><strong>NLRIフィルタリング:</strong> 分配リスト（ACLを使用）、プレフィックスリスト、ルートマップを使用して、特定のネットワークプレフィックスを許可または拒否します [3, 4]。</li>
+        <li><strong>AS_PATHフィルタリング:</strong> <strong>正規表現 (Regular Expressions)</strong> を使用してAS_PATH属性の内容を照合します [5, 6]。<code>ip as-path access-list</code>コマンドで定義し、<code>neighbor filter-list</code>で適用します [7, 8]。</li>
+        <li><strong>ソフト再構成 (Soft Reconfiguration):</strong> ネイバー接続をリセットせずにルーティングポリシーを再適用する機能です [9]。<code>clear ip bgp [address] soft</code>コマンドを使用します [9]。</li>
+    </ul>
+
+    <h3>2. AS_PATHの正規表現 (Regex)</h3>
+    <p>AS_PATHフィルタでは特殊な文字（メタキャラクタ）を使用してパターンをマッチングさせます [10]。</p>
+    <table>
+        <tr><th>メタキャラクタ</th><th>意味</th></tr>
+        <tr><td><code>^</code></td><td>行の先頭（最初のAS番号など）[10]</td></tr>
+        <tr><td><code>$</code></td><td>行の末尾 [10]</td></tr>
+        <tr><td><code>_</code></td><td>任意の区切り文字（スペース、カンマ、先頭、末尾など）[10]</td></tr>
+        <tr><td><code>.*</code></td><td>すべてのAS_PATH（「すべて許可」によく使われる）[11]</td></tr>
+        <tr><td><code>^$</code></td><td>空のAS_PATH（自AS内で生成されたルート）[12]</td></tr>
+    </table>
+
+    <h3>3. BGPベストパス決定プロセス</h3>
+    <p>BGPは、複数の候補ルートがある場合、以下の優先順位に従って1つのベストパスを決定します [13, 14]。</p>
+    <ol start="0">
+        <li><strong>NEXT_HOPの到達性:</strong> ネクストホップIPアドレスがルーティングテーブル上で到達可能であること [15, 16]。</li>
+        <li><strong>Weight:</strong> Cisco独自属性。値が大きい方を優先（ルーター内のみ有効）[15, 17]。</li>
+        <li><strong>LOCAL_PREF:</strong> AS全体で共有される優先度。値が大きい方を優先 [18, 19]。</li>
+        <li><strong>ローカル注入ルート:</strong> 自身で注入したルート（<code>network</code>や<code>redistribute</code>）を優先 [20, 21]。</li>
+        <li><strong>AS_PATH長:</strong> AS番号のリストが短い方を優先 [21, 22]。</li>
+        <li><strong>ORIGIN PA:</strong> IGP(i) &gt; EGP(e) &gt; Incomplete(?) の順で優先 [23, 24]。</li>
+        <li><strong>MED (Multi-Exit Discriminator):</strong> 隣接ASへの出口を指定。値が小さい方を優先 [23, 25]。</li>
+        <li><strong>ネイバータイプ:</strong> iBGPよりeBGP経由のルートを優先 [14, 26]。</li>
+        <li><strong>IGPメトリック:</strong> NEXT_HOPへのIGPメトリックが最小のパスを優先 [26, 27]。</li>
+        <li><strong>BGP Router ID / Neighbor ID:</strong> 最終的なタイブレーカーとして、最小のRIDを持つルーターからのルートを選択 [28-30]。</li>
+    </ol>
+
+    <h3>4. BGPコミュニティ属性</h3>
+    <p>ルートをグループ化し、ポリシーを適用しやすくするための属性です [31]。コミュニティ属性は、遠隔のASにあるルーターにポリシー情報を伝える強力な手段となります [31]。</p>
+    <ul>
+        <li><strong>Well-knownコミュニティ:</strong>
+            <ul>
+                <li><strong>NO_EXPORT:</strong> 外部AS（eBGPピア）にルートを広報しない [32]。</li>
+                <li><strong>NO_ADVERTISE:</strong> 他のどのBGPピアにもルートを広報しない [33]。</li>
+                <li><strong>LOCAL_AS:</strong> コンフェデレーション外に広報しない [33]。</li>
+            </ul>
+        </li>
+        <li><strong>設定:</strong> ルートマップの<code>set community</code>コマンドで値を付与し、<code>neighbor send-community</code>コマンドで属性を送信します [34, 35]。</li>
+    </ul>
+
+    <h3>基本設定・確認コマンド例</h3>
+    <pre>
+! AS_PATHフィルタの設定（AS 1から始まり、AS 44で終わるパスを拒否）
+ip as-path access-list 34 deny ^1_.*_44$
+ip as-path access-list 34 permit .*
+router bgp 123
+ neighbor 10.1.34.3 filter-list 34 out
+
+! LOCAL_PREFを200に設定するルートマップ
+route-map SET_LP permit 10
+ match ip address prefix-list MY_NET
+ set local-preference 200
+
+! コミュニティ属性の付与と送信
+router bgp 123
+ neighbor 10.1.1.1 route-map SEND_COMM out
+ neighbor 10.1.1.1 send-community
+route-map SEND_COMM permit 10
+ set community no-export
+
+! ベストパス選択の詳細確認
+show ip bgp [prefix]
+    </pre>
+</section>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CCIE 習得用テキスト：Part VIII MPLS</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        h1 { border-bottom: 3px solid #00796b; color: #00796b; padding-bottom: 10px; }
+        h2 { border-left: 5px solid #00796b; padding-left: 10px; background: #e0f2f1; margin-top: 30px; }
+        h3 { color: #c62828; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .citation { color: #666; font-size: 0.85em; vertical-align: super; margin-left: 2px; }
+        .important { font-weight: bold; color: #d32f2f; }
+        nav { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>CCIE 習得用学習テキスト：Part VIII MPLS</h1>
+
+<nav>
+    <strong>【目次】</strong>
+    <ul>
+        <li><a href="#chapter19">Chapter 19: Multiprotocol Label Switching</a></li>
+    </ul>
+</nav>
+
+<section id="chapter19">
+    <h2>Chapter 19: Multiprotocol Label Switching</h2>
+    <p>MPLSは、宛先IPアドレスではなく「ラベル」に基づいてパケットを転送する技術です。これにより、トラフィックエンジニアリング、QoS、VPNなどの高度なサービスを効率的に提供できます [1]。</p>
+
+    <h3>1. MPLS ユニキャスト IP 転送</h3>
+    <h4>1.1 データプレーン：FIB と LFIB</h4>
+    <p>MPLSルーター（LSR: Label Switch Router）は、パケットの状態に応じて2つの転送テーブルを使い分けます [1]。</p>
+    <ul>
+        <li><strong>FIB (Forwarding Information Base):</strong> ラベルのないパケットを受信した際に使用します。宛先IPに基づき、ラベルを付与（Push）して転送します [1]。</li>
+        <li><strong>LFIB (Label Forwarding Information Base):</strong> ラベル付きパケットを受信した際に使用します。ラベルの付け替え（Swap）や除去（Pop）を行います [1]。</li>
+    </ul>
+
+    <h4>1.2 MPLS ヘッダーと TTL</h4>
+    <ul>
+        <li><strong>ヘッダー構造:</strong> 20ビットのラベル、3ビットのEXP（QoS用）、1ビットのS（スタックの底を示す）、8ビットのTTLで構成されます [1]。</li>
+        <li><strong>TTL 伝播:</strong> デフォルトではIPのTTLがMPLSラベルにコピーされます。これを無効にすると、MPLS内部のルーターが <code>traceroute</code> で隠蔽されます [1]。</li>
+    </ul>
+
+    <h4>1.3 コントロールプレーン：LDP</h4>
+    <p><strong>LDP (Label Distribution Protocol)</strong> は、ルーター間で「どのIPプレフィックスにどのラベルを割り当てたか」を共有します [2]。</p>
+    <ul>
+        <li><strong>LIB (Label Information Base):</strong> LDPで学習したすべてのラベル情報を保持するデータベースです。ここから最適な経路がLFIBへ反映されます [2]。</li>
+    </ul>
+
+    <h3>2. MPLS VPN</h3>
+    <p>MPLS VPNは、サービスプロバイダーのネットワーク上で顧客ごとに独立したルーティング環境を提供します。複数の顧客が同じプライベートIP（10.0.0.0など）を使用していても、衝突することなく通信可能です [2]。</p>
+
+    <h4>2.1 主要なコンポーネント</h4>
+    <ul>
+        <li><strong>VRF (Virtual Routing and Forwarding):</strong> ルーター内部で顧客ごとに独立した仮想的なルーティングテーブルです [2]。</li>
+        <li><strong>RD (Route Distinguisher):</strong> 重複するIPv4アドレスをグローバルでユニークな <strong>VPNv4アドレス</strong>（64bit RD + 32bit IPv4）に変換するための識別子です [2]。</li>
+        <li><strong>RT (Route Target):</strong> どのVRFにどのルートをインポート/エクスポートするかを制御するBGP拡張コミュニティ属性です [2]。</li>
+    </ul>
+
+    <h4>2.2 データプレーン：2つのラベル</h4>
+    <p>MPLS VPNではパケットに2層のラベルをスタックします [3]。</p>
+    <ul>
+        <li><strong>外側ラベル (IGPラベル):</strong> 宛先側のPEルーターまでパケットを届けるために使用されます [3]。</li>
+        <li><strong>内側ラベル (VPNラベル):</strong> 宛先PEにおいて、どのVRF（顧客）へパケットを渡すべきかを識別するために使用されます [3]。</li>
+        <li><strong>PHP (Penultimate Hop Popping):</strong> 宛先PEの負荷を軽減するため、その1つ手前のルーターで外側ラベルを除去する機能です [3]。</li>
+    </ul>
+
+    <h3>3. VRF Lite (Multi-VRF CE)</h3>
+    <p>MPLSそのものを使用せずに、ルーター内で複数のVRFを構成してルーティングテーブルを分離する技術です。企業内でのネットワーク分離などに利用されます [3]。</p>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! MPLS転送の有効化
+ip cef
+mpls ip
+mpls label protocol ldp
+
+! VRFの作成と設定
+ip vrf Cust-A
+ rd 1:111
+ route-target export 1:100
+ route-target import 1:100
+
+! インターフェースへの適用
+interface GigabitEthernet0/1
+ ip vrf forwarding Cust-A
+ ip address 192.168.1.1 255.255.255.0
+
+! MP-BGPの設定（PEルーター間）
+router bgp 65001
+ neighbor 2.2.2.2 remote-as 65001
+ address-family vpnv4
+  neighbor 2.2.2.2 activate
+  neighbor 2.2.2.2 send-community extended
+    </pre>
+</section>
+
+</body>
+</html>

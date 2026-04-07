@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CCIE 習得用テキスト：Part VII Security</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        h1 { border-bottom: 3px solid #d32f2f; color: #d32f2f; padding-bottom: 10px; }
+        h2 { border-left: 5px solid #d32f2f; padding-left: 10px; background: #ffebee; margin-top: 30px; }
+        h3 { color: #005a9c; border-bottom: 1px solid #ccc; margin-top: 20px; }
+        code { background-color: #eee; padding: 2px 4px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        pre { background-color: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .citation { color: #666; font-size: 0.85em; vertical-align: super; margin-left: 2px; }
+        .important { font-weight: bold; color: #d32f2f; }
+        nav { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>CCIE 習得用学習テキスト：Part VII Security</h1>
+
+<nav>
+    <strong>【目次】</strong>
+    <ul>
+        <li><a href="#chapter18">Chapter 18: Security</a></li>
+    </ul>
+</nav>
+
+<section id="chapter18">
+    <h2>Chapter 18: Security</h2>
+    <p>ネットワークセキュリティは、デバイスへのアクセス制御（管理プレーン）、スイッチ内でのトラフィック保護（レイヤ2）、およびルーティングやファイアウォールによる制御（レイヤ3）の多層防御によって構築されます [1]。</p>
+
+    <h3>1. デバイスアクセスとAAA</h3>
+    <ul>
+        <li><strong>パスワード保護:</strong> 
+            <ul>
+                <li><code>service password-encryption</code>: 設定内の平文パスワードを「タイプ7」で暗号化しますが、これは比較的脆弱です [2, 3]。</li>
+                <li><code>enable secret</code>: MD5ハッシュを使用してパスワードを保存するため、より安全です [4]。</li>
+            </ul>
+        </li>
+        <li><strong>SSH (Secure Shell):</strong> Telnetの代替として、管理セッションを暗号化します。設定にはホスト名、ドメイン名、RSAキーの生成が必要です [5, 6]。</li>
+        <li><strong>AAA (Authentication, Authorization, and Accounting):</strong>
+            <ul>
+                <li><strong>TACACS+:</strong> TCPポート49を使用。パケットペイロード全体を暗号化し、コマンド単位の認可に優れています [7, 8]。</li>
+                <li><strong>RADIUS:</strong> UDPポート1812/1645を使用。パスワードのみを暗号化します [8]。</li>
+                <li><strong>メソッドリスト:</strong> 複数の認証手段（RADIUSサーバー、ローカルDB、パスワードなしなど）を順番に試行するように構成できます [9, 10]。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>2. レイヤ2 セキュリティ (スイッチセキュリティ)</h3>
+    <p>キャンパスネットワーク内のポートを保護するための主要な機能です [11]。</p>
+    <ul>
+        <li><strong>ポートセキュリティ:</strong> MACアドレスの最大数を制限し、不正なMACからの通信を遮断します。「スティッキー（Sticky）」学習により、動的に学習したアドレスを構成に保存可能です [12, 13]。</li>
+        <li><strong>DHCPスヌーピング:</strong> 信頼できないポートからの不正なDHCPサーバーメッセージを遮断し、IP/MACのバインディングデータベースを構築します [14, 15]。</li>
+        <li><strong>Dynamic ARP Inspection (DAI):</strong> DHCPスヌーピングのデータベースを使用して、不正なARPメッセージ（中間者攻撃）をフィルタリングします [16, 17]。</li>
+        <li><strong>IP Source Guard:</strong> 送信元IPアドレスをスヌーピングデータベースと照合し、IPスプーフィングを防ぎます [18]。</li>
+        <li><strong>IEEE 802.1X:</strong> EAPプロトコルを使用してポートベースのユーザー認証を行います。サプリカント（端末）、オーセンティケータ（スイッチ）、認証サーバー（RADIUS）の3要素で構成されます [19, 20]。</li>
+    </ul>
+
+    <h3>3. レイヤ3 セキュリティ (ルーターセキュリティ)</h3>
+    <ul>
+        <li><strong>uRPF (Unicast Reverse Path Forwarding):</strong> 受信パケットの送信元IPへのルートが受信インターフェースと一致するかを確認し、スプーフィングされたパケットを破棄します（厳密モードと緩和モードがあります） [21, 22]。</li>
+        <li><strong>TCP Intercept:</strong> TCP SYNフラッド攻撃からサーバーを保護します。ルーターがコネクション要求を監視またはプロキシとして代行します [6, 23]。</li>
+        <li><strong>ファイアウォール機能:</strong>
+            <ul>
+                <li><strong>CBAC (Classic IOS Firewall):</strong> ステートフルインスペクションを行い、内部から開始されたセッションに対する戻りトラフィックを動的に許可します [24, 25]。</li>
+                <li><strong>Zone-Based Firewall (ZFW):</strong> インターフェースを「ゾーン」に分割し、ゾーンペアに対してポリシーを適用する現代的な手法です [26, 27]。</li>
+            </ul>
+        </li>
+        <li><strong>CoPP (Control Plane Policing):</strong> ルーターのCPU（コントロールプレーン）宛のトラフィックを制限し、DoS攻撃による過負荷から保護します [28, 29]。</li>
+    </ul>
+
+    <h3>基本設定コマンド例</h3>
+    <pre>
+! AAAの設定
+aaa new-model
+aaa authentication login default group tacacs+ local
+tacacs-server host 10.1.1.100 key cisco_key
+
+! ポートセキュリティの設定
+interface fa0/1
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+
+! uRPFの設定
+interface gig0/1
+ ipv6 verify unicast source reachable-via rx
+
+! ゾーンベースファイアウォール（ゾーン定義）
+zone security INSIDE
+zone security OUTSIDE
+zone-pair security IN-TO-OUT source INSIDE destination OUTSIDE
+    </pre>
+</section>
+
+</body>
+</html>

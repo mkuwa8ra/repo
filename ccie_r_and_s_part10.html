@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CCIE 習得用テキスト：Part X Appendixes</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        h1 { border-bottom: 3px solid #455a64; color: #455a64; padding-bottom: 10px; }
+        h2 { border-left: 5px solid #455a64; padding-left: 10px; background: #eceff1; margin-top: 30px; }
+        h3 { color: #d32f2f; border-bottom: 1px solid #ccc; margin-top: 20px; padding-bottom: 5px; }
+        .answer-block { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .q-num { font-weight: bold; color: #005a9c; margin-right: 10px; }
+        .explanation { font-size: 0.95em; color: #555; margin-top: 5px; display: block; }
+        nav { background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 20px; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>CCIE 習得用学習テキスト：Part X Appendixes</h1>
+
+<nav>
+    <strong>【目次】</strong>
+    <ul>
+        <li><a href="#appendixA">Appendix A: Answers to the “Do I Know This Already?” Quizzes</a></li>
+        <li><a href="#appendixB">Appendix B: Decimal to Binary Conversion Table</a></li>
+        <li><a href="#appendixC">Appendix C: CCIE Exam Updates</a></li>
+    </ul>
+</nav>
+
+<section id="appendixA">
+    <h2>Appendix A: Answers to the “Do I Know This Already?” Quizzes</h2>
+    <p>各章の冒頭にあるクイズの解答と、その根拠となる解説をまとめています。</p>
+
+    <h3>Chapter 1: Ethernet Basics</h3>
+    <div class="answer-block">
+        <ul>
+            <li><span class="q-num">1.</span> C, E [1]</li>
+            <li><span class="q-num">2.</span> A [1]</li>
+            <li><span class="q-num">3.</span> C <span class="explanation">Ciscoスイッチポートで速度またはデュプレックスのみが設定されている場合、設定されていない方のネゴシエーションのためにFLP（Fast Link Pulses）が引き続き使用されます。</span> [1]</li>
+            <li><span class="q-num">4.</span> B, C <span class="explanation">10/100Mbpsポートは、オートネゴシエーションに失敗した場合、デフォルトで半二重（half duplex）を使用します。</span> [1]</li>
+            <li><span class="q-num">5.</span> C, D <span class="explanation">半二重スイッチはループバック回路を有効にしたままにするため、自身が送信中にフレームを受信すると、誤って衝突（Collision）を検出します。</span> [2]</li>
+            <li><span class="q-num">6.</span> B, C [2]</li>
+            <li><span class="q-num">7.</span> B [2]</li>
+            <li><span class="q-num">8.</span> A, B, D [2]</li>
+            <li><span class="q-num">9.</span> C [2]</li>
+            <li><span class="q-num">10.</span> C [2]</li>
+        </ul>
+    </div>
+
+    <h3>Chapter 2: Virtual LANs and VLAN Trunking</h3>
+    <div class="answer-block">
+        <ul>
+            <li><span class="q-num">1.</span> A <span class="explanation"><code>switchport access vlan 28</code>コマンドを実行すると、VLANが存在しない場合は自動的に作成されます。</span> [2]</li>
+            <li><span class="q-num">2.</span> A, B <span class="explanation">プライベートVLANの主な動機は、LANセキュリティの向上とIPサブネットの節約です。</span> [2]</li>
+            <li><span class="q-num">3.</span> C <span class="explanation">VTPプルーニングは標準範囲のVLANにのみ機能します。VLAN 1や1002-1005は削除できません。</span> [3]</li>
+            <li><span class="q-num">4.</span> B <span class="explanation">VTPクライアントであっても、既存のサーバーより高いリビジョン番号を持っていれば、ドメイン内の全スイッチのVLAN情報を上書きしてしまいます。</span> [3]</li>
+            <li><span class="q-num">5.</span> B [4]</li>
+            <li><span class="q-num">6.</span> A <span class="explanation">ネイティブVLAN（デフォルトでVLAN 1）を通過するフレームに802.1Qタグは追加されません。</span> [4]</li>
+            <li><span class="q-num">7.</span> A, B <span class="explanation">一方が<code>nonegotiate</code>設定の場合、他方は静的なトランク設定が必要です。</span> [4]</li>
+            <li><span class="q-num">8.</span> A, B, C [5]</li>
+            <li><span class="q-num">9.</span> A, C, D [5]</li>
+            <li><span class="q-num">10.</span> A [5]</li>
+        </ul>
+    </div>
+
+    <h3>Chapter 3: Spanning Tree Protocol</h3>
+    <div class="answer-block">
+        <ul>
+            <li><span class="q-num">1.</span> B <span class="explanation">Maxageタイマーが満了するまで、ルートへの接続が失われたとは判断されません。</span> [5]</li>
+            <li><span class="q-num">2.</span> C <span class="explanation">TCNフラグ付きのHelloを受信すると、スイッチはForward Delayタイマーに基づいてCAM（MACテーブル）エントリを短時間でタイムアウトさせます。</span> [6]</li>
+            <li><span class="q-num">3.</span> A, C <span class="explanation">RSTP/MSTは、Helloの3倍の時間待機してから動作を開始します。</span> [6]</li>
+            <li><span class="q-num">4.</span> B, C [6]</li>
+            <li><span class="q-num">5.</span> C <span class="explanation">TCN BPDUの目的は、全スイッチにCAMのフラッシュ（再学習）を促すための短いタイマーを使用させることです。</span> [6]</li>
+            <li><span class="q-num">6.</span> D <span class="explanation">4つのセグメントのうち、一方が全ポートDP、他方が1つのみRPとなるため、計5つがForwardingになります。</span> [7]</li>
+            <li><span class="q-num">7.</span> A [8]</li>
+            <li><span class="q-num">8.</span> C, D, F <span class="explanation">802.1w RSTPの状態は、Forwarding, Learning, Discardingの3つです。</span> [8]</li>
+            <li><span class="q-num">9.</span> D, E [8]</li>
+            <li><span class="q-num">10.</span> B <span class="explanation">UDLDはレイヤ2のメッセージ交換により、物理的な片方向リンクを検知して遮断します。</span> [9]</li>
+            <li><span class="q-num">11.</span> B [9]</li>
+        </ul>
+    </div>
+
+    <h3>Chapter 4: IP Addressing</h3>
+    <div class="answer-block">
+        <ul>
+            <li><span class="q-num">1.</span> D [9]</li>
+            <li><span class="q-num">2.</span> C <span class="explanation">10.1.0.0/21は10.1.0.0～10.1.7.255を含み、提示された4つのサブネットをすべてカバーする最小の集約ルートです。</span> [9]</li>
+            <li><span class="q-num">3.</span> D [10]</li>
+            <li><span class="q-num">4.</span> A, D <span class="explanation">10.22.21.128/26（範囲: .128-.191）は、10.22.20.0/23（範囲: .20.0-.21.255）の中に含まれており重複しています。</span> [11]</li>
+            <li><span class="q-num">5.</span> A [11]</li>
+            <li><span class="q-num">6.</span> C, D <span class="explanation">PAT（オーバーロード）は、ポート番号を使用して、少数のグローバルIPで多数の内部ホストを収容します。</span> [11]</li>
+            <li><span class="q-num">7.</span> B <span class="explanation">インターネット上を流れている際の、NATルーターより外側でのパケットの宛先アドレスは「Inside Global」と呼ばれます。</span> [12]</li>
+            <li><span class="q-num">8.</span> A, B [13]</li>
+        </ul>
+    </div>
+
+    <h3>Chapter 5: IP Services</h3>
+    <div class="answer-block">
+        <ul>
+            <li><span class="q-num">1.</span> C, D <span class="explanation">PC2のサブネットマスクが255.255.0.0である場合、別のサブネットにあるWebサーバーを同一サブネット内と誤認してARPを送信します。</span> [13]</li>
+            <li><span class="q-num">2.</span> A, E <span class="explanation"><code>ip helper-address</code>により、ルーターはDHCPリクエストの送信元IPを自身のインターフェースのアドレス（この場合は10.4.7.255）に書き換えて転送します。</span> [14]</li>
+            <li><span class="q-num">5.</span> D <span class="explanation">オブジェクトトラッキングは、HSRP/GLBP/VRRP共通のインターフェース監視機能です。</span> [15]</li>
+            <li><span class="q-num">6.</span> D [15]</li>
+            <li><span class="q-num">7.</span> B, D <span class="explanation">NTPサーバーモードやブロードキャストクライアントモードでは、個別のサーバーIPを事前に定義する必要はありません。</span> [16]</li>
+            <li><span class="q-num">8.</span> A, C, D [16]</li>
+            <li><span class="q-num">9.</span> C [16]</li>
+            <li><span class="q-num">10.</span> A [16]</li>
+            <li><span class="q-num">11.</span> A <span class="explanation">WCCPクラスターでは、最も低いIPアドレスを持つコンテンツエンジンがリードエンジンに選出されます。</span> [16]</li>
+            <li><span class="q-num">12.</span> A, B, C, D [17]</li>
+            <li><span class="q-num">13.</span> E <span class="explanation">SCPはSSHを利用するため、FTPやTFTPよりも安全です。</span> [17]</li>
+            <li><span class="q-num">14.</span> A [17]</li>
+            <li><span class="q-num">15.</span> B <span class="explanation">IP SLAは、ネットワークの両端でアクティブな計測（プローブ）を行う機能です。</span> [17]</li>
+        </ul>
+    </div>
+</section>
+<section id="appendixB">
+    <h2>Appendix B: Decimal to Binary Conversion Table</h2>
+    <p>この付録は、IPアドレッシングやサブネット計算を迅速に行うための、0から255までの10進数と8ビット2進数の対応表です [1], [2]。</p>
+    
+    <div class="important">
+        <p>※以下はサブネットマスクやワイルドカードマスクの計算で頻出する主要な値の抜粋です。</p>
+    </div>
+
+    <style>
+        .binary-table { width: 100%; border-collapse: collapse; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; }
+        .binary-table th { background-color: #cfd8dc; }
+        .binary-table td, .binary-table th { border: 1px solid #ccc; padding: 5px; text-align: center; }
+        .highlight-row { background-color: #fff9c4; font-weight: bold; }
+    </style>
+
+    <table class="binary-table">
+        <thead>
+            <tr>
+                <th>Decimal</th>
+                <th>Binary</th>
+                <th>備考 (Mask等)</th>
+                <th>Decimal</th>
+                <th>Binary</th>
+                <th>備考 (Mask等)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>0</td><td>00000000</td><td>/0</td><td>192</td><td>11000000</td><td>/2, /10, /18, /26</td></tr>
+            <tr class="highlight-row"><td>128</td><td>10000000</td><td>/1, /9, /17, /25</td><td>224</td><td>11100000</td><td>/3, /11, /19, /27</td></tr>
+            <tr><td>129</td><td>10000001</td><td></td><td>240</td><td>11110000</td><td>/4, /12, /20, /28</td></tr>
+            <tr><td>130</td><td>10000100</td><td></td><td>248</td><td>11111000</td><td>/5, /13, /21, /29</td></tr>
+            <tr class="highlight-row"><td>160</td><td>10100000</td><td></td><td>252</td><td>11111100</td><td>/6, /14, /22, /30</td></tr>
+            <tr><td>168</td><td>10101000</td><td>(192.168.x.x)</td><td>254</td><td>11111110</td><td>/7, /15, /23, /31</td></tr>
+            <tr class="highlight-row"><td>191</td><td>10111111</td><td></td><td>255</td><td>11111111</td><td>/8, /16, /24, /32</td></tr>
+        </tbody>
+    </table>
+
+    <h3>計算のポイント：マジックナンバー</h3>
+    <p>出典によると、サブネットの境界を見つけるには、256からマスク値を引いた「マジックナンバー」を利用するのが効率的です [3]。たとえば、マスクが252（11111100）の場合、マジックナンバーは 256 - 252 = 4 となり、4の倍数でサブネットが区切られることが分かります [3]。</p>
+</section>
+<section id="appendixC">
+    <h2>Appendix C: CCIE Exam Updates</h2>
+    <p>この付録「CCIE Routing and Switching Exam Updates: Version 1.0」は、CCIE試験のブループリント（試験範囲）の変更に伴う最新情報や補足資料を提供するためのセクションです [1]。</p>
+
+    <div class="answer-block">
+        <p>本書の初刷時点において、このセクションには最新情報を確認するためのウェブサイトへの参照情報が記載されています。試験内容が更新されるたびに、著者は以下のコンパニオンサイトに新しい学習資料を掲載します [1]。</p>
+        
+        <ul>
+            <li><strong>公式アップデートサイト:</strong> <a href="http://www.ciscopress.com/title/9781587059803" target="_blank">http://www.ciscopress.com/title/9781587059803</a></li>
+        </ul>
+
+        <p><strong>注意点:</strong></p>
+        <ul>
+            <li>ブループリントの微細な変更や追加資料は上記サイトで公開されますが、試験のメジャーアップデート（大幅な改訂）が行われた場合は、ウェブサイトではなく新しい版（Edition）の書籍として発行される予定です [1]。</li>
+            <li>試験準備の最終段階では、必ず公式サイトにアクセスし、最新の試験トピックや修正事項を確認することが推奨されています [1]。</li>
+        </ul>
+    </div>
+</section>
+
+</body>
+</html>
