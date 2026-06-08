@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本史図解：鎌倉〜明治</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --ink-mid: #3d2e1a;
+    --ink-light: #7a6a55;
+    --paper: #faf6ef;
+    --paper-aged: #f0e9d8;
+    --paper-dark: #e5d9c3;
+    --accent-red: #8b1a1a;
+    --accent-gold: #b8860b;
+    --accent-teal: #1a5e52;
+    --accent-indigo: #2c3e7a;
+    --accent-brown: #6b3a1f;
+    --shadow: rgba(26,18,9,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ヘッダー */
+  .site-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(255,255,255,0.015) 20px,
+      rgba(255,255,255,0.015) 40px
+    );
+  }
+  .site-header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    position: relative;
+  }
+  .site-header .subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 0.3em;
+    color: rgba(250,246,239,0.6);
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .header-line {
+    width: 60px;
+    height: 2px;
+    background: var(--accent-gold);
+    margin: 1.2rem auto 0;
+    position: relative;
+  }
+
+  /* タイムライン */
+  .timeline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    background: var(--paper-aged);
+    border-bottom: 1px solid var(--paper-dark);
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+  .timeline-nav a {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--ink-light);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .timeline-nav a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--accent-gold);
+  }
+
+  /* メインレイアウト */
+  .main-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  /* 時代セクション */
+  .era-section {
+    margin-bottom: 4rem;
+    scroll-margin-top: 80px;
+  }
+
+  .era-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--paper-dark);
+  }
+  .era-number {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--paper-dark);
+    line-height: 1;
+    min-width: 2.5rem;
+  }
+  .era-title-group { flex: 1; }
+  .era-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .era-years {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-top: 0.2rem;
+  }
+  .era-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  /* カードグリッド */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .card-grid.three-col {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .info-card {
+    background: white;
+    border: 1px solid var(--paper-dark);
+    border-radius: 4px;
+    padding: 1.2rem 1.4rem;
+    position: relative;
+  }
+  .info-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+  }
+  .card-political::before { background: var(--accent-indigo); }
+  .card-economy::before { background: var(--accent-gold); }
+  .card-culture::before { background: var(--accent-teal); }
+  .card-war::before { background: var(--accent-red); }
+  .card-reform::before { background: var(--accent-brown); }
+  .card-foreign::before { background: #4a6741; }
+  .card-neutral::before { background: var(--ink-light); }
+
+  .card-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .card-political .card-label { color: var(--accent-indigo); }
+  .card-economy .card-label { color: var(--accent-gold); }
+  .card-culture .card-label { color: var(--accent-teal); }
+  .card-war .card-label { color: var(--accent-red); }
+  .card-reform .card-label { color: var(--accent-brown); }
+  .card-foreign .card-label { color: #4a6741; }
+  .card-neutral .card-label { color: var(--ink-light); }
+
+  .card-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  .card-body {
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+  .card-body ul { padding-left: 1.1rem; }
+  .card-body li { margin-bottom: 0.2rem; }
+  .card-body strong { color: var(--ink); font-weight: 700; }
+
+  /* イベントタイムライン */
+  .event-timeline {
+    position: relative;
+    padding-left: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .event-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--paper-dark);
+  }
+  .event-item {
+    position: relative;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    background: white;
+    border: 1px solid var(--paper-dark);
+    border-radius: 4px;
+  }
+  .event-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 1rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--ink-light);
+  }
+  .event-item.highlight::before {
+    background: var(--accent-red);
+    border-color: var(--accent-red);
+  }
+  .event-year {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-bottom: 0.2rem;
+  }
+  .event-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .event-desc {
+    font-size: 0.82rem;
+    color: var(--ink-mid);
+    line-height: 1.6;
+  }
+
+  /* 構造図 */
+  .structure-box {
+    background: white;
+    border: 1px solid var(--paper-dark);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .structure-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--ink-light);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 1rem;
+  }
+  .pyramid-level {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    line-height: 1.3;
+  }
+
+  .four-pillars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 600px) {
+    .four-pillars { grid-template-columns: repeat(2, 1fr); }
+  }
+  .pillar {
+    text-align: center;
+    padding: 0.8rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* 年表バー */
+  .era-bar-container {
+    margin-bottom: 3rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+  }
+  .era-bar-wrap {
+    min-width: 700px;
+    position: relative;
+  }
+  .era-bar-track {
+    position: relative;
+    height: 48px;
+    background: var(--paper-aged);
+    border: 1px solid var(--paper-dark);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .era-bar-segment {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: opacity 0.2s;
+  }
+  .era-bar-segment:hover { opacity: 0.85; }
+  .era-bar-segment span {
+    writing-mode: horizontal-tb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 6px;
+  }
+  .era-labels {
+    position: relative;
+    height: 20px;
+    margin-top: 4px;
+  }
+  .era-tick {
+    position: absolute;
+    font-size: 0.65rem;
+    color: var(--ink-light);
+    transform: translateX(-50%);
+  }
+
+  /* ポイントリスト */
+  .point-list {
+    list-style: none;
+    padding: 0;
+  }
+  .point-list li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.4rem 0;
+    font-size: 0.87rem;
+    color: var(--ink-mid);
+    border-bottom: 1px dotted var(--paper-dark);
+  }
+  .point-list li:last-child { border-bottom: none; }
+  .point-list li::before {
+    content: '▸';
+    color: var(--accent-gold);
+    flex-shrink: 0;
+    margin-top: 0.05em;
+  }
+  .point-list strong { color: var(--ink); }
+
+  /* 兵農分離図 */
+  .separation-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .sep-group {
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .sep-group-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .sep-item {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+    background: rgba(255,255,255,0.5);
+    border-radius: 2px;
+    margin-bottom: 4px;
+  }
+
+  /* フッター */
+  footer {
+    background: var(--ink);
+    color: rgba(250,246,239,0.5);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ユーティリティ */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--paper-dark);
+    margin: 2rem 0;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .tag-war { background: #f5e0e0; color: var(--accent-red); }
+  .tag-culture { background: #ddf0eb; color: var(--accent-teal); }
+  .tag-politics { background: #e0e4f5; color: var(--accent-indigo); }
+  .tag-economy { background: #f5f0dc; color: var(--accent-gold); }
+  .tag-reform { background: #ede3d8; color: var(--accent-brown); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>日本史　図解テキスト</h1>
+  <p class="subtitle">鎌倉時代 〜 明治時代　｜　1185年 – 1912年</p>
+  <div class="header-line"></div>
+</header>
+
+<nav class="timeline-nav">
+  <a href="#kamakura">鎌倉</a>
+  <a href="#nanbokucho">南北朝</a>
+  <a href="#muromachi">室町</a>
+  <a href="#sengoku">戦国</a>
+  <a href="#azuchimomoyama">安土桃山</a>
+  <a href="#edo">江戸</a>
+  <a href="#bakumatsu">幕末・明治</a>
+</nav>
+
+<main class="main-wrap">
+
+  <!-- 通史タイムラインバー -->
+  <div class="era-bar-container">
+    <div class="era-bar-wrap">
+      <div class="era-bar-track">
+        <!-- 鎌倉 1185-1333 = 148年 / 727年 = 20.4% -->
+        <div class="era-bar-segment" style="left:0%;width:20.4%;background:#2c3e7a;color:#cdd4f0;">
+          <span>鎌倉</span>
+        </div>
+        <!-- 南北朝 1333-1392 = 59年 = 8.1% -->
+        <div class="era-bar-segment" style="left:20.4%;width:8.1%;background:#6b3a1f;color:#ede3d8;">
+          <span>南北朝</span>
+        </div>
+        <!-- 室町 1392-1467 = 75年 = 10.3% -->
+        <div class="era-bar-segment" style="left:28.5%;width:10.3%;background:#1a5e52;color:#c4e8df;">
+          <span>室町</span>
+        </div>
+        <!-- 戦国 1467-1573 = 106年 = 14.6% -->
+        <div class="era-bar-segment" style="left:38.8%;width:14.6%;background:#8b1a1a;color:#f5e0e0;">
+          <span>戦国</span>
+        </div>
+        <!-- 安土桃山 1573-1603 = 30年 = 4.1% -->
+        <div class="era-bar-segment" style="left:53.4%;width:4.1%;background:#b8860b;color:#faf0d0;">
+          <span>安桃</span>
+        </div>
+        <!-- 江戸 1603-1868 = 265年 = 36.5% -->
+        <div class="era-bar-segment" style="left:57.5%;width:36.5%;background:#3d3226;color:#d4c9b8;">
+          <span>江戸時代</span>
+        </div>
+        <!-- 明治 1868-1912 = 44年 = 6.0% -->
+        <div class="era-bar-segment" style="left:94%;width:6%;background:#4a6741;color:#d4e8cf;">
+          <span>明治</span>
+        </div>
+      </div>
+      <div class="era-labels">
+        <span class="era-tick" style="left:0%">1185</span>
+        <span class="era-tick" style="left:20.4%">1333</span>
+        <span class="era-tick" style="left:28.5%">1392</span>
+        <span class="era-tick" style="left:38.8%">1467</span>
+        <span class="era-tick" style="left:53.4%">1573</span>
+        <span class="era-tick" style="left:57.5%">1603</span>
+        <span class="era-tick" style="left:94%">1868</span>
+        <span class="era-tick" style="left:100%">1912</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===== 1. 鎌倉時代 ===== -->
+  <section class="era-section" id="kamakura">
+    <div class="era-header">
+      <div class="era-number">01</div>
+      <div class="era-title-group">
+        <div class="era-name">鎌倉時代</div>
+        <div class="era-years">1185年頃 – 1333年　｜　約150年間</div>
+      </div>
+      <span class="era-badge tag-politics">武家政権の誕生</span>
+    </div>
+
+    <!-- 統治構造 -->
+    <div class="structure-box">
+      <div class="structure-title">幕府の統治構造</div>
+      <div class="pyramid">
+        <div class="pyramid-level" style="width:50%;background:#2c3e7a;color:#cdd4f0;">将軍（源氏→摂家→皇族）</div>
+        <div class="pyramid-level" style="width:64%;background:#3a5096;color:#d6dcf5;">執権（北条氏）──実質的支配者</div>
+        <div class="pyramid-level" style="width:78%;background:#e0e4f5;color:#2c3e7a;">侍所・政所・問注所（中央三機関）</div>
+        <div class="pyramid-level" style="width:92%;background:#edf0fa;color:#3a4a80;">守護（国の軍事統括）　・　地頭（荘園管理・徴税）</div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--ink-light);text-align:center;">頼朝の死後、北条氏が執権として政治の実権を独占（執権政治）</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card card-political">
+        <div class="card-label">政治</div>
+        <div class="card-title">御成敗式目（1232年）</div>
+        <div class="card-body">
+          <p>3代執権・北条泰時が制定した<strong>日本初の武家法</strong>。御家人の権利・義務を51か条で明文化。武家社会に法治の基盤を築き、後世の法律に大きな影響を与えた。</p>
+        </div>
+      </div>
+      <div class="info-card card-war">
+        <div class="card-label">動乱</div>
+        <div class="card-title">承久の乱（1221年）</div>
+        <div class="card-body">
+          <p>後鳥羽上皇の倒幕計画に対し幕府軍が圧勝。<strong>朝廷への優位を確立</strong>し、六波羅探題を設置。西国の守護・地頭も幕府の影響下に入る。</p>
+        </div>
+      </div>
+      <div class="info-card card-war">
+        <div class="card-label">外圧</div>
+        <div class="card-title">元寇（1274・1281年）</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>文永の役</strong>（1274）：集団戦法・火器に苦戦するも暴風で撤退</li>
+            <li><strong>弘安の役</strong>（1281）：石塁を構築して持久戦、再び暴風（神風）で撃退</li>
+            <li>防衛戦のため<strong>恩賞不足</strong>→御家人の不満が増大し幕府衰退の遠因に</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-card card-culture">
+        <div class="card-label">文化・宗教</div>
+        <div class="card-title">鎌倉新仏教の勃興</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>浄土宗</strong>（法然）・<strong>浄土真宗</strong>（親鸞）：念仏</li>
+            <li><strong>時宗</strong>（一遍）：踊り念仏で民衆に広まる</li>
+            <li><strong>臨済宗</strong>（栄西）・<strong>曹洞宗</strong>（道元）：禅、武士に浸透</li>
+            <li><strong>日蓮宗</strong>（日蓮）：法華経、社会批判的性格</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-card card-economy">
+        <div class="card-label">経済・社会</div>
+        <div class="card-title">貨幣経済の浸透</div>
+        <div class="card-body">
+          <p>宋銭が大量に流入し、各地に定期市（三斎市）が立つ。商工業者の座（ざ）が形成され、農業では牛馬耕・草木灰肥料が普及。物々交換から<strong>貨幣経済へ</strong>移行が進んだ。</p>
+        </div>
+      </div>
+      <div class="info-card card-culture">
+        <div class="card-label">美術</div>
+        <div class="card-title">写実主義芸術の興隆</div>
+        <div class="card-body">
+          <p>運慶・快慶による<strong>金剛力士像</strong>（東大寺南大門）に代表される写実的彫刻。軍記物語（平家物語）、東大寺南大門などの建築も力強い武士文化を反映。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 2. 南北朝 ===== -->
+  <section class="era-section" id="nanbokucho">
+    <div class="era-header">
+      <div class="era-number">02</div>
+      <div class="era-title-group">
+        <div class="era-name">建武の新政・南北朝時代</div>
+        <div class="era-years">1333年 – 1392年　｜　約60年間</div>
+      </div>
+      <span class="era-badge tag-war">分裂と内乱</span>
+    </div>
+
+    <div class="event-timeline">
+      <div class="event-item highlight">
+        <div class="event-year">1333年</div>
+        <div class="event-name">鎌倉幕府滅亡・建武の新政</div>
+        <div class="event-desc">後醍醐天皇が楠木正成・新田義貞らと幕府を打倒。天皇親政を開始するが、論功行賞の不公平・公家優先の政策が武士の反発を招く。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1335年</div>
+        <div class="event-name">足利尊氏の反乱</div>
+        <div class="event-desc">建武政権に不満を持つ武士を率いて足利尊氏が挙兵。翌年、光明天皇（北朝）を擁立して室町幕府を開く。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1336年</div>
+        <div class="event-name">南北朝分裂</div>
+        <div class="event-desc">後醍醐天皇は吉野に逃れ南朝を樹立。以後約60年、南北両朝が皇位の正統性をめぐって争い続ける。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1392年</div>
+        <div class="event-name">南北朝合一</div>
+        <div class="event-desc">3代将軍足利義満の仲介により南朝の後亀山天皇が北朝に合流。約60年にわたる内乱が終結する。</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card card-political">
+        <div class="card-label">社会変革</div>
+        <div class="card-title">「惣」と国人の台頭</div>
+        <div class="card-body">
+          <p>地縁で結ばれた農村共同体<strong>「惣（そう）」</strong>が自治・祭礼・用水管理を行い、地侍・有力農民の発言力が増大。在地領主（国人）が武士と農民の中間層として台頭した。</p>
+        </div>
+      </div>
+      <div class="info-card card-culture">
+        <div class="card-label">文化</div>
+        <div class="card-title">猿楽・連歌・五山文学</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>猿楽（能楽の前身）</strong>：観阿弥・世阿弥が大成へ向かう土台</li>
+            <li><strong>連歌</strong>：武家・公家が楽しんだ複数人の詩の連鎖</li>
+            <li><strong>五山文学</strong>：禅宗寺院の漢詩文</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 3. 室町時代 ===== -->
+  <section class="era-section" id="muromachi">
+    <div class="era-header">
+      <div class="era-number">03</div>
+      <div class="era-title-group">
+        <div class="era-name">室町時代</div>
+        <div class="era-years">1336年 – 1573年　｜　約240年間</div>
+      </div>
+      <span class="era-badge tag-culture">禅・わびさびの美</span>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card card-political">
+        <div class="card-label">最盛期</div>
+        <div class="card-title">足利義満の全盛（3代将軍）</div>
+        <div class="card-body">
+          <ul>
+            <li>1392年：南北朝合一を実現</li>
+            <li>花の御所（室町御所）を造営→「室町幕府」の名の由来</li>
+            <li><strong>日明貿易（勘合貿易）</strong>開始。明から「日本国王」として冊封される</li>
+            <li>守護大名の上洛を義務化し、将軍権威を頂点に</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-card card-war">
+        <div class="card-label">転換点</div>
+        <div class="card-title">応仁の乱（1467–1477年）</div>
+        <div class="card-body">
+          <p>将軍継嗣問題と管領家の相続争いが絡み合い勃発。<strong>京都は10年以上の戦火で荒廃</strong>。守護大名が在京から国元へ帰り、事実上の幕府全国支配が崩壊→戦国時代へ。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="structure-box">
+      <div class="structure-title">室町の二大文化</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="border:1px solid var(--paper-dark);border-radius:4px;padding:1rem;background:white;">
+          <div style="font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;color:#b8860b;">北山文化</div>
+          <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:0.5rem;">3代 足利義満期｜14世紀末〜15世紀初</div>
+          <ul class="point-list">
+            <li><strong>金閣寺</strong>（鹿苑寺）：三層の楼閣、金箔貼り</li>
+            <li>公家文化と武家文化の融合</li>
+            <li>禅宗・明の文化の影響</li>
+            <li>猿楽（能）の確立（観阿弥・世阿弥）</li>
+          </ul>
+        </div>
+        <div style="border:1px solid var(--paper-dark);border-radius:4px;padding:1rem;background:white;">
+          <div style="font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;color:#1a5e52;">東山文化</div>
+          <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:0.5rem;">8代 足利義政期｜15世紀後半</div>
+          <ul class="point-list">
+            <li><strong>銀閣寺</strong>（慈照寺）：わびの美</li>
+            <li><strong>書院造</strong>：現代和室の原型（床の間・障子・畳）</li>
+            <li>水墨画（雪舟）、枯山水（龍安寺）</li>
+            <li>立花（生け花の前身）・茶の湯の素地</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card card-economy" style="margin-bottom:1rem;">
+      <div class="card-label">経済・交通</div>
+      <div class="card-title">流通ネットワークの発展</div>
+      <div class="card-body">
+        <p>馬借・問丸などの<strong>運送業者</strong>が各地を結び、土倉・酒屋が金融機能を担った。明銭（永楽通宝など）の流通が一般化。割符（為替）も使われ始め、商品経済が列島に浸透した。</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 4. 戦国時代 ===== -->
+  <section class="era-section" id="sengoku">
+    <div class="era-header">
+      <div class="era-number">04</div>
+      <div class="era-title-group">
+        <div class="era-name">戦国時代</div>
+        <div class="era-years">1467年頃 – 1573年　｜　約100年間</div>
+      </div>
+      <span class="era-badge tag-war">下剋上の世</span>
+    </div>
+
+    <div class="card-grid three-col">
+      <div class="info-card card-political">
+        <div class="card-label">支配構造</div>
+        <div class="card-title">戦国大名の一円支配</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>分国法</strong>の制定（今川仮名目録・塵芥集など）</li>
+            <li>城下町整備で商工業者を集住</li>
+            <li>検地・指出検地で農地・農民を掌握</li>
+            <li>外様国人を被官化し一元的統治</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-card card-war">
+        <div class="card-label">技術革新</div>
+        <div class="card-title">鉄砲伝来（1543年）</div>
+        <div class="card-body">
+          <p>種子島にポルトガル人が漂着し鉄砲を伝来。<strong>堺・国友などで国産化</strong>が急速に進み、集団歩兵戦術・築城技術（城郭の高石垣化）を劇的に変革した。</p>
+        </div>
+      </div>
+      <div class="info-card card-foreign">
+        <div class="card-label">対外・宗教</div>
+        <div class="card-title">キリスト教伝来（1549年）</div>
+        <div class="card-body">
+          <p>イエズス会のザビエルが鹿児島に上陸。大名が<strong>南蛮貿易</strong>の利益目当てにキリスト教を保護（キリシタン大名）。鉄砲・火薬・生糸などを輸入し、西洋医学・天文学も伝わった。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 5. 安土桃山 ===== -->
+  <section class="era-section" id="azuchimomoyama">
+    <div class="era-header">
+      <div class="era-number">05</div>
+      <div class="era-title-group">
+        <div class="era-name">安土桃山時代</div>
+        <div class="era-years">1573年 – 1603年　｜　約30年間</div>
+      </div>
+      <span class="era-badge tag-reform">天下統一</span>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card card-war">
+        <div class="card-label">織田政権</div>
+        <div class="card-title">織田信長の革新政策</div>
+        <div class="card-body">
+          <ul>
+            <li>1573年：足利義昭を追放→室町幕府滅亡</li>
+            <li><strong>楽市・楽座</strong>：座の独占廃止、自由商業の推進</li>
+            <li>関所の廃止による流通促進</li>
+            <li>兵農分離の始動・常備軍化</li>
+            <li>1582年：<strong>本能寺の変</strong>（明智光秀の謀反）で自害</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-card card-reform">
+        <div class="card-label">豊臣政権</div>
+        <div class="card-title">豊臣秀吉の社会変革</div>
+        <div class="card-body">
+          <ul>
+            <li>1590年：天下統一完成（小田原征伐・奥州仕置）</li>
+            <li><strong>太閤検地</strong>：一地一作人原則で石高制確立</li>
+            <li><strong>刀狩</strong>（1588年）：農民の武装解除</li>
+            <li>⬆ 兵農分離・身分制社会の確立</li>
+            <li>文禄・慶長の役（朝鮮出兵）：1592・1597年</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="structure-box">
+      <div class="structure-title">兵農分離のしくみ</div>
+      <div class="separation-diagram">
+        <div class="sep-group" style="background:#e0e4f5;">
+          <div class="sep-group-title" style="color:var(--accent-indigo);">武士（士）</div>
+          <div class="sep-item">城下町に居住</div>
+          <div class="sep-item">主君に仕える専業軍人</div>
+          <div class="sep-item">刀・弓矢を所持</div>
+        </div>
+        <div class="sep-group" style="background:#edf5e6;">
+          <div class="sep-group-title" style="color:#3b6d11;">農民（農）</div>
+          <div class="sep-item">村に縛り付けられる</div>
+          <div class="sep-item">農業専業・年貢納入</div>
+          <div class="sep-item">武器の所持禁止</div>
+        </div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--ink-light);margin-top:0.8rem;text-align:center;">→ 江戸時代の士農工商身分制の基礎となる</p>
+    </div>
+
+    <div class="info-card card-culture" style="margin-bottom:0;">
+      <div class="card-label">文化</div>
+      <div class="card-title">桃山文化——豪壮・絢爛</div>
+      <div class="card-body">
+        <p>戦国大名の権威を示す<strong>壮大な城郭建築</strong>（安土城・大坂城・姫路城）と障壁画（狩野永徳）。茶の湯が大成（千利休のわびの茶）され、かぶき踊り（出雲阿国）も登場した。</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 6. 江戸時代 ===== -->
+  <section class="era-section" id="edo">
+    <div class="era-header">
+      <div class="era-number">06</div>
+      <div class="era-title-group">
+        <div class="era-name">江戸時代</div>
+        <div class="era-years">1603年 – 1868年　｜　約265年間</div>
+      </div>
+      <span class="era-badge tag-reform">平和と鎖国</span>
+    </div>
+
+    <!-- 幕藩体制 -->
+    <div class="structure-box">
+      <div class="structure-title">幕藩体制の構造</div>
+      <div class="pyramid">
+        <div class="pyramid-level" style="width:35%;background:#3d3226;color:#d4c9b8;">将軍（徳川家）</div>
+        <div class="pyramid-level" style="width:55%;background:#5a4a36;color:#e0d5c6;">老中・若年寄（幕府中枢）</div>
+        <div class="pyramid-level" style="width:75%;background:#e0d5c6;color:#3d3226;">旗本・御家人（直参）</div>
+        <div class="pyramid-level" style="width:90%;background:#ede8df;color:#3d3226;">大名（親藩・譜代・外様）</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.8rem;">
+        <div style="background:#f5f0e8;padding:0.7rem;border-radius:4px;font-size:0.8rem;">
+          <strong>武家諸法度</strong>：大名の行動を規制。無断の婚姻・築城・軍備を禁止
+        </div>
+        <div style="background:#f5f0e8;padding:0.7rem;border-radius:4px;font-size:0.8rem;">
+          <strong>参勤交代</strong>：隔年で江戸と国元を往来。財政負担で大名勢力を弱体化
+        </div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="info-card card-political">
+        <div class="card-label">対外政策</div>
+        <div class="card-title">「鎖国」体制（1639年完成）</div>
+        <div class="card-body">
+          <p>ポルトガル船の来航禁止を最後に鎖国が完成。<strong>「四つの口」</strong>による管理貿易体制：</p>
+          <ul style="margin-top:0.4rem;">
+            <li><strong>長崎</strong>：オランダ（出島）・清との貿易</li>
+            <li><strong>対馬</strong>：朝鮮との外交・貿易</li>
+            <li><strong>薩摩</strong>：琉球王国を通じた貿易</li>
+            <li><strong>松前</strong>：アイヌとの交易</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-card card-reform">
+        <div class="card-label">三大改革</div>
+        <div class="card-title">幕政の財政立て直し</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>享保の改革</strong>（徳川吉宗・1716〜）：目安箱・公事方御定書・上米の制</li>
+            <li><strong>寛政の改革</strong>（松平定信・1787〜）：寛政異学の禁・棄捐令・囲米</li>
+            <li><strong>天保の改革</strong>（水野忠邦・1841〜）：株仲間解散・上知令→失敗</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="structure-box">
+      <div class="structure-title">江戸の二大文化</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="border:1px solid var(--paper-dark);border-radius:4px;padding:1rem;background:white;">
+          <div style="font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;color:#8b1a1a;">元禄文化</div>
+          <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:0.5rem;">17世紀末〜18世紀初　上方（大坂・京都）中心　町人文化</div>
+          <ul class="point-list">
+            <li>松尾芭蕉の<strong>俳諧（奥の細道）</strong></li>
+            <li>近松門左衛門の<strong>人形浄瑠璃・歌舞伎</strong></li>
+            <li>井原西鶴の浮世草子</li>
+            <li>菱川師宣の浮世絵</li>
+          </ul>
+        </div>
+        <div style="border:1px solid var(--paper-dark);border-radius:4px;padding:1rem;background:white;">
+          <div style="font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;color:#1a5e52;">化政文化</div>
+          <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:0.5rem;">19世紀初　江戸中心　庶民文化</div>
+          <ul class="point-list">
+            <li>葛飾北斎・歌川広重の<strong>浮世絵（錦絵）</strong></li>
+            <li>十返舎一九・式亭三馬の滑稽本</li>
+            <li>川柳・狂歌の流行</li>
+            <li>寺子屋の普及→識字率の向上</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 7. 幕末・明治 ===== -->
+  <section class="era-section" id="bakumatsu">
+    <div class="era-header">
+      <div class="era-number">07</div>
+      <div class="era-title-group">
+        <div class="era-name">幕末から明治時代</div>
+        <div class="era-years">1853年 – 1912年　｜　約60年間</div>
+      </div>
+      <span class="era-badge tag-reform">近代国家の誕生</span>
+    </div>
+
+    <div class="event-timeline">
+      <div class="event-item highlight">
+        <div class="event-year">1853年</div>
+        <div class="event-name">ペリー来航（黒船）</div>
+        <div class="event-desc">アメリカ東インド艦隊司令長官ペリーが浦賀に来航、開国を要求。翌1854年、日米和親条約を締結し約200年の「鎖国」が終了。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1858年</div>
+        <div class="event-name">安政五カ国条約（不平等条約）</div>
+        <div class="event-desc">米・英・仏・露・蘭と通商条約締結。領事裁判権を認め、関税自主権を失う。不平等条約が尊王攘夷運動を加速させる。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1866年</div>
+        <div class="event-name">薩長同盟</div>
+        <div class="event-desc">坂本龍馬の仲介で薩摩（西郷隆盛）と長州（木戸孝允）が秘密同盟。倒幕への共同戦線が整う。</div>
+      </div>
+      <div class="event-item highlight">
+        <div class="event-year">1867–68年</div>
+        <div class="event-name">大政奉還・王政復古</div>
+        <div class="event-desc">15代将軍徳川慶喜が政権を天皇に返上（大政奉還）。翌年、明治新政府が樹立。戊辰戦争で旧幕府勢力を制圧。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1871年</div>
+        <div class="event-name">廃藩置県</div>
+        <div class="event-desc">全国の藩を廃止して府県を設置。中央集権国家の確立。岩倉使節団が欧米視察へ出発。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1872–1873年</div>
+        <div class="event-name">三大改革の実施</div>
+        <div class="event-desc">①学制（近代教育制度）②徴兵令（国民皆兵）③地租改正（土地の私的所有権確立・税制近代化）</div>
+      </div>
+      <div class="event-item highlight">
+        <div class="event-year">1889年</div>
+        <div class="event-name">大日本帝国憲法の発布</div>
+        <div class="event-desc">欽定憲法として発布。天皇大権を中心としつつも、アジア初の近代的議会（帝国議会）が開設。翌年、第1回衆議院議員選挙が実施された。</div>
+      </div>
+      <div class="event-item">
+        <div class="event-year">1894–1905年</div>
+        <div class="event-name">日清・日露戦争に勝利</div>
+        <div class="event-desc">日清戦争（1894-95）：下関条約で台湾・遼東半島割譲。日露戦争（1904-05）：ポーツマス条約。列強の一員としての地位を確立。</div>
+      </div>
+      <div class="event-item highlight">
+        <div class="event-year">1911年</div>
+        <div class="event-name">条約改正の完成</div>
+        <div class="event-desc">関税自主権を完全回復。1894年の領事裁判権撤廃（陸奥宗光）と合わせ、幕末以来の不平等条約が完全解消された。</div>
+      </div>
+    </div>
+
+    <div class="structure-box">
+      <div class="structure-title">明治維新の四本柱</div>
+      <div class="four-pillars">
+        <div class="pillar" style="background:#e0e4f5;color:var(--accent-indigo);">
+          <div style="font-size:1.2rem;margin-bottom:0.3rem;">🏛</div>
+          <div style="font-weight:700;margin-bottom:0.3rem;">政治</div>
+          <div style="font-size:0.73rem;">廃藩置県・憲法発布・帝国議会</div>
+        </div>
+        <div class="pillar" style="background:#ddf0eb;color:var(--accent-teal);">
+          <div style="font-size:1.2rem;margin-bottom:0.3rem;">📚</div>
+          <div style="font-weight:700;margin-bottom:0.3rem;">教育</div>
+          <div style="font-size:0.73rem;">学制・教育勅語・帝国大学</div>
+        </div>
+        <div class="pillar" style="background:#f5f0dc;color:var(--accent-gold);">
+          <div style="font-size:1.2rem;margin-bottom:0.3rem;">⚙️</div>
+          <div style="font-weight:700;margin-bottom:0.3rem;">産業</div>
+          <div style="font-size:0.73rem;">富国強兵・殖産興業・官営模範工場</div>
+        </div>
+        <div class="pillar" style="background:#ede3d8;color:var(--accent-brown);">
+          <div style="font-size:1.2rem;margin-bottom:0.3rem;">⚔️</div>
+          <div style="font-weight:700;margin-bottom:0.3rem;">軍事</div>
+          <div style="font-size:0.73rem;">徴兵令・陸軍省・海軍省創設</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  <p>日本史図解テキスト　鎌倉〜明治　|　1185 – 1912</p>
+</footer>
+
+<script>
+  document.querySelectorAll('.timeline-nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.getAttribute('href').slice(1);
+      document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
