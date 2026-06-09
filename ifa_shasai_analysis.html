@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IFAと社債投資における手数料の実態</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fafaf8;
+    --bg2: #f2f0ea;
+    --bg3: #ffffff;
+    --text: #1a1a18;
+    --text2: #5a5a56;
+    --text3: #8a8a84;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --info-bg: #e6f1fb;
+    --info-text: #0c447c;
+    --warn-bg: #faeeda;
+    --warn-text: #633806;
+    --danger-bg: #fcebeb;
+    --danger-text: #791f1f;
+    --success-bg: #eaf3de;
+    --success-text: #27500a;
+    --accent: #178CE4;
+    --accent-soft: #e6f1fb;
+    --red: #E24B4A;
+    --green: #1D9E75;
+    --amber: #BA7517;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #242422;
+      --bg3: #2a2a28;
+      --text: #e8e6de;
+      --text2: #a8a69e;
+      --text3: #6a6a64;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.2);
+      --info-bg: #042c53;
+      --info-text: #85b7eb;
+      --warn-bg: #412402;
+      --warn-text: #fac775;
+      --danger-bg: #501313;
+      --danger-text: #f09595;
+      --success-bg: #173404;
+      --success-text: #c0dd97;
+      --accent: #85b7eb;
+      --accent-soft: #042c53;
+      --red: #f09595;
+      --green: #5dcaa5;
+      --amber: #ef9f27;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    min-height: 100vh;
+  }
+
+  .page-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .page-header {
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 0.5px solid var(--border2);
+  }
+  .page-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+  .page-title {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+  .page-sub {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .card-sub {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* Metric Grid */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .metric {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: .9rem 1rem;
+  }
+  .metric-label {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 4px;
+  }
+  .metric-val {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .metric-val.danger { color: var(--red); }
+  .metric-val.warn { color: var(--amber); }
+  .metric-note {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 0.5px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* Bar chart */
+  .bar-section-title {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .bar-label { width: 110px; flex-shrink: 0; }
+  .bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--bg2);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .bar-fill { height: 100%; border-radius: 5px; }
+  .bar-num {
+    width: 30px;
+    text-align: right;
+    font-weight: 500;
+    color: var(--text);
+    font-size: 12px;
+  }
+
+  /* Compare grid */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 520px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+  .compare-card {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: .9rem 1.1rem;
+  }
+  .compare-card.featured { border: 2px solid var(--accent); }
+  .compare-head {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 5px 0;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text2);
+  }
+  .compare-row:last-child { border: none; }
+  .val { font-weight: 500; color: var(--text); }
+  .val.bad { color: var(--red); }
+  .val.good { color: var(--green); }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .badge-info { background: var(--info-bg); color: var(--info-text); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .badge-danger { background: var(--danger-bg); color: var(--danger-text); }
+  .badge-success { background: var(--success-bg); color: var(--success-text); }
+
+  /* Alert boxes */
+  .tip-box {
+    background: var(--info-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: .8rem 1rem;
+    font-size: 13px;
+    color: var(--info-text);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .warning-box {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 8px 8px 0;
+    padding: .8rem 1rem;
+    font-size: 13px;
+    color: var(--warn-text);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .danger-box {
+    background: var(--danger-bg);
+    border-left: 3px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: .8rem 1rem;
+    font-size: 13px;
+    color: var(--danger-text);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  /* Step list */
+  .step-list { list-style: none; }
+  .step-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 9px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .step-list li:last-child { border: none; }
+  .step-num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--info-bg);
+    color: var(--info-text);
+    font-size: 11px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .step-num.warn { background: var(--warn-bg); color: var(--warn-text); }
+  .step-num.danger { background: var(--danger-bg); color: var(--danger-text); }
+  .step-num.success { background: var(--success-bg); color: var(--success-text); }
+  .step-title { font-weight: 500; color: var(--text); }
+
+  /* Cost recovery visual */
+  .recovery-timeline {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 12px;
+  }
+  .timeline-track {
+    position: relative;
+    height: 28px;
+    background: var(--danger-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    margin: 12px 0 8px;
+  }
+  .timeline-fill {
+    height: 100%;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #E24B4A 0%, #BA7517 60%, #1D9E75 100%);
+    width: 100%;
+  }
+  .timeline-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100% / 30 * 6);
+    width: 2px;
+    background: var(--text);
+    opacity: 0.6;
+  }
+  .timeline-marker::after {
+    content: '← 6年で回収';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .timeline-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* DB table */
+  .db-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .db-table td {
+    padding: 9px 8px;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text2);
+    vertical-align: middle;
+  }
+  .db-table td:last-child { text-align: right; }
+  .db-table tr:last-child td { border: none; }
+
+  /* Tag row */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    border: 0.5px solid var(--border2);
+    color: var(--text3);
+  }
+
+  /* Icon placeholder (simple SVG icons inline) */
+  .icon { display: inline-block; vertical-align: middle; margin-right: 6px; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .page-wrap { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <p class="page-eyebrow">分析レポート</p>
+    <h1 class="page-title">IFAと社債投資における手数料の実態</h1>
+    <p class="page-sub">独立系アドバイザーの提案に潜むコスト構造と、個人投資家が取るべき対策の整理。「独立・中立」という言葉の裏側を批判的に分析する。</p>
+  </div>
+
+  <!-- METRICS -->
+  <div class="section">
+    <p class="section-label">主要数値サマリー</p>
+    <div class="metric-grid">
+      <div class="metric">
+        <p class="metric-label">購入時マークアップ</p>
+        <p class="metric-val danger">~3%</p>
+        <p class="metric-note">明示されない隠れコスト</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">社債の追加利回り</p>
+        <p class="metric-val">~0.5%</p>
+        <p class="metric-note">米国債比（高格付けでも）</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">手数料の回収年数</p>
+        <p class="metric-val warn">約6年</p>
+        <p class="metric-note">3% ÷ 0.5% で算出</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">往復スプレッド</p>
+        <p class="metric-val danger">3%超</p>
+        <p class="metric-note">売却時も同様に発生</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- COST COMPARISON BAR -->
+  <div class="section">
+    <p class="section-label">コスト比較：社債 vs 債券ETF</p>
+    <div class="card">
+      <p class="card-title" style="margin-bottom:14px;">手数料の透明性と流動性</p>
+
+      <p class="bar-section-title">コスト負担（高いほど投資家に不利）</p>
+      <div class="bar-row">
+        <span class="bar-label">生債券（社債）</span>
+        <div class="bar-track"><div class="bar-fill" style="width:88%;background:#E24B4A;"></div></div>
+        <span class="bar-num" style="color:var(--red);">高</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">TLT / EDV 等</span>
+        <div class="bar-track"><div class="bar-fill" style="width:12%;background:#1D9E75;"></div></div>
+        <span class="bar-num" style="color:var(--green);">低</span>
+      </div>
+
+      <hr class="divider">
+
+      <p class="bar-section-title">流動性（高いほど換金しやすい）</p>
+      <div class="bar-row">
+        <span class="bar-label">生債券（社債）</span>
+        <div class="bar-track"><div class="bar-fill" style="width:28%;background:#E24B4A;"></div></div>
+        <span class="bar-num" style="color:var(--red);">低</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">TLT / EDV 等</span>
+        <div class="bar-track"><div class="bar-fill" style="width:95%;background:#1D9E75;"></div></div>
+        <span class="bar-num" style="color:var(--green);">高</span>
+      </div>
+    </div>
+
+    <!-- Recovery timeline -->
+    <div class="recovery-timeline">
+      <p style="font-size:13px; font-weight:500; color:var(--text); margin-bottom:4px;">手数料回収シミュレーション</p>
+      <p style="font-size:12px; color:var(--text2);">3%のマークアップを、+0.5%の追加利回りで回収するには約6年かかる</p>
+      <div class="timeline-track">
+        <div class="timeline-fill"></div>
+        <div class="timeline-marker"></div>
+      </div>
+      <div class="timeline-labels">
+        <span>0年（購入）</span>
+        <span>10年</span>
+        <span>20年</span>
+        <span>30年</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PRODUCT COMPARISON -->
+  <div class="section">
+    <p class="section-label">商品別リスク比較</p>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <p class="compare-head">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          生債券（社債）
+        </p>
+        <div class="compare-row"><span>購入コスト</span><span class="val bad">~3% 上乗せ</span></div>
+        <div class="compare-row"><span>スプレッド</span><span class="val bad">不透明・大</span></div>
+        <div class="compare-row"><span>流動性</span><span class="val bad">低い</span></div>
+        <div class="compare-row"><span>倒産リスク</span><span class="val bad">あり</span></div>
+        <div class="compare-row"><span>価格透明性</span><span class="val bad">不透明</span></div>
+        <div class="compare-row"><span>追加利回り</span><span class="val">+0.5% 程度</span></div>
+      </div>
+      <div class="compare-card featured">
+        <span class="badge badge-info">推奨代替案</span>
+        <p class="compare-head">
+          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          債券ETF（TLT / EDV 等）
+        </p>
+        <div class="compare-row"><span>購入コスト</span><span class="val good">低い（透明）</span></div>
+        <div class="compare-row"><span>スプレッド</span><span class="val good">透明・小</span></div>
+        <div class="compare-row"><span>流動性</span><span class="val good">高い（即時換金）</span></div>
+        <div class="compare-row"><span>倒産リスク</span><span class="val good">なし（米国債）</span></div>
+        <div class="compare-row"><span>価格透明性</span><span class="val good">リアルタイム</span></div>
+        <div class="compare-row"><span>デュレーション</span><span class="val good">長期対応可</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- IFA STRUCTURE -->
+  <div class="section">
+    <p class="section-label">IFA制度の理想と現実</p>
+
+    <div class="warning-box">
+      <strong>利益相反の構造：</strong>多くのIFAは証券会社のシステムに依存しており、手数料が高い商品ほどアドバイザーの報酬も高くなるインセンティブが働く。インデックス投資よりも高コスト商品が優先的に提案されやすい。
+    </div>
+
+    <div class="card">
+      <p class="card-title" style="margin-bottom:12px;">IFA提案の変遷パターン（典型例）</p>
+      <ul class="step-list">
+        <li>
+          <span class="step-num">1</span>
+          <div><span class="step-title">中立性の訴求</span><br>「SNSの情報に振り回されない、本質の分散投資」を掲げ、IFAの公平性と独立性を強調する</div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div><span class="step-title">具体性の欠如</span><br>インデックス投資との差別化を問われると、明確な根拠を示せず抽象的な議論に終始する</div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div><span class="step-title">商品への誘導</span><br>最終的に「社債投資の魅力」という具体的なプロダクト提案へ論点をずらし、個別相談の獲得を優先する</div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div><span class="step-title">開示の拒絶</span><br>手数料構造や売却時の条件を「証券会社との関係」を理由に非開示にする。これは信頼の欠如を示すシグナルである</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="card-title" style="margin-bottom:10px;">「満期まで持てば損しない」論理の落とし穴</p>
+      <p class="card-sub">この説明は、人生における予期せぬ資金需要（病気、転職、環境変化等）を無視している。中途換金時には証券会社の言い値で買い叩かれるリスクがあり、流動性は資産防衛の重要な要素である。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- INVESTOR TOOLS -->
+  <div class="section">
+    <p class="section-label">投資家が使うべき「情報の武器」</p>
+
+    <div class="tip-box">
+      <strong>識別番号（ISIN / CUSIP）で価格を自己確認できる。</strong>提案された社債の番号を入手し、下記データベースでプロ間の実際の売買価格と比較することで、上乗せコストを可視化できる。番号の開示を拒むアドバイザーは信頼に値しない。
+    </div>
+
+    <div class="card">
+      <p class="card-title" style="margin-bottom:12px;">価格確認に使えるデータベース</p>
+      <table class="db-table">
+        <tr>
+          <td><strong style="color:var(--text);">FINRA</strong><br><span style="font-size:11px;">米国金融業規制機構</span></td>
+          <td><span class="badge badge-info">直近の売買価格を確認</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text);">Morningstar</strong><br><span style="font-size:11px;">モーニングスター</span></td>
+          <td><span class="badge badge-info">格付け・利回り情報</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHECKLIST -->
+  <div class="section">
+    <p class="section-label">IFAから提案を受けたときのチェックリスト</p>
+    <div class="card">
+      <ul class="step-list">
+        <li>
+          <span class="step-num success">✓</span>
+          <span>商品の <strong style="color:var(--text);">ISIN / CUSIP 番号</strong>を必ず確認する</span>
+        </li>
+        <li>
+          <span class="step-num success">✓</span>
+          <span>FINRA で市場価格と購入価格の乖離を自分で計算する</span>
+        </li>
+        <li>
+          <span class="step-num success">✓</span>
+          <span>同等の債券 ETF（TLT・EDV・BND 等）と費用対効果を比較する</span>
+        </li>
+        <li>
+          <span class="step-num success">✓</span>
+          <span>中途解約・売却時の条件（価格保証の有無）を明確に確認する</span>
+        </li>
+        <li>
+          <span class="step-num success">✓</span>
+          <span>金利低下でキャピタルゲインを狙うなら、高コスト社債よりデュレーションの長い ETF（EDV 等）を検討する</span>
+        </li>
+        <li>
+          <span class="step-num danger">✗</span>
+          <span><strong style="color:var(--red);">識別番号の開示を拒むアドバイザーは信頼に値しない</strong>と判断する</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CONCLUSION -->
+  <div class="section">
+    <p class="section-label">結論</p>
+    <div class="danger-box">
+      <strong>「独立・中立」の再定義：</strong>本当に独立したアドバイザーとは、特定の商品の販売手数料に依存せず、投資家と同じ立場で議論できる存在である。現状の多くのIFAは証券会社の「面貸し」に近く、構造的な利益相反を抱えている。
+    </div>
+    <div class="card">
+      <p class="card-title" style="margin-bottom:8px;">投資家へのメッセージ</p>
+      <p class="card-sub">「独立」「中立」という言葉を鵜呑みにせず、提案された商品の手数料・流動性・代替案（低コストETF等）との合理的比較を徹底すること。情報の非対称性は、ISIN/CUSIP番号という武器を使うことで、個人でも解消できる。</p>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tag-row">
+    <span class="tag">社債投資</span>
+    <span class="tag">IFA</span>
+    <span class="tag">手数料の透明性</span>
+    <span class="tag">TLT / EDV / BND</span>
+    <span class="tag">FINRA</span>
+    <span class="tag">ISIN / CUSIP</span>
+    <span class="tag">利益相反</span>
+    <span class="tag">流動性リスク</span>
+  </div>
+
+</div>
+</body>
+</html>
