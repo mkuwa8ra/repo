@@ -1,0 +1,970 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FortiSASE 技術者向け包括的図解資料</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #283593;
+            --accent: #ff6f00;
+            --bg-light: #f5f7fa;
+            --bg-card: #ffffff;
+            --text-dark: #212121;
+            --text-muted: #616161;
+            --border: #e0e0e0;
+            --green: #2e7d32;
+            --blue: #1565c0;
+            --purple: #6a1b9a;
+            --red: #c62828;
+            --teal: #00796b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(26, 35, 126, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 5px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 5px solid var(--accent);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+
+        .card h3 {
+            color: var(--secondary);
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .arch-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-width: 900px;
+            padding: 20px 0;
+        }
+
+        .arch-box {
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 140px;
+            position: relative;
+        }
+
+        .arch-box.user {
+            border-color: var(--blue);
+            background: #e3f2fd;
+        }
+
+        .arch-box.sase {
+            border-color: var(--accent);
+            background: #fff3e0;
+            min-width: 200px;
+        }
+
+        .arch-box.internet {
+            border-color: var(--green);
+            background: #e8f5e9;
+        }
+
+        .arch-box.dc {
+            border-color: var(--purple);
+            background: #f3e5f5;
+        }
+
+        .arch-arrow {
+            font-size: 2em;
+            color: var(--text-muted);
+        }
+
+        .arch-label {
+            font-size: 0.75em;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Feature boxes */
+        .feature-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .feature-box h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-box ul {
+            padding-left: 18px;
+            color: var(--text-muted);
+        }
+
+        .feature-box ul li {
+            margin-bottom: 4px;
+        }
+
+        /* Table */
+        .license-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .license-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 10px;
+            text-align: center;
+        }
+
+        .license-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .license-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .license-table .category {
+            background: #e8eaf6;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .check {
+            color: var(--green);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .dash {
+            color: #bbb;
+        }
+
+        /* Flow Diagram */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .flow-step {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.85em;
+            min-width: 120px;
+        }
+
+        .flow-arrow {
+            color: var(--accent);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* SPA Diagram */
+        .spa-diagram {
+            background: #fafbff;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .spa-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .spa-node {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 130px;
+        }
+
+        .spa-node.client {
+            background: #e3f2fd;
+            border: 2px solid var(--blue);
+        }
+
+        .spa-node.cloud {
+            background: #fff3e0;
+            border: 2px solid var(--accent);
+        }
+
+        .spa-node.gate {
+            background: #e8f5e9;
+            border: 2px solid var(--green);
+        }
+
+        .spa-node.server {
+            background: #f3e5f5;
+            border: 2px solid var(--purple);
+        }
+
+        .spa-node .icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .spa-node .label {
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .spa-node .sublabel {
+            font-size: 0.72em;
+            color: var(--text-muted);
+        }
+
+        .spa-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.72em;
+            color: var(--text-muted);
+        }
+
+        .spa-connector .arrow {
+            font-size: 1.8em;
+            color: var(--accent);
+        }
+
+        /* Concept comparison */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .concept-card.forrester {
+            border-top-color: var(--blue);
+        }
+
+        .concept-card.gartner {
+            border-top-color: var(--purple);
+        }
+
+        .concept-card h4 {
+            margin-bottom: 8px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #e8f5e9;
+            border-left: 4px solid var(--green);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        .info-box.warning {
+            background: #fff8e1;
+            border-left-color: var(--accent);
+        }
+
+        .info-box.important {
+            background: #fce4ec;
+            border-left-color: var(--red);
+        }
+
+        /* Mode tags */
+        .mode-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin: 3px;
+        }
+
+        .mode-tag.endpoint {
+            background: #e3f2fd;
+            color: var(--blue);
+        }
+
+        .mode-tag.swg {
+            background: #e8f5e9;
+            color: var(--green);
+        }
+
+        /* Integration */
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .integration-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.85em;
+            transition: transform 0.2s;
+        }
+
+        .integration-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .integration-item .product {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .integration-item .purpose {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+
+        /* Reserved Segments */
+        .segment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .segment-table th, .segment-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            font-size: 0.85em;
+        }
+
+        .segment-table th {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted var(--text-muted);
+            cursor: help;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        /* SLA badge */
+        .sla-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* Posture check */
+        .posture-flow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .posture-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.82em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🛡️ FortiSASE 包括的技術図解資料</h1>
+            <p>Secure Access Service Edge — Fortinet クラウドセキュリティプラットフォーム</p>
+            <div style="margin-top: 15px;">
+                <span class="badge">SOC2 Type II 認定</span>
+                <span class="badge">99.999% SLA</span>
+                <span class="badge">50ユーザー〜（MoQ）</span>
+                <span class="badge">FortiFlex対応</span>
+            </div>
+        </div>
+
+        <!-- 1. Overview -->
+        <div class="section">
+            <h2 class="section-title">1. FortiSASEとは</h2>
+            <div class="card">
+                <p>FortiSASEは、Fortinet社がクラウド上で提供するSASE（Secure Access Service Edge）セキュリティサービスです。場所に関係なくどこからアクセスしても、<strong>会社の社内LANと同等のセキュリティポリシー</strong>で保護できます。セキュリティとネットワーキングのシームレスな統合により、すべてのユーザーに同じレベルの保護・可視性・ユーザーエクスペリエンスを提供します。</p>
+                <div class="sla-badge">✓ 99.999% SLA（レイテンシ保証付き）— 世界数百のセキュリティPoPs</div>
+            </div>
+        </div>
+
+        <!-- 2. Architecture Overview -->
+        <div class="section">
+            <h2 class="section-title">2. アーキテクチャ概要</h2>
+            <div class="architecture-diagram">
+                <h3 style="text-align:center; margin-bottom:20px;">FortiSASE 全体アーキテクチャ</h3>
+                <div class="arch-container">
+                    <div class="arch-box user">
+                        <strong>👤 リモートユーザー</strong>
+                        <div class="arch-label">FortiClient<br>(エージェント)</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box sase">
+                        <strong>☁️ FortiSASE Cloud</strong>
+                        <div class="arch-label">セキュリティPoPs<br>SWG / CASB / DLP / ZTNA<br>FW / IPS / AV / SSL検査</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box internet">
+                        <strong>🌐 インターネット</strong>
+                        <div class="arch-label">SaaS / Web<br>パブリッククラウド</div>
+                    </div>
+                </div>
+                <div class="arch-container" style="margin-top: 10px;">
+                    <div class="arch-box user">
+                        <strong>🏢 拠点 Edge</strong>
+                        <div class="arch-label">FortiGate / SD-WAN<br>3rd Party IPsec</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box sase">
+                        <strong>☁️ FortiSASE Cloud</strong>
+                        <div class="arch-label">Branch On-ramp<br>SD-WAN + ADVPN</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-box dc">
+                        <strong>🏛️ データセンター / 本社</strong>
+                        <div class="arch-label">セキュアプライベート<br>アクセス (SPA)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. SASE Concept -->
+        <div class="section">
+            <h2 class="section-title">3. SASEコンセプト比較とFortiSASEの立ち位置</h2>
+            <div class="concept-grid">
+                <div class="concept-card forrester">
+                    <h4>📘 Forrester社モデル（FortiSASEのベース）</h4>
+                    <p>オンプレミスのUTM（FortiGate）と<strong>クラウドのSASEを融合</strong>してセキュリティを提供。既存のFortiGate資産を活用しながらZTNA機能を追加可能。</p>
+                    <div class="info-box">
+                        <strong>FortiSASEの推奨構成:</strong> FortiGate + FortiSASE連携でZTNA/SPAを実現
+                    </div>
+                </div>
+                <div class="concept-card gartner">
+                    <h4>📗 Gartner社モデル（SSE単体利用も可能）</h4>
+                    <p><strong>クラウドのSASEのみ</strong>でセキュリティを提供する構成。FortiGate未導入の場合、FortiSASE単体でSSE（Security Service Edge）として利用可能。</p>
+                    <div class="info-box">
+                        <strong>FortiSASE単体:</strong> SSEとしてSIA + SSA + エンドポイントセキュリティを提供
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Modes -->
+        <div class="section">
+            <h2 class="section-title">4. 接続モード</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3><span class="mode-tag endpoint">エンドポイントモード</span></h3>
+                    <p>FortiClientによるVPNを介してFortiSASEに接続。すべてのインターネット通信がFortiSASEによって保護されます。</p>
+                    <ul style="margin-top:10px; padding-left:18px; color: var(--text-muted);">
+                        <li>フルトンネル方式</li>
+                        <li>ポスチャーチェック対応</li>
+                        <li>エンドポイントセキュリティ統合</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3><span class="mode-tag swg">SWG（セキュアWebゲートウェイ）モード</span></h3>
+                    <p>WebブラウザのWebプロキシとしてFortiSASEを使用。Webブラウザの通信のみFortiSASEによって保護されます。</p>
+                    <ul style="margin-top:10px; padding-left:18px; color: var(--text-muted);">
+                        <li>エージェントレス（ブラウザ設定のみ）</li>
+                        <li>Web通信に限定した保護</li>
+                        <li>BYOD端末に最適</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Core Functions -->
+        <div class="section">
+            <h2 class="section-title">5. コア機能群</h2>
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4>🔒 Secure Internet Access (SIA)</h4>
+                    <p style="font-size:0.85em; color:var(--text-muted); margin-bottom:8px;">インターネットアクセス時の脅威保護</p>
+                    <ul>
+                        <li>アンチウイルス</li>
+                        <li>Web / DNSフィルタ</li>
+                        <li>侵入防止（IPS）</li>
+                        <li>ファイル / ビデオフィルタ</li>
+                        <li>アプリケーション制御</li>
+                        <li>SSLインスペクション</li>
+                        <li>Remote Browser Isolation (RBI) ※Advanced以上</li>
+                    </ul>
+                </div>
+                <div class="feature-box">
+                    <h4>☁️ Secure SaaS Access (SSA)</h4>
+                    <p style="font-size:0.85em; color:var(--text-muted); margin-bottom:8px;">SaaSアプリの包括的な可視化と制御</p>
+                    <ul>
+                        <li>データ漏洩防止（DLP）</li>
+                        <li>CASB（Cloud Access Security Broker）</li>
+                        <li>シャドーIT検出</li>
+                        <li>SaaS使用状況の把握</li>
+                        <li>機密情報・重要データの保護</li>
+                    </ul>
+                </div>
+                <div class="feature-box">
+                    <h4>🏢 Secure Private Access (SPA)</h4>
+                    <p style="font-size:0.85em; color:var(--text-muted); margin-bottom:8px;">社内リソースへのセキュアアクセス</p>
+                    <ul>
+                        <li>ゼロトラストネットワークアクセス（ZTNA）</li>
+                        <li>セキュアプライベートアクセス（SPA）</li>
+                        <li>FortiGate連携必須</li>
+                        <li>IPsec VPN + BGP動的ルーティング</li>
+                        <li>Split DNS対応</li>
+                    </ul>
+                </div>
+                <div class="feature-box">
+                    <h4>💻 Endpoint Security</h4>
+                    <p style="font-size:0.85em; color:var(--text-muted); margin-bottom:8px;">端末のセキュリティ保護（FortiClient必須）</p>
+                    <ul>
+                        <li>アンチウイルス</li>
+                        <li>アンチランサムウェア</li>
+                        <li>脆弱性スキャン</li>
+                        <li>リムーバブルメディア制御</li>
+                        <li>サンドボックス</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. SPA Detail -->
+        <div class="section">
+            <h2 class="section-title">6. セキュアプライベートアクセス (SPA) 詳細構成</h2>
+            <div class="card">
+                <h3>SPA通信フロー</h3>
+                <div class="spa-diagram">
+                    <div class="spa-flow">
+                        <div class="spa-node client">
+                            <div class="icon">💻</div>
+                            <div class="label">FortiClient</div>
+                            <div class="sublabel">エージェント<br>ポスチャー送信</div>
+                        </div>
+                        <div class="spa-connector">
+                            <div>VPN接続</div>
+                            <div class="arrow">⟶</div>
+                            <div>認証+ポスチャーチェック</div>
+                        </div>
+                        <div class="spa-node cloud">
+                            <div class="icon">☁️</div>
+                            <div class="label">FortiSASE PoPs</div>
+                            <div class="sublabel">セキュリティ検査<br>FWポリシー適用</div>
+                        </div>
+                        <div class="spa-connector">
+                            <div>IPsec VPN (×4 PoPs)</div>
+                            <div class="arrow">⟶</div>
+                            <div>BGP動的ルーティング</div>
+                        </div>
+                        <div class="spa-node gate">
+                            <div class="icon">🔥</div>
+                            <div class="label">FortiGate</div>
+                            <div class="sublabel">固定グローバルIP必須<br>SPAライセンス必須</div>
+                        </div>
+                        <div class="spa-connector">
+                            <div>内部ルーティング</div>
+                            <div class="arrow">⟶</div>
+                        </div>
+                        <div class="spa-node server">
+                            <div class="icon">🖥️</div>
+                            <div class="label">社内サーバ</div>
+                            <div class="sublabel">業務システム<br>データセンター</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top:20px;">SPA構成に必要な要件</h3>
+                <div class="grid-3" style="margin-top:10px;">
+                    <div class="info-box">
+                        <strong>FortiSASE</strong><br>
+                        SPAライセンス含む
+                    </div>
+                    <div class="info-box warning">
+                        <strong>FortiGate</strong><br>
+                        + SPA追加ライセンス<br>
+                        + 固定グローバルIP
+                    </div>
+                    <div class="info-box">
+                        <strong>FortiClient</strong><br>
+                        FortiSASE連携済み<br>
+                        ポスチャー送信対応
+                    </div>
+                </div>
+
+                <div class="info-box important" style="margin-top:15px;">
+                    <strong>⚠️ 注意事項:</strong>
+                    <ul style="padding-left:18px; margin-top:5px;">
+                        <li>FortiGateには固定グローバルIPが必須（FortiSASE側でFQDN指定不可）</li>
+                        <li>FortiSASEからFortiGateへIPsec VPN接続（4つのPoPsから4本のトンネル）</li>
+                        <li>トンネル内でBGPによる動的ルーティングで経路交換</li>
+                        <li>あらかじめ5つのセグメントが予約済み — 既存NWとの重複確認必須</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. SD-WAN & Network -->
+        <div class="section">
+            <h2 class="section-title">7. SD-WAN & ネットワーク機能</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>🌐 SD-WAN / ADVPN</h3>
+                    <ul style="padding-left:18px;">
+                        <li><strong>Built-in SD-WAN:</strong> 唯一のSASEクラウドに内蔵されたSD-WAN機能</li>
+                        <li><strong>ADVPN:</strong> 動的トンネル機能でメッシュ型接続</li>
+                        <li><strong>3rd Party IPsec:</strong> 非Fortinet機器からBranch On-ramp PoPsへの標準IPsec接続対応</li>
+                        <li><strong>WAN負荷分散:</strong> SaaS/Internet向け通信をFortiSASE経由にルーティング</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🌍 Geofencing & アクセス制御</h3>
+                    <ul style="padding-left:18px;">
+                        <li>国/地域に基づくリモートユーザー接続の許可/ブロック</li>
+                        <li>エッジデバイス接続のジオフェンシング制御</li>
+                        <li>デフォルト: Country/Region = Deny、選択なし → 制限なし</li>
+                        <li>インフラストラクチャベースのフィルタリング</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. License -->
+        <div class="section">
+            <h2 class="section-title">8. ライセンス体系</h2>
+            <div class="card" style="overflow-x:auto;">
+                <table class="license-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">機能カテゴリ</th>
+                            <th>Standard</th>
+                            <th>Advanced</th>
+                            <th>Professional /<br>Comprehensive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="category"><td colspan="4">Secure Internet Access (SIA)</td></tr>
+                        <tr><td style="text-align:left;">アンチウイルス / Web・DNSフィルタ / IPS / ファイル・ビデオフィルタ / アプリ制御 / SSL検査</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr><td style="text-align:left;">リモートブラウザ分離 (RBI)</td><td class="dash">—</td><td class="check">✓</td><td class="dash">—</td></tr>
+                        <tr class="category"><td colspan="4">Secure SaaS Access (SSA)</td></tr>
+                        <tr><td style="text-align:left;">DLP / CASB</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr class="category"><td colspan="4">Secure Private Access (SPA)</td></tr>
+                        <tr><td style="text-align:left;">ZTNA / SPA</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr class="category"><td colspan="4">Endpoint Security</td></tr>
+                        <tr><td style="text-align:left;">AV / ランサムウェア対策 / 脆弱性スキャン / メディア制御 / サンドボックス</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr class="category"><td colspan="4">NOC/SOC サービス</td></tr>
+                        <tr><td style="text-align:left;">ロギング / レポート / 外部ログ転送</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr><td style="text-align:left;">DEM（デジタルエクスペリエンスモニタリング）</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr><td style="text-align:left;">SOCaaS / FortiGuardフォレンジック</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr class="category"><td colspan="4">その他</td></tr>
+                        <tr><td style="text-align:left;">FortiClient一元管理</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                        <tr><td style="text-align:left;">データセンター</td><td>Fortinet DC</td><td>Fortinet DC</td><td>Fortinet + Google Cloud</td></tr>
+                        <tr><td style="text-align:left;">Dedicated Public IP</td><td>アドオン可</td><td class="check">✓</td><td class="check">✓</td></tr>
+                    </tbody>
+                </table>
+                <div class="info-box" style="margin-top:15px;">
+                    <strong>ライセンスモデル:</strong> シンプルなユーザーベース課金。最小発注数量 (MoQ) = <strong>50ユーザー</strong>。FortiFlex エンタイトルメント適用可能。
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. Integration -->
+        <div class="section">
+            <h2 class="section-title">9. API連携 & エコシステム</h2>
+            <div class="card">
+                <p>FortiSASEは以下の製品とシームレスに統合し、Open REST APIによるインバウンドAPI連携も可能です。</p>
+                <div class="integration-grid">
+                    <div class="integration-item">
+                        <div class="product">FortiAnalyzer</div>
+                        <div class="purpose">Analytics / ログ分析</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">FortiIsolator</div>
+                        <div class="purpose">Remote Browser Isolation</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">FortiMonitor</div>
+                        <div class="purpose">DEM（デジタル体験監視）</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">FortiSIEM</div>
+                        <div class="purpose">脅威検出 / SIEM</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">FortiPAM</div>
+                        <div class="purpose">特権アクセス管理</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">FortiGate</div>
+                        <div class="purpose">UTM / NGFW / SD-WAN</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">Open REST API</div>
+                        <div class="purpose">インバウンドAPI統合</div>
+                    </div>
+                    <div class="integration-item">
+                        <div class="product">FortiGuard AI/ML</div>
+                        <div class="purpose">ゼロデイ脅威保護</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Key Differentiators -->
+        <div class="section">
+            <h2 class="section-title">10. FortiSASEの差別化ポイント</h2>
+            <div class="grid-3">
+                <div class="card" style="border-top: 3px solid var(--blue);">
+                    <h3>🔄 WAN回線の負荷分散</h3>
+                    <p>Internet / SaaS / パブリッククラウド向け通信をFortiSASE経由にし、WAN回線の負荷を最適化。SD-WAN + ADVPNによる動的トンネルを内蔵。</p>
+                </div>
+                <div class="card" style="border-top: 3px solid var(--green);">
+                    <h3>🛡️ どこからでも安全</h3>
+                    <p>FortiSASEのセキュリティサービスにより、場所を問わず端末を保護。AI/ML駆動FortiGuardサービスでゼロデイ脅威も防御。</p>
+                </div>
+                <div class="card" style="border-top: 3px solid var(--purple);">
+                    <h3>🏢 社内システムへ選択接続</h3>
+                    <p>ZTNA / SPA機能により、必要な社内システムのみ本社経由で通信。ポスチャーチェックでゼロトラストを実現。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. Deployment Flow -->
+        <div class="section">
+            <h2 class="section-title">11. SPA構築手順フロー</h2>
+            <div class="card">
+                <div class="flow-container">
+                    <div class="flow-step">① FortiGate<br>SPAライセンス適用</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">② FortiGate<br>IPsec VPN設定<br>トンネルIP設定</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">③ FortiGate<br>BGPパラメータ設定<br>(redistribute含む)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">④ FortiGate<br>FWポリシー設定</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">⑤ FortiSASE<br>Secure Private<br>Access設定</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">⑥ FortiSASE<br>セキュリティ<br>プロファイル設定</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">⑦ FortiSASE<br>FWポリシー作成<br>(SPA専用)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">⑧ Split DNS<br>設定（任意）</div>
+                </div>
+                <div class="info-box warning" style="margin-top:15px;">
+                    <strong>💡 設定時の注意:</strong> FortiSASE上では、インターネットアクセス向けとセキュアプライベートアクセス向けのセキュリティプロファイル・FWポリシーが<strong>別々に管理</strong>されているため、設定箇所を間違えないこと。
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. Posture Check -->
+        <div class="section">
+            <h2 class="section-title">12. ポスチャーチェック（ゼロトラスト）</h2>
+            <div class="card">
+                <p>FortiClientがエージェントとして端末の「状態（ポスチャー）」をFortiSASEに送信し、認証だけでなく端末の状態に基づいてアクセスの許可/拒否を制御します。</p>
+                <div class="posture-flow">
+                    <div class="posture-item">🔍 OS パッチ状態</div>
+                    <div class="posture-item">🛡️ AV定義更新</div>
+                    <div class="posture-item">🔐 暗号化状態</div>
+                    <div class="posture-item">📋 コンプライアンス</div>
+                    <div class="posture-item">🚫 マルウェア検出</div>
+                    <div class="posture-item">📍 位置情報</div>
+                </div>
+                <p style="margin-top:10px; color:var(--text-muted); font-size:0.9em;">→ ZTNAと組み合わせることで、従来のVPN方式では実現できなかった<strong>継続的な信頼性評価</strong>に基づくアクセス制御が可能。</p>
+            </div>
+        </div>
+
+        <!-- 13. Compliance -->
+        <div class="section">
+            <h2 class="section-title">13. コンプライアンス & 信頼性</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>📜 SOC2 Type II 認定</h3>
+                    <p>AICPA Trust Services Principles and Criteriaに基づく独立検証済み。セキュリティ管理が継続的に適切に運用されていることを証明。</p>
+                </div>
+                <div class="card">
+                    <h3>⚡ 99.999% SLA</h3>
+                    <p>セキュリティ検査に対するレイテンシ保証付きSLA。世界数百のセキュリティPoPsによるグローバルリーチで実現。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>出典:</strong></p>
+            <p>FortiSASE Datasheet (Fortinet) | 
+            <a href="https://www.scsk.jp/sp/fortinet/blog/fortisase-introduction/" target="_blank">SCSK FortiSASE技術ブログ 第1回</a> | 
+            <a href="https://licensecounter.jp/engineer-voice/blog/articles/20230920_fortisase-spa.html" target="_blank">SB C&S FortiSASE SPA解説</a></p>
+            <p style="margin-top:10px;">本資料は技術者向けの参考資料です。最新情報は公式ドキュメントをご確認ください。</p>
+        </div>
+    </div>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
