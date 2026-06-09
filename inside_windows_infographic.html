@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>インサイドWindows 第7版 — システムアーキテクチャ図解</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg:       #080c12;
+    --surface:  #0e1520;
+    --surface2: #131c2b;
+    --border:   #1e2d42;
+    --blue:     #0d8fff;
+    --blue-dim: #0a3a66;
+    --cyan:     #00d4ff;
+    --purple:   #8b5cf6;
+    --green:    #22c55e;
+    --yellow:   #f59e0b;
+    --red:      #ef4444;
+    --text:     #d0dae8;
+    --muted:    #5a6e85;
+    --mono:     'Share Tech Mono', 'Consolas', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 24px 56px;
+    text-align: center;
+    background: radial-gradient(ellipse 90% 60% at 50% 0%, #041d3a 0%, var(--bg) 70%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(13,143,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13,143,255,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    border: 1px solid var(--blue);
+    color: var(--cyan);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 56px);
+    font-weight: 900;
+    line-height: 1.15;
+    color: #fff;
+    position: relative;
+  }
+  .hero h1 .accent { color: var(--cyan); }
+  .hero-sub {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 580px;
+    margin-inline: auto;
+  }
+  .hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(13,143,255,0.1);
+    border: 1px solid var(--blue-dim);
+    color: var(--blue);
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-family: var(--mono);
+  }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 28px;
+  }
+
+  /* ── DESIGN GOALS TABLE ── */
+  .goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+  }
+  .goal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 16px;
+    border-top: 3px solid var(--blue);
+    position: relative;
+    overflow: hidden;
+  }
+  .goal-card::before {
+    content: attr(data-en);
+    position: absolute;
+    bottom: -8px; right: 8px;
+    font-family: var(--mono);
+    font-size: 32px;
+    color: rgba(13,143,255,0.06);
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .goal-icon { font-size: 22px; margin-bottom: 8px; }
+  .goal-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .goal-desc  { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  /* ── RING DIAGRAM ── */
+  .ring-diagram {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 32px;
+    max-width: 520px;
+  }
+  .ring-wrap {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    flex-shrink: 0;
+  }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .ring-0 {
+    inset: 0;
+    background: rgba(139,92,246,0.08);
+    border: 2px solid rgba(139,92,246,0.4);
+  }
+  .ring-1 {
+    inset: 52px;
+    background: rgba(13,143,255,0.09);
+    border: 2px solid rgba(13,143,255,0.4);
+  }
+  .ring-2 {
+    inset: 104px;
+    background: rgba(34,197,94,0.1);
+    border: 2px solid rgba(34,197,94,0.4);
+  }
+  .ring-3 {
+    inset: 156px;
+    background: rgba(245,158,11,0.12);
+    border: 2px solid rgba(245,158,11,0.4);
+  }
+  .ring-label {
+    position: absolute;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .ring-0 .ring-label { top: 12px; color: rgba(139,92,246,0.9); }
+  .ring-1 .ring-label { top: 12px; color: rgba(13,143,255,0.9); }
+  .ring-2 .ring-label { top: 8px; color: rgba(34,197,94,0.9); }
+  .ring-3 .ring-label { font-size: 10px; color: rgba(245,158,11,0.9); text-align:center; padding: 0 4px; }
+
+  .ring-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    justify-content: center;
+    margin-left: 32px;
+  }
+  .rl-item { display: flex; align-items: flex-start; gap: 10px; }
+  .rl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .rl-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .rl-desc { font-size: 11px; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .ring-diagram { flex-direction: column; align-items: center; }
+    .ring-legend { margin-left: 0; margin-top: 20px; }
+    .ring-wrap { width: 260px; height: 260px; }
+    .ring-1 { inset: 42px; }
+    .ring-2 { inset: 84px; }
+    .ring-3 { inset: 126px; }
+  }
+
+  /* ── ARCHITECTURE LAYERS ── */
+  .arch-stack { display: flex; flex-direction: column; gap: 6px; }
+  .arch-layer {
+    border-radius: 4px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .arch-layer:hover { border-color: var(--blue); }
+  .arch-layer::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+  .layer-user   { background: rgba(139,92,246,0.06); }
+  .layer-user::before   { background: var(--purple); }
+  .layer-subsys { background: rgba(139,92,246,0.04); }
+  .layer-subsys::before { background: rgba(139,92,246,0.5); }
+  .layer-exec   { background: rgba(13,143,255,0.06); }
+  .layer-exec::before   { background: var(--blue); }
+  .layer-kernel { background: rgba(34,197,94,0.06); }
+  .layer-kernel::before { background: var(--green); }
+  .layer-hal    { background: rgba(245,158,11,0.06); }
+  .layer-hal::before    { background: var(--yellow); }
+  .layer-hw     { background: rgba(239,68,68,0.06); }
+  .layer-hw::before     { background: var(--red); }
+
+  .layer-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tag-user   { background: rgba(139,92,246,0.2); color: var(--purple); }
+  .tag-kernel { background: rgba(13,143,255,0.2);  color: var(--blue); }
+  .tag-hw     { background: rgba(245,158,11,0.2);  color: var(--yellow); }
+
+  .layer-name { font-size: 14px; font-weight: 700; color: #fff; min-width: 160px; }
+  .layer-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .layer-components {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;
+  }
+  .lc-chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .divider-label {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    padding: 4px 0;
+    border-top: 1px dashed var(--border);
+    border-bottom: 1px dashed var(--border);
+    margin: 4px 0;
+  }
+
+  /* ── VBS SECTION ── */
+  .vbs-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) { .vbs-wrap { grid-template-columns: 1fr; } }
+  .vtl-card {
+    border-radius: 6px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vtl-0 {
+    background: rgba(13,143,255,0.07);
+    border: 1px solid rgba(13,143,255,0.3);
+  }
+  .vtl-1 {
+    background: rgba(34,197,94,0.07);
+    border: 1px solid rgba(34,197,94,0.4);
+    box-shadow: 0 0 30px rgba(34,197,94,0.08);
+  }
+  .vtl-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+  .vtl-0 .vtl-badge { background: rgba(13,143,255,0.2); color: var(--blue); }
+  .vtl-1 .vtl-badge { background: rgba(34,197,94,0.2); color: var(--green); }
+  .vtl-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .vtl-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+  .vtl-items { display: flex; flex-direction: column; gap: 6px; }
+  .vtl-item {
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vtl-item::before { content: '▸'; color: var(--cyan); font-size: 10px; }
+
+  .vbs-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .arrow-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+  .arrow-center {
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  .vbs-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .vbs-feat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 16px;
+    border-left: 3px solid var(--green);
+  }
+  .vbs-feat-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+  .vbs-feat-desc  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ── PROCESS/THREAD/JOB ── */
+  .ptj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .ptj-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 18px;
+  }
+  .ptj-icon { font-size: 28px; margin-bottom: 10px; }
+  .ptj-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .ptj-props { display: flex; flex-direction: column; gap: 5px; }
+  .ptj-prop {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .ptj-prop::before { content: '·'; color: var(--cyan); flex-shrink: 0; }
+
+  /* ── TOOLS ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+  }
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 16px;
+    border-top: 2px solid var(--cyan);
+  }
+  .tool-name {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--cyan);
+    margin-bottom: 6px;
+  }
+  .tool-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ── ONECORE ── */
+  .onecore-wrap { position: relative; }
+  .onecore-center {
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(13,143,255,0.15));
+    border: 2px solid var(--cyan);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    box-shadow: 0 0 40px rgba(0,212,255,0.08);
+  }
+  .onecore-center .oc-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cyan);
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+  }
+  .onecore-center .oc-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+  }
+  .device-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .device-icon { font-size: 24px; margin-bottom: 6px; }
+  .device-name { font-size: 12px; color: var(--text); font-weight: 700; }
+  .device-sub  { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .connect-line {
+    text-align: center;
+    font-size: 20px;
+    color: var(--border);
+    margin: 4px 0;
+    letter-spacing: 12px;
+  }
+
+  /* ── VERSION TABLE ── */
+  .ver-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .ver-table thead tr {
+    border-bottom: 1px solid var(--blue);
+  }
+  .ver-table th {
+    padding: 8px 14px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 700;
+    font-family: var(--mono);
+  }
+  .ver-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .ver-table tr:hover td { background: rgba(13,143,255,0.04); }
+  .ver-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; }
+  .ver-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .ver-blue  { background: rgba(13,143,255,0.15); color: var(--blue); }
+
+  footer {
+    text-align: center;
+    padding: 28px;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+
+  /* animations */
+  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="page">
+    <div class="hero-eyebrow">TECHNICAL BRIEFING // INSIDE WINDOWS 第7版</div>
+    <h1>Windows <span class="accent">システムアーキテクチャ</span><br>内部構造 図解</h1>
+    <p class="hero-sub">Windows 10 / Windows Server 2016 のコアコンポーネント・設計目標・VBSセキュリティ・実行モデルを一枚で理解する</p>
+    <div class="hero-badges">
+      <span class="badge">OneCore</span>
+      <span class="badge">VBS / Hyper-V</span>
+      <span class="badge">User Mode / Kernel Mode</span>
+      <span class="badge">Sysinternals</span>
+      <span class="badge">Windows NT 設計思想</span>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── SECTION 1: ONECORE ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 1 // OS の統合</div>
+    <div class="section-title">OneCore — すべてのデバイスが共通カーネルを共有</div>
+
+    <div class="connect-line">↑ ↑ ↑ ↑ ↑ ↑</div>
+    <div class="onecore-center">
+      <div class="oc-title">OneCore</div>
+      <div class="oc-sub">共通カーネル + ベースプラットフォーム（Windows 8 で開始 → Windows 10 で完成）</div>
+    </div>
+    <div class="connect-line">↓ ↓ ↓ ↓ ↓ ↓</div>
+
+    <div class="devices-grid" style="margin-top:12px">
+      <div class="device-card">
+        <div class="device-icon">🖥️</div>
+        <div class="device-name">PC / Desktop</div>
+        <div class="device-sub">Windows 10</div>
+      </div>
+      <div class="device-card">
+        <div class="device-icon">🗄️</div>
+        <div class="device-name">Server</div>
+        <div class="device-sub">Windows Server 2016</div>
+      </div>
+      <div class="device-card">
+        <div class="device-icon">🎮</div>
+        <div class="device-name">Xbox One</div>
+        <div class="device-sub">Gaming Console</div>
+      </div>
+      <div class="device-card">
+        <div class="device-icon">📱</div>
+        <div class="device-name">スマートフォン</div>
+        <div class="device-sub">Windows Mobile</div>
+      </div>
+      <div class="device-card">
+        <div class="device-icon">🥽</div>
+        <div class="device-name">HoloLens</div>
+        <div class="device-sub">Mixed Reality</div>
+      </div>
+      <div class="device-card">
+        <div class="device-icon">⚙️</div>
+        <div class="device-name">IoT デバイス</div>
+        <div class="device-sub">Embedded</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:4px;font-size:12px;color:var(--muted)">
+      📌 Windows 10 は今後のWindowsの名称として定着し、定期的な機能更新（Wave）でアップデート。本書が扱うカーネルアーキテクチャは長期的基盤となる。
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: DESIGN GOALS ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 2 // 設計思想</div>
+    <div class="section-title">Windows NT 以来の5つの設計目標（1989年策定）</div>
+
+    <div class="goals-grid">
+      <div class="goal-card" data-en="EXT">
+        <div class="goal-icon">🔌</div>
+        <div class="goal-title">拡張性</div>
+        <div class="goal-desc">市場の変化に合わせてコードを柔軟に追加・変更可能にする</div>
+      </div>
+      <div class="goal-card" data-en="PORT">
+        <div class="goal-icon">🔄</div>
+        <div class="goal-title">ポータビリティ</div>
+        <div class="goal-desc">x86 / x64 / ARM 等の複数ハードウェアで稼働可能にする</div>
+      </div>
+      <div class="goal-card" data-en="REL">
+        <div class="goal-icon">🛡️</div>
+        <div class="goal-title">信頼性・堅牢性</div>
+        <div class="goal-desc">誤動作・改ざんからシステムを保護し、アプリがOSを損なわないようにする</div>
+      </div>
+      <div class="goal-card" data-en="COMPAT">
+        <div class="goal-icon">🔗</div>
+        <div class="goal-title">互換性</div>
+        <div class="goal-desc">旧Windows / MS-DOS / UNIX 等との互換・相互運用性を確保する</div>
+      </div>
+      <div class="goal-card" data-en="PERF">
+        <div class="goal-icon">⚡</div>
+        <div class="goal-title">パフォーマンス</div>
+        <div class="goal-desc">各プラットフォームで可能な限り高速・応答性の良い動作を実現する</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 3: EXECUTION MODE ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 3 // 実行モード</div>
+    <div class="section-title">プロセッサのアクセスモード — Ring 構造</div>
+
+    <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
+      <div class="ring-diagram">
+        <div class="ring-wrap">
+          <div class="ring ring-0">
+            <span class="ring-label">Ring 3 — User Mode</span>
+          </div>
+          <div class="ring ring-1">
+            <span class="ring-label">Ring 0 — Kernel Mode</span>
+          </div>
+          <div class="ring ring-2">
+            <span class="ring-label">Executive</span>
+          </div>
+          <div class="ring ring-3">
+            <span class="ring-label">Kernel Core</span>
+          </div>
+        </div>
+      </div>
+      <div class="ring-legend" style="flex:1;min-width:200px">
+        <div class="rl-item">
+          <div class="rl-dot" style="background:var(--purple)"></div>
+          <div>
+            <div class="rl-name">ユーザーモード（Ring 3）</div>
+            <div class="rl-desc">アプリケーションが実行される非特権モード。システムデータへの直接アクセス・ハードウェア操作は制限される</div>
+          </div>
+        </div>
+        <div class="rl-item">
+          <div class="rl-dot" style="background:var(--blue)"></div>
+          <div>
+            <div class="rl-name">カーネルモード（Ring 0）</div>
+            <div class="rl-desc">OSコード（システムサービス・デバイスドライバー等）が実行される特権モード。全メモリ・CPU命令にアクセス可能</div>
+          </div>
+        </div>
+        <div class="rl-item">
+          <div class="rl-dot" style="background:var(--green)"></div>
+          <div>
+            <div class="rl-name">モード遷移</div>
+            <div class="rl-desc">ユーザーアプリがシステムリソースを必要とする際、システムサービスコールを通じてカーネルモードへ遷移（コンテキストスイッチとは異なる）</div>
+          </div>
+        </div>
+        <div class="rl-item">
+          <div class="rl-dot" style="background:var(--yellow)"></div>
+          <div>
+            <div class="rl-name">HAL（最下層）</div>
+            <div class="rl-desc">ハードウェア固有の差異を吸収し、OSの上位レイヤーから隠蔽する</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 4: ARCHITECTURE STACK ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 4 // 主要コンポーネント</div>
+    <div class="section-title">Windowsアーキテクチャ・レイヤー構造</div>
+
+    <div class="arch-stack">
+
+      <!-- User mode -->
+      <div class="arch-layer layer-user">
+        <span class="layer-tag tag-user">USER MODE</span>
+        <div>
+          <div class="layer-name">アプリケーション</div>
+          <div class="layer-detail">Win32 / UWP / .NET / コマンドラインツール</div>
+        </div>
+      </div>
+
+      <div class="arch-layer layer-subsys">
+        <span class="layer-tag tag-user">USER MODE</span>
+        <div>
+          <div class="layer-name">環境サブシステム</div>
+          <div class="layer-detail">Windowsサブシステム — ウィンドウ管理・グラフィックス・コンソールI/O</div>
+          <div class="layer-components">
+            <span class="lc-chip">Csrss.exe</span>
+            <span class="lc-chip">Win32k.sys</span>
+            <span class="lc-chip">NTDLL.DLL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">─────── USER MODE / KERNEL MODE 境界（システムサービスコール） ───────</div>
+
+      <!-- Kernel mode -->
+      <div class="arch-layer layer-exec">
+        <span class="layer-tag tag-kernel">KERNEL MODE</span>
+        <div>
+          <div class="layer-name">Windowsエグゼクティブ</div>
+          <div class="layer-detail">基本OSサービス — メモリ管理・プロセス管理・セキュリティ・I/O</div>
+          <div class="layer-components">
+            <span class="lc-chip">I/Oマネージャー</span>
+            <span class="lc-chip">メモリマネージャー</span>
+            <span class="lc-chip">セキュリティ参照モニター(SRM)</span>
+            <span class="lc-chip">プロセスマネージャー</span>
+            <span class="lc-chip">オブジェクトマネージャー</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer layer-kernel">
+        <span class="layer-tag tag-kernel">KERNEL MODE</span>
+        <div>
+          <div class="layer-name">カーネル（Ntoskrnl.exe）</div>
+          <div class="layer-detail">スレッドスケジューリング・割り込み/例外ディスパッチ・マルチプロセッサ同期など低レベル機能</div>
+          <div class="layer-components">
+            <span class="lc-chip">スケジューラー</span>
+            <span class="lc-chip">割り込みハンドラー</span>
+            <span class="lc-chip">同期プリミティブ</span>
+            <span class="lc-chip">デバイスドライバー</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-layer layer-hal">
+        <span class="layer-tag tag-kernel">KERNEL MODE</span>
+        <div>
+          <div class="layer-name">ハードウェア抽象化レイヤー（HAL）</div>
+          <div class="layer-detail">マザーボード固有の差異を吸収し、上位レイヤーから隠蔽する</div>
+        </div>
+      </div>
+
+      <div class="arch-layer layer-hw">
+        <span class="layer-tag tag-hw">HARDWARE</span>
+        <div>
+          <div class="layer-name">ハードウェア</div>
+          <div class="layer-detail">CPU（x86 / x64 / ARM）、メモリ、ストレージ、デバイス</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SECTION 5: PROCESS/THREAD/JOB ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 5 // 実行単位</div>
+    <div class="section-title">プロセス・スレッド・ジョブの階層モデル</div>
+
+    <div class="ptj-grid">
+      <div class="ptj-card" style="border-top:3px solid var(--purple)">
+        <div class="ptj-icon">📦</div>
+        <div class="ptj-title">ジョブ (Job)</div>
+        <div class="ptj-props">
+          <div class="ptj-prop">複数プロセスを単一ユニットとして管理・制限するオブジェクト</div>
+          <div class="ptj-prop">CPU時間・メモリ・プロセス数などを一括制御</div>
+        </div>
+      </div>
+      <div class="ptj-card" style="border-top:3px solid var(--blue)">
+        <div class="ptj-icon">🗂️</div>
+        <div class="ptj-title">プロセス (Process)</div>
+        <div class="ptj-props">
+          <div class="ptj-prop">プログラム実行のための「リソースコンテナー」</div>
+          <div class="ptj-prop">プライベート仮想アドレス空間</div>
+          <div class="ptj-prop">オープンされたハンドルのリスト</div>
+          <div class="ptj-prop">セキュリティコンテキスト（トークン）</div>
+          <div class="ptj-prop">1つ以上のスレッドを内包</div>
+        </div>
+      </div>
+      <div class="ptj-card" style="border-top:3px solid var(--cyan)">
+        <div class="ptj-icon">🧵</div>
+        <div class="ptj-title">スレッド (Thread)</div>
+        <div class="ptj-props">
+          <div class="ptj-prop">Windowsが実行をスケジュールする実体</div>
+          <div class="ptj-prop">独自のスタック</div>
+          <div class="ptj-prop">CPUレジスタの状態（コンテキスト）</div>
+          <div class="ptj-prop">スレッドローカルストレージ（TLS）</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:12px;color:var(--muted)">
+      🔑 OSがスケジュールするのはプロセスではなく<strong style="color:var(--text)">スレッド</strong>。プロセスはリソースの器であり、実際の実行単位はスレッドである。
+    </div>
+  </section>
+
+  <!-- ── SECTION 6: VBS ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 6 // セキュリティ</div>
+    <div class="section-title">仮想化ベースのセキュリティ（VBS）— Hyper-V による多層防御</div>
+
+    <div class="vbs-wrap">
+      <div class="vtl-card vtl-1">
+        <div class="vtl-badge">VTL 1 — 高信頼環境</div>
+        <div class="vtl-name">セキュアカーネル</div>
+        <div class="vtl-desc">Securekernel.exe が動作する隔離空間。VTL 0 からのアクセスをハイパーバイザーが物理的にブロック</div>
+        <div class="vtl-items">
+          <div class="vtl-item">資格情報ガード（Credential Guard）</div>
+          <div class="vtl-item">ドメイン資格情報の隔離保管</div>
+          <div class="vtl-item">デバイスガード（HVCI）</div>
+          <div class="vtl-item">コード整合性の強制</div>
+        </div>
+      </div>
+      <div class="vtl-card vtl-0">
+        <div class="vtl-badge">VTL 0 — 通常OS環境</div>
+        <div class="vtl-name">通常カーネル</div>
+        <div class="vtl-desc">従来のWindows OS が動作。万が一カーネルモードが侵害されても VTL 1 の資産は保護される</div>
+        <div class="vtl-items">
+          <div class="vtl-item">User Mode アプリ</div>
+          <div class="vtl-item">Windows Executive</div>
+          <div class="vtl-item">デバイスドライバー</div>
+          <div class="vtl-item">通常のカーネル処理</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vbs-arrow">
+      <div class="arrow-line"></div>
+      <div class="arrow-center">🔒 VTL 0 は VTL 1 のメモリに直接アクセス不可 — ハイパーバイザーが分離を強制</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="vbs-features">
+      <div class="vbs-feat">
+        <div class="vbs-feat-title">✅ 資格情報ガード</div>
+        <div class="vbs-feat-desc">ドメイン資格情報を VTL 1 内に隔離。カーネルが侵害されても Pass-the-Hash 攻撃を防止</div>
+      </div>
+      <div class="vbs-feat">
+        <div class="vbs-feat-title">✅ デバイスガード（HVCI）</div>
+        <div class="vbs-feat-desc">ハイパーバイザーによるコード整合性チェック。未署名・改ざんされたコードの実行を物理的に防止</div>
+      </div>
+      <div class="vbs-feat">
+        <div class="vbs-feat-title">✅ 多層アーキテクチャ</div>
+        <div class="vbs-feat-desc">従来のユーザー/カーネルの2層に加え、VTL による第3の分離層を追加。攻撃面を根本的に縮小</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 7: TOOLS ── -->
+  <section class="fade-in">
+    <div class="section-label">CHAPTER 7 // 調査ツール</div>
+    <div class="section-title">内部構造を「見る」ためのツール群</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px">ソースコードがなくても、これらのツールでWindowsの挙動を詳細に観察・理解できる</p>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-name">Process Explorer</div>
+        <div class="tool-desc">プロセス・ハンドルの詳細表示。DLLやネットワーク接続も確認可能。タスクマネージャーの上位版</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Process Monitor</div>
+        <div class="tool-desc">ファイル・レジストリ・スレッドのリアルタイム追跡。トラブルシューティングの定番ツール</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">WinDbg</div>
+        <div class="tool-desc">カーネルデバッガー。dt コマンドで構造体の型情報を表示。稼働中システムの深層調査が可能</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">LiveKd</div>
+        <div class="tool-desc">デバッグモード不要で稼働中カーネルを調査可能にするツール。本番環境の診断に有用</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">perfmon</div>
+        <div class="tool-desc">パフォーマンスモニター。システム・プロセスの動的パフォーマンス情報をリアルタイム取得</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Sysinternals Suite</div>
+        <div class="tool-desc">上記を含む包括的ツール群。マイクロソフト公式提供。Windows 内部理解の必携セット</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 8: VERSION ── -->
+  <section class="fade-in">
+    <div class="section-label">APPENDIX // バージョン管理</div>
+    <div class="section-title">Windows バージョン履歴と互換性管理</div>
+
+    <table class="ver-table">
+      <thead>
+        <tr>
+          <th>OS</th>
+          <th>内部バージョン</th>
+          <th>備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Windows 7</td>
+          <td>6.1</td>
+          <td style="color:var(--muted)">互換性維持のためメジャー番号を据え置き</td>
+        </tr>
+        <tr>
+          <td>Windows 8 / 8.1</td>
+          <td>6.2 / 6.3</td>
+          <td><span class="ver-badge ver-blue">OneCore 開始</span></td>
+        </tr>
+        <tr>
+          <td>Windows 10</td>
+          <td>10.0</td>
+          <td><span class="ver-badge ver-green">OneCore 完成 ✔</span> バージョンヘルパーAPI 推奨</td>
+        </tr>
+        <tr>
+          <td>Windows Server 2016</td>
+          <td>10.0</td>
+          <td><span class="ver-badge ver-green">VBS 本格導入 ✔</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:14px;padding:12px 16px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:4px;font-size:12px;color:var(--muted)">
+      ⚠ Windows 7 以降、アプリ互換性のため内部バージョン番号の変更は慎重に管理される。機能チェックには IsWindowsVersionOrGreater() 等の <strong style="color:var(--text)">バージョンヘルパーAPI</strong> の使用が推奨。
+    </div>
+  </section>
+
+</div>
+
+<footer>Inside Windows 7th Edition — Windows 10 / Windows Server 2016 Architecture Briefing // Visual Summary</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
