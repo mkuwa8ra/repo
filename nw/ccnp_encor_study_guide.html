@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCNP ENCOR 完全学習ガイド</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1c2230;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f78166;
+    --accent5: #bc8cff;
+    --accent6: #39d0d8;
+    --tag: #0e4429;
+    --tag-border: #238636;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans JP', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a2035 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% -10%, rgba(88,166,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 38px; font-weight: 700; letter-spacing: -.02em;
+    line-height: 1.15; margin-bottom: 12px;
+  }
+  h1 span { color: var(--accent); }
+  .header-sub {
+    color: var(--muted); font-size: 14px; margin-bottom: 28px;
+  }
+  .exam-pills {
+    display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+  }
+  .pill {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 14px;
+    font-size: 12px; color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .pill strong { color: var(--text); }
+
+  /* NAV */
+  nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    padding: 0 24px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-inner { display: inline-flex; gap: 0; min-width: 100%; }
+  nav a {
+    display: inline-block;
+    padding: 12px 16px;
+    color: var(--muted); text-decoration: none;
+    font-size: 12px; font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: color .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--border); }
+  nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  section.topic {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topic-header {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 32px;
+  }
+  .topic-number {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid;
+  }
+  .topic-number.c1 { background: rgba(88,166,255,.12); border-color: rgba(88,166,255,.4); color: var(--accent); }
+  .topic-number.c2 { background: rgba(63,185,80,.12); border-color: rgba(63,185,80,.4); color: var(--accent2); }
+  .topic-number.c3 { background: rgba(210,153,34,.12); border-color: rgba(210,153,34,.4); color: var(--accent3); }
+  .topic-number.c4 { background: rgba(247,129,102,.12); border-color: rgba(247,129,102,.4); color: var(--accent4); }
+  .topic-number.c5 { background: rgba(188,140,255,.12); border-color: rgba(188,140,255,.4); color: var(--accent5); }
+  .topic-number.c6 { background: rgba(57,208,216,.12); border-color: rgba(57,208,216,.4); color: var(--accent6); }
+
+  h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .topic-desc { color: var(--muted); font-size: 13px; }
+
+  /* CARDS GRID */
+  .cards { display: grid; gap: 16px; }
+  .cards-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .cards-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-blue { background: var(--accent); }
+  .dot-green { background: var(--accent2); }
+  .dot-yellow { background: var(--accent3); }
+  .dot-red { background: var(--accent4); }
+  .dot-purple { background: var(--accent5); }
+  .dot-cyan { background: var(--accent6); }
+
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* KEY-VALUE LIST */
+  .kv { list-style: none; }
+  .kv li {
+    display: flex; align-items: baseline; gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(48,54,61,.6);
+    font-size: 13px;
+  }
+  .kv li:last-child { border-bottom: none; }
+  .kv-key {
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    color: var(--accent);
+    background: rgba(88,166,255,.1);
+    border-radius: 4px;
+    padding: 1px 6px;
+    min-width: 80px; text-align: center;
+  }
+  .kv-val { color: var(--text); }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #e6edf3;
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  .code-block .cmd { color: #79c0ff; }
+  .code-block .kw { color: #ff7b72; }
+  .code-block .cmt { color: var(--muted); }
+  .code-block .val { color: var(--accent2); }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .flow-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px; font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 16px; padding: 0 6px;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    margin-top: 8px;
+  }
+  thead th {
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 8px 12px; text-align: left;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted);
+  }
+  tbody td {
+    border: 1px solid var(--border); padding: 8px 12px;
+    color: var(--text);
+  }
+  tbody tr:hover td { background: rgba(255,255,255,.03); }
+
+  /* DIAGRAM SVG WRAPPER */
+  .diagram-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  svg { max-width: 100%; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    border-radius: 4px; padding: 1px 7px;
+    font-size: 11px; font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .badge-blue { background: rgba(88,166,255,.15); color: var(--accent); }
+  .badge-green { background: rgba(63,185,80,.15); color: var(--accent2); }
+  .badge-yellow { background: rgba(210,153,34,.15); color: var(--accent3); }
+  .badge-red { background: rgba(247,129,102,.15); color: var(--accent4); }
+  .badge-purple { background: rgba(188,140,255,.15); color: var(--accent5); }
+  .badge-cyan { background: rgba(57,208,216,.15); color: var(--accent6); }
+
+  /* ALERT */
+  .alert {
+    border-radius: 8px; padding: 12px 16px;
+    font-size: 13px; line-height: 1.6;
+    display: flex; gap: 10px; align-items: flex-start;
+    margin: 12px 0;
+  }
+  .alert-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+  .alert-blue { background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.25); }
+  .alert-yellow { background: rgba(210,153,34,.08); border: 1px solid rgba(210,153,34,.25); }
+  .alert-green { background: rgba(63,185,80,.08); border: 1px solid rgba(63,185,80,.25); }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--muted); font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 10px;
+  }
+
+  /* GRID LAYOUT helpers */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) {
+    .g2, .g3 { grid-template-columns: 1fr; }
+    h1 { font-size: 26px; }
+  }
+
+  /* PROCESS STEPS */
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(88,166,255,.15); border: 1px solid rgba(88,166,255,.4);
+    color: var(--accent); font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 2px;
+  }
+  .step-content { font-size: 13px; }
+  .step-content strong { color: var(--text); }
+  .step-content p { color: var(--muted); margin-top: 2px; }
+
+  /* SPACER */
+  .mt12 { margin-top: 12px; }
+  .mt20 { margin-top: 20px; }
+  .mt8 { margin-top: 8px; }
+
+  footer {
+    text-align: center; padding: 40px 24px;
+    color: var(--muted); font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="header-badge">📡 Cisco CCNP ENCOR 350-401</div>
+    <h1>CCNP <span>ENCOR</span><br>完全学習ガイド</h1>
+    <p class="header-sub">試験範囲を網羅した図解付きリファレンス ─ Exam Version 1.2</p>
+    <div class="exam-pills">
+      <div class="pill">試験時間 <strong>120分</strong></div>
+      <div class="pill">受験料 <strong>約￥60,000</strong></div>
+      <div class="pill">前提試験 <strong>なし</strong></div>
+      <div class="pill">問題形式 <strong>選択式 + シミュレーション</strong></div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hardware">ハードウェア転送</a>
+    <a href="#stp">STP / EtherChannel</a>
+    <a href="#ospf">OSPF / ルーティング</a>
+    <a href="#nat">NAT / FHRP</a>
+    <a href="#multicast">マルチキャスト</a>
+    <a href="#virt">仮想化 / GRE</a>
+    <a href="#sdn">SDN / SD-Access</a>
+    <a href="#mgmt">管理 / 監視</a>
+    <a href="#security">セキュリティ / QoS</a>
+    <a href="#automation">自動化</a>
+    <a href="#wireless">ワイヤレス</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 1. ハードウェア転送 -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="hardware">
+  <div class="topic-header">
+    <div class="topic-number c1">01</div>
+    <div>
+      <h2>ハードウェア転送技術 — CEF / TCAM</h2>
+      <p class="topic-desc">パケットをどのように高速転送するか。コントロールプレーンとデータプレーンの分離。</p>
+    </div>
+  </div>
+
+  <div class="section-label">転送方式の進化</div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 700 90" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Mono, monospace">
+      <!-- Process Switching -->
+      <rect x="10" y="20" width="160" height="50" rx="8" fill="#1c2230" stroke="#30363d"/>
+      <text x="90" y="40" text-anchor="middle" fill="#8b949e" font-size="10">①</text>
+      <text x="90" y="56" text-anchor="middle" fill="#e6edf3" font-size="12" font-weight="600">Process Switching</text>
+      <text x="90" y="68" text-anchor="middle" fill="#8b949e" font-size="10">CPU毎回参照（低速）</text>
+      <!-- arrow -->
+      <text x="180" y="50" fill="#30363d" font-size="20">→</text>
+      <!-- Fast Switching -->
+      <rect x="205" y="20" width="160" height="50" rx="8" fill="#1c2230" stroke="#30363d"/>
+      <text x="285" y="40" text-anchor="middle" fill="#8b949e" font-size="10">②</text>
+      <text x="285" y="56" text-anchor="middle" fill="#e6edf3" font-size="12" font-weight="600">Fast Switching</text>
+      <text x="285" y="68" text-anchor="middle" fill="#8b949e" font-size="10">初回のみCPU・以降はキャッシュ</text>
+      <!-- arrow -->
+      <text x="375" y="50" fill="#30363d" font-size="20">→</text>
+      <!-- CEF -->
+      <rect x="400" y="15" width="160" height="60" rx="8" fill="rgba(88,166,255,0.12)" stroke="rgba(88,166,255,0.5)"/>
+      <text x="480" y="36" text-anchor="middle" fill="#8b949e" font-size="10">③ デフォルト有効</text>
+      <text x="480" y="52" text-anchor="middle" fill="#58a6ff" font-size="13" font-weight="700">CEF</text>
+      <text x="480" y="66" text-anchor="middle" fill="#8b949e" font-size="10">FIB + 隣接テーブルで高速化</text>
+      <text x="570" y="50" fill="#58a6ff" font-size="18">★</text>
+    </svg>
+  </div>
+
+  <div class="g2 mt12">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-blue"></div>CEF (Cisco Express Forwarding)</div>
+      <ul class="kv">
+        <li><span class="kv-key">RIB→FIB</span><span class="kv-val">ルーティングテーブルをFIBに同期（ハードウェア転送用）</span></li>
+        <li><span class="kv-key">ARP→隣接</span><span class="kv-val">ARPテーブルを隣接テーブル(Adj Table)に同期</span></li>
+        <li><span class="kv-key">効果</span><span class="kv-val">CPU介入なしでパケット転送。デフォルト有効。</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-purple"></div>TCAM (Ternary Content Addressable Memory)</div>
+      <ul class="kv">
+        <li><span class="kv-key">値</span><span class="kv-val">0 / 1 / X（ワイルドカード）の3値で処理</span></li>
+        <li><span class="kv-key">速度</span><span class="kv-val">サブネットマスク一致を1クロックで判定</span></li>
+        <li><span class="kv-key">用途</span><span class="kv-val">ACL・ルートルックアップ・QoSマッチング</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="diagram-wrap mt20">
+    <div class="section-label">CEF データフロー</div>
+    <svg viewBox="0 0 680 140" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+      <!-- Control Plane -->
+      <rect x="10" y="10" width="300" height="120" rx="8" fill="rgba(63,185,80,0.06)" stroke="rgba(63,185,80,0.3)"/>
+      <text x="160" y="28" text-anchor="middle" fill="#3fb950" font-size="10" font-family="IBM Plex Mono">CONTROL PLANE</text>
+      <rect x="30" y="38" width="120" height="36" rx="6" fill="#1c2230" stroke="#30363d"/>
+      <text x="90" y="56" text-anchor="middle" fill="#e6edf3" font-size="12">RIB (ルーティング)</text>
+      <text x="90" y="68" text-anchor="middle" fill="#8b949e" font-size="10">OSPF/BGP計算結果</text>
+      <rect x="165" y="38" width="120" height="36" rx="6" fill="#1c2230" stroke="#30363d"/>
+      <text x="225" y="56" text-anchor="middle" fill="#e6edf3" font-size="12">ARPテーブル</text>
+      <text x="225" y="68" text-anchor="middle" fill="#8b949e" font-size="10">MACアドレス解決</text>
+      <!-- sync arrows -->
+      <text x="90" y="92" text-anchor="middle" fill="#3fb950" font-size="18">↓</text>
+      <text x="225" y="92" text-anchor="middle" fill="#3fb950" font-size="18">↓</text>
+      <text x="90" y="110" text-anchor="middle" fill="#8b949e" font-size="10">同期</text>
+      <text x="225" y="110" text-anchor="middle" fill="#8b949e" font-size="10">同期</text>
+      <!-- Data Plane -->
+      <rect x="330" y="10" width="330" height="120" rx="8" fill="rgba(88,166,255,0.06)" stroke="rgba(88,166,255,0.3)"/>
+      <text x="495" y="28" text-anchor="middle" fill="#58a6ff" font-size="10" font-family="IBM Plex Mono">DATA PLANE (CEF)</text>
+      <rect x="350" y="38" width="120" height="36" rx="6" fill="rgba(88,166,255,0.15)" stroke="rgba(88,166,255,0.4)"/>
+      <text x="410" y="56" text-anchor="middle" fill="#58a6ff" font-size="12" font-weight="600">FIB</text>
+      <text x="410" y="68" text-anchor="middle" fill="#8b949e" font-size="10">転送情報ベース</text>
+      <rect x="490" y="38" width="150" height="36" rx="6" fill="rgba(88,166,255,0.15)" stroke="rgba(88,166,255,0.4)"/>
+      <text x="565" y="56" text-anchor="middle" fill="#58a6ff" font-size="12" font-weight="600">隣接テーブル</text>
+      <text x="565" y="68" text-anchor="middle" fill="#8b949e" font-size="10">次ホップのMACアドレス</text>
+      <text x="410" y="102" text-anchor="middle" fill="#58a6ff" font-size="11">CPU不要で高速転送！</text>
+      <text x="565" y="102" text-anchor="middle" fill="#58a6ff" font-size="11">1クロックで書き換え</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 2. STP / EtherChannel -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="stp">
+  <div class="topic-header">
+    <div class="topic-number c2">02</div>
+    <div>
+      <h2>レイヤ2技術 — STP / EtherChannel</h2>
+      <p class="topic-desc">ループ防止と冗長化。現場での2大トラブルメーカーの1つ。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">STP ポート状態遷移（PVST+）</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- states -->
+          <rect x="100" y="10" width="120" height="40" rx="8" fill="#1c2230" stroke="#30363d"/>
+          <text x="160" y="34" text-anchor="middle" fill="#8b949e" font-size="13">Disabled</text>
+          <rect x="100" y="70" width="120" height="40" rx="8" fill="#1c2230" stroke="rgba(247,129,102,0.5)"/>
+          <text x="160" y="94" text-anchor="middle" fill="#f78166" font-size="13">Blocking</text>
+          <rect x="100" y="130" width="120" height="40" rx="8" fill="#1c2230" stroke="#30363d"/>
+          <text x="160" y="154" text-anchor="middle" fill="#8b949e" font-size="13">Listening (15s)</text>
+          <rect x="100" y="190" width="120" height="40" rx="8" fill="#1c2230" stroke="#30363d"/>
+          <text x="160" y="214" text-anchor="middle" fill="#8b949e" font-size="13">Learning (15s)</text>
+          <rect x="100" y="250" width="120" height="40" rx="8" fill="rgba(63,185,80,0.15)" stroke="rgba(63,185,80,0.5)"/>
+          <text x="160" y="274" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="600">Forwarding ✓</text>
+          <!-- arrows -->
+          <line x1="160" y1="50" x2="160" y2="68" stroke="#30363d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="160" y1="110" x2="160" y2="128" stroke="#30363d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="160" y1="170" x2="160" y2="188" stroke="#30363d" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="160" y1="230" x2="160" y2="248" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arr2)"/>
+          <!-- total time label -->
+          <text x="250" y="170" fill="#d29922" font-size="11">合計</text>
+          <text x="250" y="184" fill="#d29922" font-size="11">30-50s</text>
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#30363d"/>
+            </marker>
+            <marker id="arr2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#3fb950"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">STP ロール選出プロセス</div>
+      <div class="steps mt8">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <strong>ルートブリッジ選出</strong>
+            <p>Bridge ID (Priority 32768 + VLAN + MAC) が最小のスイッチ。全ポートが Designated Port になる。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <strong>ルートポート決定</strong>
+            <p>非ルートブリッジの各スイッチで、ルートブリッジへのコスト最小ポート。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <strong>指定ポート / 非指定ポート決定</strong>
+            <p>各セグメントで1つを Designated、残りを Non-Designated（Blocking）にする。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <strong>PortFast 設定</strong>
+            <p>PCやサーバー接続ポートに設定。即座に Forwarding へ。BPDUGuard と必ずセットで。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-blue mt12">
+        <span class="alert-icon">⚡</span>
+        <div><strong>Rapid PVST+ (802.1w)</strong> — 収束時間を数秒に短縮。Proposal/Agreement メカニズムにより即時同期。現代の推奨設定。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">STPコスト比較</div>
+    <table>
+      <thead><tr><th>帯域幅</th><th>コスト (旧)</th><th>コスト (新・推奨)</th></tr></thead>
+      <tbody>
+        <tr><td>10 Mbps</td><td>100</td><td>2,000,000</td></tr>
+        <tr><td>100 Mbps</td><td>19</td><td>200,000</td></tr>
+        <tr><td>1 Gbps</td><td>4</td><td>20,000</td></tr>
+        <tr><td>10 Gbps</td><td>2</td><td>2,000</td></tr>
+        <tr><td>100 Gbps</td><td>—</td><td>200</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">EtherChannel (ポートチャネル)</div>
+    <div class="cards cards-3 mt8">
+      <div class="card">
+        <div class="card-title"><div class="dot dot-green"></div>LACP (標準 802.3ad)</div>
+        <ul class="kv">
+          <li><span class="kv-key">モード</span><span class="kv-val">active / passive</span></li>
+          <li><span class="kv-key">条件</span><span class="kv-val">両端が active か、片端が active</span></li>
+          <li><span class="kv-key">推奨</span><span class="kv-val">マルチベンダー環境で利用</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-yellow"></div>PAgP (Cisco独自)</div>
+        <ul class="kv">
+          <li><span class="kv-key">モード</span><span class="kv-val">desirable / auto</span></li>
+          <li><span class="kv-key">条件</span><span class="kv-val">両端が desirable か、片端が desirable</span></li>
+          <li><span class="kv-key">制限</span><span class="kv-val">Ciscoデバイス間のみ</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-purple"></div>ロードバランシング</div>
+        <ul class="kv">
+          <li><span class="kv-key">単位</span><span class="kv-val">パケット単位ではなくフロー単位</span></li>
+          <li><span class="kv-key">最大帯域</span><span class="kv-val">1端末は物理リンク1本分</span></li>
+          <li><span class="kv-key">ハッシュ</span><span class="kv-val">src/dst IP・MACなど複数方式</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-green mt12">
+      <span class="alert-icon">✅</span>
+      <div>EtherChannelはSTPから見て1本の論理リンクのため、STPのブロッキングが発生しない。障害時のダウンタイムも <strong>1秒未満</strong>。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 3. OSPF -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="ospf">
+  <div class="topic-header">
+    <div class="topic-number c3">03</div>
+    <div>
+      <h2>レイヤ3技術 — OSPF</h2>
+      <p class="topic-desc">標準リンクステート型プロトコル。エリア設計とDR/BDR選出が重要。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">OSPFネイバー確立フロー</div>
+      <div class="steps mt8">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Down</strong><p>Hello未受信の初期状態</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Init</strong><p>Hello受信。まだ自分のRIDは含まれていない</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><strong>2-Way</strong><p>双方のHelloに互いのRIDが含まれる。DR/BDR選出はここで</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><strong>ExStart</strong><p>マスター/スレーブを決定。DBD交換開始</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><strong>Exchange</strong><p>DBD（データベース概要）を交換</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-content"><strong>Loading</strong><p>LSRequest → LSUpdate → LSAck</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(63,185,80,.2);border-color:rgba(63,185,80,.6);color:#3fb950">✓</div><div class="step-content"><strong style="color:#3fb950">Full ← 目標はここ！</strong><p>LSDB同期完了。アジャセンシー確立</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">OSPF エリア設計</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- Area 0 (backbone) -->
+          <rect x="80" y="10" width="160" height="80" rx="10" fill="rgba(88,166,255,0.12)" stroke="rgba(88,166,255,0.5)"/>
+          <text x="160" y="35" text-anchor="middle" fill="#58a6ff" font-size="12" font-weight="700">Area 0</text>
+          <text x="160" y="52" text-anchor="middle" fill="#8b949e" font-size="10">バックボーンエリア</text>
+          <text x="160" y="66" text-anchor="middle" fill="#8b949e" font-size="10">（必須・必ず存在）</text>
+          <!-- ABR -->
+          <rect x="60" y="108" width="80" height="36" rx="6" fill="#1c2230" stroke="rgba(210,153,34,0.5)"/>
+          <text x="100" y="126" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">ABR</text>
+          <text x="100" y="138" text-anchor="middle" fill="#8b949e" font-size="9">エリア境界ルーター</text>
+          <rect x="180" y="108" width="80" height="36" rx="6" fill="#1c2230" stroke="rgba(210,153,34,0.5)"/>
+          <text x="220" y="126" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">ABR</text>
+          <text x="220" y="138" text-anchor="middle" fill="#8b949e" font-size="9">エリア境界ルーター</text>
+          <!-- Area 1 -->
+          <rect x="20" y="162" width="160" height="60" rx="8" fill="rgba(63,185,80,0.08)" stroke="rgba(63,185,80,0.3)"/>
+          <text x="100" y="185" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">Area 1</text>
+          <text x="100" y="202" text-anchor="middle" fill="#8b949e" font-size="9">スタブエリア等に設定可</text>
+          <!-- Area 2 -->
+          <rect x="140" y="162" width="160" height="60" rx="8" fill="rgba(188,140,255,0.08)" stroke="rgba(188,140,255,0.3)"/>
+          <text x="220" y="185" text-anchor="middle" fill="#bc8cff" font-size="11" font-weight="600">Area 2</text>
+          <text x="220" y="202" text-anchor="middle" fill="#8b949e" font-size="9">NSSA等に設定可</text>
+          <!-- ASBR -->
+          <rect x="100" y="242" width="120" height="32" rx="6" fill="#1c2230" stroke="rgba(247,129,102,0.4)"/>
+          <text x="160" y="258" text-anchor="middle" fill="#f78166" font-size="11" font-weight="600">ASBR</text>
+          <text x="160" y="270" text-anchor="middle" fill="#8b949e" font-size="9">外部ルート再配布</text>
+          <!-- lines -->
+          <line x1="100" y1="90" x2="100" y2="108" stroke="#30363d" stroke-width="1.5"/>
+          <line x1="220" y1="90" x2="220" y2="108" stroke="#30363d" stroke-width="1.5"/>
+          <line x1="100" y1="144" x2="100" y2="162" stroke="#30363d" stroke-width="1.5"/>
+          <line x1="220" y1="144" x2="220" y2="162" stroke="#30363d" stroke-width="1.5"/>
+          <line x1="160" y1="222" x2="160" y2="242" stroke="#30363d" stroke-width="1.5" stroke-dasharray="4"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">DR / BDR 選出とネットワークタイプ</div>
+    <div class="g2 mt8">
+      <div class="card">
+        <div class="card-title"><div class="dot dot-blue"></div>DR / BDR 選出（マルチアクセスネットワーク）</div>
+        <ul class="kv">
+          <li><span class="kv-key">DR</span><span class="kv-val">Priority最大(デフォルト1) → 同値ならRouter-ID最大</span></li>
+          <li><span class="kv-key">BDR</span><span class="kv-val">DR次点。DRダウン時に昇格</span></li>
+          <li><span class="kv-key">DROTHER</span><span class="kv-val">DR/BDRとのみFull。他はFull不要</span></li>
+          <li><span class="kv-key">Priority 0</span><span class="kv-val">DR/BDRに絶対なれない</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-green"></div>ネットワークタイプ</div>
+        <table>
+          <thead><tr><th>タイプ</th><th>DR/BDR</th><th>代表例</th></tr></thead>
+          <tbody>
+            <tr><td>Broadcast</td><td>あり</td><td>Ethernet</td></tr>
+            <tr><td>Point-to-Point</td><td>なし</td><td>シリアル/GRE</td></tr>
+            <tr><td>NBMA</td><td>あり</td><td>Frame Relay</td></tr>
+            <tr><td>Point-to-Multipoint</td><td>なし</td><td>HubSpokeなど</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">主要コマンド</div>
+    <div class="code-block">
+<span class="cmt">! インターフェース単位でOSPF有効化（推奨）</span>
+<span class="cmd">interface GigabitEthernet0/0</span>
+ <span class="kw">ip ospf</span> <span class="val">1</span> area <span class="val">0</span>
+
+<span class="cmt">! ルーターIDを明示的に設定（重複不可・必須推奨）</span>
+<span class="cmd">router ospf 1</span>
+ <span class="kw">router-id</span> <span class="val">1.1.1.1</span>
+
+<span class="cmt">! ネイバー確認 → STATEがFULLであることを確認</span>
+<span class="cmd">show ip ospf neighbor</span>
+<span class="cmd">show ip ospf interface brief</span>
+<span class="cmd">show ip route ospf</span></div>
+  </div>
+
+  <div class="alert alert-yellow mt12">
+    <span class="alert-icon">⚠️</span>
+    <div>OSPFアジャセンシーが張れない主な原因：Hello/Deadタイマー不一致、エリアID不一致、サブネットマスク不一致（ネットワークタイプによる）、認証設定の差異。</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 4. NAT / FHRP -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="nat">
+  <div class="topic-header">
+    <div class="topic-number c4">04</div>
+    <div>
+      <h2>NAT / PAT — FHRP — HA技術</h2>
+      <p class="topic-desc">アドレス変換と冗長化。PATとHSRP/VRRPは現場の基本構成。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">NAT の種類</div>
+      <div class="cards mt8">
+        <div class="card">
+          <div class="card-title"><div class="dot dot-blue"></div>Static NAT</div>
+          <p>プライベートIPとグローバルIPを1対1で対応。サーバー公開などに使用。</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot dot-green"></div>Dynamic NAT</div>
+          <p>アドレスプールから動的に割り当て。プール枯渇すると接続不可になる。</p>
+        </div>
+        <div class="card">
+          <div class="card-title" style="color:#3fb950"><div class="dot dot-yellow"></div>PAT (Overload) ← 現在の主流</div>
+          <p>多数のプライベートIPをポート番号で識別し、1つのグローバルIPに多重化。</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">FHRP 比較</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- Virtual IP -->
+          <rect x="90" y="10" width="120" height="36" rx="8" fill="rgba(210,153,34,0.15)" stroke="rgba(210,153,34,0.5)"/>
+          <text x="150" y="26" text-anchor="middle" fill="#d29922" font-size="11" font-weight="700">仮想IP (VIP)</text>
+          <text x="150" y="40" text-anchor="middle" fill="#8b949e" font-size="9">PC のデフォルトGW</text>
+          <!-- Active/Master -->
+          <rect x="20" y="80" width="110" height="60" rx="8" fill="rgba(63,185,80,0.12)" stroke="rgba(63,185,80,0.4)"/>
+          <text x="75" y="103" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">Active / Master</text>
+          <text x="75" y="118" text-anchor="middle" fill="#8b949e" font-size="9">通常転送担当</text>
+          <text x="75" y="132" text-anchor="middle" fill="#8b949e" font-size="9">Priority高い方</text>
+          <!-- Standby/Backup -->
+          <rect x="170" y="80" width="110" height="60" rx="8" fill="#1c2230" stroke="#30363d"/>
+          <text x="225" y="103" text-anchor="middle" fill="#8b949e" font-size="11" font-weight="600">Standby / Backup</text>
+          <text x="225" y="118" text-anchor="middle" fill="#8b949e" font-size="9">監視のみ</text>
+          <text x="225" y="132" text-anchor="middle" fill="#8b949e" font-size="9">Active失敗時に昇格</text>
+          <!-- lines -->
+          <line x1="100" y1="46" x2="75" y2="80" stroke="#30363d" stroke-width="1.5"/>
+          <line x1="200" y1="46" x2="225" y2="80" stroke="#30363d" stroke-width="1.5"/>
+          <!-- failover arrow -->
+          <path d="M130,110 Q150,95 170,110" stroke="#f78166" stroke-width="1.5" fill="none" stroke-dasharray="4"/>
+          <text x="150" y="90" text-anchor="middle" fill="#f78166" font-size="9">フェールオーバー</text>
+          <!-- Clients -->
+          <rect x="90" y="164" width="120" height="30" rx="6" fill="#1c2230" stroke="#30363d"/>
+          <text x="150" y="183" text-anchor="middle" fill="#8b949e" font-size="11">クライアント群</text>
+          <line x1="150" y1="46" x2="150" y2="80" stroke="rgba(210,153,34,0.4)" stroke-width="1.5" stroke-dasharray="4"/>
+          <line x1="150" y1="164" x2="75" y2="140" stroke="#30363d" stroke-width="1"/>
+          <line x1="150" y1="164" x2="225" y2="140" stroke="#30363d" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt12">
+    <table>
+      <thead><tr><th>プロトコル</th><th>種別</th><th>Active側呼称</th><th>Standby側呼称</th><th>マルチグループLB</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">HSRP v1/v2</span></td><td>Cisco独自</td><td>Active</td><td>Standby</td><td>可（MHSRP）</td></tr>
+        <tr><td><span class="badge badge-green">VRRP</span></td><td>標準 (RFC)</td><td>Master</td><td>Backup</td><td>可</td></tr>
+        <tr><td><span class="badge badge-purple">GLBP</span></td><td>Cisco独自</td><td>AVG</td><td>AVF（全台稼働）</td><td>自動LB（全台Active）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="g2 mt20">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-cyan"></div>SSO (Stateful Switchover)</div>
+      <p>スーパーバイザーを冗長化。アクティブ/スタンバイでステートを同期。切り替え時もセッション情報を保持。</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-cyan"></div>NSF (Non-Stop Forwarding)</div>
+      <p>SSO切り替え中も転送を継続。隣接ルーターにGraceful Restartを通知し、ルーティング情報を保持してもらう。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 5. マルチキャスト -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="multicast">
+  <div class="topic-header">
+    <div class="topic-number c5">05</div>
+    <div>
+      <h2>マルチキャスト</h2>
+      <p class="topic-desc">グループメンバーにのみ効率的に配信。IGMP + PIM の組み合わせ。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">マルチキャストアドレス体系</div>
+      <div class="card">
+        <ul class="kv">
+          <li><span class="kv-key">範囲</span><span class="kv-val">224.0.0.0 〜 239.255.255.255</span></li>
+          <li><span class="kv-key">リンクローカル</span><span class="kv-val">224.0.0.0/24（ルーターが転送しない）</span></li>
+          <li><span class="kv-key">OSPF Hello</span><span class="kv-val">224.0.0.5 / 224.0.0.6</span></li>
+          <li><span class="kv-key">HSRP</span><span class="kv-val">224.0.0.2</span></li>
+          <li><span class="kv-key">PIM</span><span class="kv-val">224.0.0.13</span></li>
+          <li><span class="kv-key">グローバルスコープ</span><span class="kv-val">224.0.1.0 〜 238.255.255.255</span></li>
+          <li><span class="kv-key">管理用スコープ</span><span class="kv-val">239.0.0.0/8（プライベート）</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">PIM モード比較</div>
+      <div class="cards mt8">
+        <div class="card">
+          <div class="card-title"><div class="dot dot-red"></div>PIM Dense Mode (DM)</div>
+          <p>まずフラッドし、不要なルーターからPruneで剪定。密な環境向け。現在はほぼ非推奨。</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot dot-blue"></div>PIM Sparse Mode (SM) ← 主流</div>
+          <p>RP（Rendezvous Point）を中心にツリーを構築。受信希望ルーターがJoinを送信。まばらな環境に最適。</p>
+          <div class="code-block" style="margin-top:8px">
+<span class="cmt">! RP設定</span>
+<span class="kw">ip pim rp-address</span> <span class="val">10.0.0.1</span>
+<span class="cmt">! Auto-RP or BSR でRP自動配布も可</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">マルチキャスト関連プロトコル</div>
+    <div class="cards cards-3 mt8">
+      <div class="card">
+        <div class="card-title"><div class="dot dot-green"></div>IGMP (Internet Group Management Protocol)</div>
+        <ul class="kv">
+          <li><span class="kv-key">役割</span><span class="kv-val">ホストとルーター間のグループ管理</span></li>
+          <li><span class="kv-key">v1</span><span class="kv-val">基本的なJoin/Leave</span></li>
+          <li><span class="kv-key">v2</span><span class="kv-val">Leave Group追加（高速離脱）</span></li>
+          <li><span class="kv-key">v3</span><span class="kv-val">送信元フィルタリング対応</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-yellow"></div>IGMP Snooping</div>
+        <p>L2スイッチがIGMPを監視し、マルチキャストをグループメンバーポートにのみ転送。フラッド防止に必須。</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-red"></div>RPF (Reverse Path Forwarding)</div>
+        <p>送信元IPに対してルーティングテーブルを逆引きし、正しいインターフェースから来たパケットのみ転送。ループ防止。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 6. 仮想化 / GRE / VPN -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="virt">
+  <div class="topic-header">
+    <div class="topic-number c6">06</div>
+    <div>
+      <h2>仮想化技術 — VRF / GRE / IPsec</h2>
+      <p class="topic-desc">ネットワーク仮想化と安全なトンネリング。VRF・GRE・IPsecの連携。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">サーバー仮想化</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- Physical Server -->
+          <rect x="10" y="150" width="260" height="40" rx="6" fill="#1c2230" stroke="#30363d"/>
+          <text x="140" y="174" text-anchor="middle" fill="#8b949e" font-size="12">物理サーバー (ハードウェア)</text>
+          <!-- Type 1 Hypervisor -->
+          <rect x="10" y="108" width="260" height="36" rx="0" fill="rgba(88,166,255,0.15)" stroke="rgba(88,166,255,0.5)"/>
+          <text x="140" y="126" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="700">Type 1 ハイパーバイザー (ベアメタル)</text>
+          <text x="140" y="138" text-anchor="middle" fill="#8b949e" font-size="9">VMware ESXi / Hyper-V / KVM</text>
+          <!-- VMs -->
+          <rect x="15" y="50" width="70" height="52" rx="6" fill="#1c2230" stroke="rgba(63,185,80,0.4)"/>
+          <text x="50" y="70" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">VM 1</text>
+          <text x="50" y="83" text-anchor="middle" fill="#8b949e" font-size="8">Guest OS</text>
+          <text x="50" y="96" text-anchor="middle" fill="#8b949e" font-size="8">App</text>
+          <rect x="105" y="50" width="70" height="52" rx="6" fill="#1c2230" stroke="rgba(63,185,80,0.4)"/>
+          <text x="140" y="70" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">VM 2</text>
+          <text x="140" y="83" text-anchor="middle" fill="#8b949e" font-size="8">Guest OS</text>
+          <text x="140" y="96" text-anchor="middle" fill="#8b949e" font-size="8">App</text>
+          <rect x="195" y="50" width="70" height="52" rx="6" fill="#1c2230" stroke="rgba(63,185,80,0.4)"/>
+          <text x="230" y="70" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">VM 3</text>
+          <text x="230" y="83" text-anchor="middle" fill="#8b949e" font-size="8">Guest OS</text>
+          <text x="230" y="96" text-anchor="middle" fill="#8b949e" font-size="8">App</text>
+          <!-- vSwitch -->
+          <rect x="10" y="15" width="260" height="28" rx="4" fill="rgba(188,140,255,0.1)" stroke="rgba(188,140,255,0.3)"/>
+          <text x="140" y="32" text-anchor="middle" fill="#bc8cff" font-size="10">vSwitch (仮想スイッチ)</text>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">VRF (Virtual Routing and Forwarding)</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- Router border -->
+          <rect x="5" y="5" width="270" height="190" rx="10" fill="rgba(88,166,255,0.04)" stroke="#30363d"/>
+          <text x="140" y="22" text-anchor="middle" fill="#8b949e" font-size="10" font-family="IBM Plex Mono">物理ルーター (1台)</text>
+          <!-- VRF A -->
+          <rect x="20" y="32" width="110" height="100" rx="8" fill="rgba(63,185,80,0.08)" stroke="rgba(63,185,80,0.35)"/>
+          <text x="75" y="52" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="700">VRF A</text>
+          <text x="75" y="68" text-anchor="middle" fill="#8b949e" font-size="9">ルーティングテーブル A</text>
+          <text x="75" y="82" text-anchor="middle" fill="#8b949e" font-size="9">10.0.0.0/8</text>
+          <text x="75" y="96" text-anchor="middle" fill="#8b949e" font-size="9">Gi0/0, Gi0/1</text>
+          <text x="75" y="112" text-anchor="middle" fill="#8b949e" font-size="9">（会社A専用）</text>
+          <!-- VRF B -->
+          <rect x="150" y="32" width="110" height="100" rx="8" fill="rgba(188,140,255,0.08)" stroke="rgba(188,140,255,0.35)"/>
+          <text x="205" y="52" text-anchor="middle" fill="#bc8cff" font-size="11" font-weight="700">VRF B</text>
+          <text x="205" y="68" text-anchor="middle" fill="#8b949e" font-size="9">ルーティングテーブル B</text>
+          <text x="205" y="82" text-anchor="middle" fill="#8b949e" font-size="9">10.0.0.0/8</text>
+          <text x="205" y="96" text-anchor="middle" fill="#8b949e" font-size="9">Gi0/2, Gi0/3</text>
+          <text x="205" y="112" text-anchor="middle" fill="#8b949e" font-size="9">（会社B専用）</text>
+          <!-- Complete isolation -->
+          <text x="140" y="155" text-anchor="middle" fill="#d29922" font-size="11">↑ 同じIPアドレス帯でも完全分離 ↑</text>
+          <text x="140" y="170" text-anchor="middle" fill="#8b949e" font-size="9">VPN・ISP・マルチテナントに活用</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">GRE / IPsec トンネリング</div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 660 100" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+        <!-- Site A -->
+        <rect x="10" y="20" width="100" height="60" rx="8" fill="#1c2230" stroke="#30363d"/>
+        <text x="60" y="45" text-anchor="middle" fill="#e6edf3" font-size="11" font-weight="600">拠点 A</text>
+        <text x="60" y="60" text-anchor="middle" fill="#8b949e" font-size="9">プライベートNW</text>
+        <text x="60" y="73" text-anchor="middle" fill="#8b949e" font-size="9">192.168.1.0/24</text>
+        <!-- GRE Tunnel -->
+        <rect x="130" y="35" width="400" height="30" rx="15" fill="rgba(88,166,255,0.1)" stroke="rgba(88,166,255,0.4)" stroke-dasharray="6,3"/>
+        <text x="330" y="54" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">GRE Tunnel（カプセル化）</text>
+        <!-- IPsec layer -->
+        <rect x="130" y="72" width="400" height="16" rx="6" fill="rgba(63,185,80,0.1)" stroke="rgba(63,185,80,0.35)"/>
+        <text x="330" y="83" text-anchor="middle" fill="#3fb950" font-size="9">＋ IPsec 暗号化 → GRE over IPsec</text>
+        <!-- Internet cloud label -->
+        <text x="330" y="28" text-anchor="middle" fill="#8b949e" font-size="9">Internet (パブリックIPで転送)</text>
+        <!-- Site B -->
+        <rect x="550" y="20" width="100" height="60" rx="8" fill="#1c2230" stroke="#30363d"/>
+        <text x="600" y="45" text-anchor="middle" fill="#e6edf3" font-size="11" font-weight="600">拠点 B</text>
+        <text x="600" y="60" text-anchor="middle" fill="#8b949e" font-size="9">プライベートNW</text>
+        <text x="600" y="73" text-anchor="middle" fill="#8b949e" font-size="9">192.168.2.0/24</text>
+      </svg>
+    </div>
+    <div class="cards cards-3 mt12">
+      <div class="card">
+        <div class="card-title"><div class="dot dot-blue"></div>GRE の特徴</div>
+        <ul class="kv">
+          <li><span class="kv-key">プロトコル</span><span class="kv-val">Protocol 47</span></li>
+          <li><span class="kv-key">マルチキャスト</span><span class="kv-val">対応可（OSPF等も流せる）</span></li>
+          <li><span class="kv-key">暗号化</span><span class="kv-val">なし → IPsecと組み合わせ必須</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-green"></div>IPsec の構成要素</div>
+        <ul class="kv">
+          <li><span class="kv-key">IKE Phase1</span><span class="kv-val">ISAKMP SAの確立（認証・鍵交換）</span></li>
+          <li><span class="kv-key">IKE Phase2</span><span class="kv-val">IPsec SAの確立（データ保護）</span></li>
+          <li><span class="kv-key">ESP</span><span class="kv-val">暗号化+認証（Protocol 50）</span></li>
+          <li><span class="kv-key">AH</span><span class="kv-val">認証のみ（暗号化なし）</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-purple"></div>DMVPN / FlexVPN</div>
+        <p>Hub-and-Spoke構成を効率化するGREベースのソリューション。スポーク同士のダイナミックトンネルも確立可能。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 7. SDN / SD-Access / SD-WAN -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="sdn">
+  <div class="topic-header">
+    <div class="topic-number c1">07</div>
+    <div>
+      <h2>SDN — SD-Access — SD-WAN</h2>
+      <p class="topic-desc">ネットワーク自動化とソフトウェア定義ネットワークのアーキテクチャ。</p>
+    </div>
+  </div>
+
+  <div class="section-label">SDN アーキテクチャ レイヤー</div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 660 180" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+      <!-- App Layer -->
+      <rect x="10" y="10" width="640" height="44" rx="8" fill="rgba(188,140,255,0.1)" stroke="rgba(188,140,255,0.4)"/>
+      <text x="330" y="28" text-anchor="middle" fill="#bc8cff" font-size="12" font-weight="700">Application Layer</text>
+      <text x="330" y="44" text-anchor="middle" fill="#8b949e" font-size="10">ネットワーク管理アプリ / セキュリティアプリ / ビジネスアプリ</text>
+      <!-- NBI arrow -->
+      <text x="330" y="68" text-anchor="middle" fill="#8b949e" font-size="10">↕ Northbound API (REST / RESTCONF / Python SDK)</text>
+      <!-- Control Layer -->
+      <rect x="10" y="74" width="640" height="44" rx="8" fill="rgba(88,166,255,0.1)" stroke="rgba(88,166,255,0.4)"/>
+      <text x="330" y="92" text-anchor="middle" fill="#58a6ff" font-size="12" font-weight="700">Control Layer — SDNコントローラー</text>
+      <text x="330" y="108" text-anchor="middle" fill="#8b949e" font-size="10">Cisco Catalyst Center (旧 DNA Center) / OpenDaylight</text>
+      <!-- SBI arrow -->
+      <text x="330" y="130" text-anchor="middle" fill="#8b949e" font-size="10">↕ Southbound API (NETCONF/YANG / OpenFlow / gRPC)</text>
+      <!-- Infra Layer -->
+      <rect x="10" y="136" width="640" height="38" rx="8" fill="rgba(63,185,80,0.08)" stroke="rgba(63,185,80,0.3)"/>
+      <text x="330" y="154" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="700">Infrastructure Layer</text>
+      <text x="330" y="168" text-anchor="middle" fill="#8b949e" font-size="10">スイッチ / ルーター / AP / 物理デバイス群</text>
+    </svg>
+  </div>
+
+  <div class="g2 mt20">
+    <div>
+      <div class="section-label">SD-Access アーキテクチャ</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- Catalyst Center -->
+          <rect x="50" y="5" width="200" height="36" rx="8" fill="rgba(88,166,255,0.12)" stroke="rgba(88,166,255,0.5)"/>
+          <text x="150" y="21" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="700">Catalyst Center</text>
+          <text x="150" y="34" text-anchor="middle" fill="#8b949e" font-size="9">IBN コントローラー</text>
+          <!-- Overlay -->
+          <rect x="20" y="60" width="260" height="90" rx="8" fill="rgba(210,153,34,0.06)" stroke="rgba(210,153,34,0.3)" stroke-dasharray="5,3"/>
+          <text x="150" y="78" text-anchor="middle" fill="#d29922" font-size="10">Overlay (ファブリック)</text>
+          <rect x="35" y="85" width="70" height="28" rx="5" fill="#1c2230" stroke="#30363d"/>
+          <text x="70" y="103" text-anchor="middle" fill="#e6edf3" font-size="9">VXLAN転送</text>
+          <rect x="118" y="85" width="70" height="28" rx="5" fill="#1c2230" stroke="#30363d"/>
+          <text x="153" y="103" text-anchor="middle" fill="#e6edf3" font-size="9">LISP制御</text>
+          <rect x="200" y="85" width="65" height="28" rx="5" fill="#1c2230" stroke="#30363d"/>
+          <text x="232" y="103" text-anchor="middle" fill="#e6edf3" font-size="9">SGTポリシー</text>
+          <text x="150" y="138" text-anchor="middle" fill="#8b949e" font-size="9">ユーザー移動に追従する仮想ネットワーク</text>
+          <!-- Underlay -->
+          <rect x="20" y="162" width="260" height="36" rx="8" fill="rgba(63,185,80,0.06)" stroke="rgba(63,185,80,0.25)"/>
+          <text x="150" y="180" text-anchor="middle" fill="#3fb950" font-size="10">Underlay (物理ネットワーク)</text>
+          <text x="150" y="192" text-anchor="middle" fill="#8b949e" font-size="9">IS-IS / eBGP ルーティング</text>
+          <!-- arrows -->
+          <line x1="150" y1="41" x2="150" y2="58" stroke="#30363d" stroke-width="1.5"/>
+          <line x1="150" y1="152" x2="150" y2="160" stroke="#30363d" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="mt8">
+        <ul class="kv">
+          <li><span class="kv-key">VXLAN</span><span class="kv-val">L2フレームをUDPでカプセル化して転送（VNID 24bit）</span></li>
+          <li><span class="kv-key">LISP</span><span class="kv-val">エンドポイントの位置（RLOC）とID（EID）を分離解決</span></li>
+          <li><span class="kv-key">SGT</span><span class="kv-val">ユーザー/デバイスにタグを付与してグループポリシー制御</span></li>
+          <li><span class="kv-key">IBN</span><span class="kv-val">Intent-Based Networking：意図(Intent)を宣言するだけで自動設定</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">SD-WAN コンポーネント</div>
+      <div class="steps mt8">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <strong>vManage (Manager)</strong>
+            <p>GUI管理ポータル。設定テンプレートの作成・配布。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <strong>vBond (Validator)</strong>
+            <p>エッジデバイスの認証・オーケストレーション。NAT越えを支援。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <strong>vSmart (Controller)</strong>
+            <p>OMPでルーティング情報・ポリシーをエッジに配布。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <strong>WAN Edge (cEdge / vEdge)</strong>
+            <p>実際のデータ転送担当。MPLS/インターネット/LTEを使い分け。</p>
+          </div>
+        </div>
+      </div>
+      <div class="card mt12">
+        <div class="card-title"><div class="dot dot-cyan"></div>OMP (Overlay Management Protocol)</div>
+        <p>SD-WANのコントロールプレーン。vSmartとエッジ間でルート・ポリシー・セキュリティ情報を交換。BGPライクな動作。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 8. ネットワーク管理・監視 -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="mgmt">
+  <div class="topic-header">
+    <div class="topic-number c2">08</div>
+    <div>
+      <h2>ネットワーク管理 / 監視</h2>
+      <p class="topic-desc">NTP・SNMP・Syslog・NetFlow・SPAN・IP SLA — 運用の基本ツール群。</p>
+    </div>
+  </div>
+
+  <div class="cards cards-3">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-blue"></div>NTP (Network Time Protocol)</div>
+      <ul class="kv">
+        <li><span class="kv-key">ポート</span><span class="kv-val">UDP 123</span></li>
+        <li><span class="kv-key">Stratum 0</span><span class="kv-val">原子時計・GPS（参照源）</span></li>
+        <li><span class="kv-key">Stratum 1</span><span class="kv-val">Stratum 0直結のNTPサーバー</span></li>
+        <li><span class="kv-key">Stratum 2+</span><span class="kv-val">上位から時刻同期（最大15）</span></li>
+        <li><span class="kv-key">重要性</span><span class="kv-val">ログ・証明書・Kerberosに必須</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-green"></div>SNMP (Simple Network Management Protocol)</div>
+      <ul class="kv">
+        <li><span class="kv-key">推奨</span><span class="kv-val"><span class="badge badge-green">v3</span> 認証+暗号化</span></li>
+        <li><span class="kv-key">GET</span><span class="kv-val">マネージャー→エージェントへ情報要求</span></li>
+        <li><span class="kv-key">SET</span><span class="kv-val">マネージャー→エージェントへ設定変更</span></li>
+        <li><span class="kv-key">Trap</span><span class="kv-val">エージェント→マネージャーへ自発通知</span></li>
+        <li><span class="kv-key">MIB</span><span class="kv-val">管理情報ベース（OIDで識別）</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-red"></div>Syslog</div>
+      <table style="margin-top:8px">
+        <thead><tr><th>レベル</th><th>名称</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-red">0</span></td><td>Emergency（最重要）</td></tr>
+          <tr><td><span class="badge badge-red">1</span></td><td>Alert</td></tr>
+          <tr><td><span class="badge badge-red">2</span></td><td>Critical</td></tr>
+          <tr><td><span class="badge badge-yellow">3</span></td><td>Error</td></tr>
+          <tr><td><span class="badge badge-yellow">4</span></td><td>Warning</td></tr>
+          <tr><td><span class="badge badge-green">5</span></td><td>Notice</td></tr>
+          <tr><td><span class="badge badge-green">6</span></td><td>Informational</td></tr>
+          <tr><td><span class="badge badge-blue">7</span></td><td>Debugging（最低重要）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="g2 mt20">
+    <div class="card">
+      <div class="card-title"><div class="dot dot-cyan"></div>NetFlow / IPFIX</div>
+      <ul class="kv">
+        <li><span class="kv-key">目的</span><span class="kv-val">フロー単位のトラフィック統計収集</span></li>
+        <li><span class="kv-key">v5</span><span class="kv-val">固定フォーマット・IPv4のみ</span></li>
+        <li><span class="kv-key">v9</span><span class="kv-val">テンプレートベース・柔軟</span></li>
+        <li><span class="kv-key">IPFIX</span><span class="kv-val">NetFlow v9ベースの標準化版（RFC 7011）</span></li>
+        <li><span class="kv-key">フロー定義</span><span class="kv-val">src/dst IP・ポート・プロトコル・ToS・入力IF</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="dot dot-purple"></div>SPAN / RSPAN / ERSPAN</div>
+      <ul class="kv">
+        <li><span class="kv-key">SPAN</span><span class="kv-val">同じスイッチ内でポートミラーリング</span></li>
+        <li><span class="kv-key">RSPAN</span><span class="kv-val">リモートスイッチまでVLANで転送してキャプチャ</span></li>
+        <li><span class="kv-key">ERSPAN</span><span class="kv-val">GREカプセル化でネットワーク越しにキャプチャ</span></li>
+        <li><span class="kv-key">用途</span><span class="kv-val">Wiresharkでのパケット分析・IDS/IPS接続</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mt12">
+    <div class="card-title"><div class="dot dot-yellow"></div>IP SLA (Service Level Agreement)</div>
+    <p>テストパケット（ICMP Echo, UDP Jitter, HTTP, DNSなど）を定期送信し、遅延・ジッター・到達性を測定。</p>
+    <div class="code-block">
+<span class="cmt">! IP SLA設定例 - ICMPエコーで疎通確認</span>
+<span class="kw">ip sla</span> <span class="val">1</span>
+ icmp-echo <span class="val">8.8.8.8</span> source-interface GigabitEthernet0/0
+ frequency <span class="val">30</span>
+<span class="kw">ip sla schedule</span> <span class="val">1</span> life forever start-time now
+
+<span class="cmt">! スタティックルートの切り替えに活用</span>
+<span class="kw">ip route</span> <span class="val">0.0.0.0 0.0.0.0 203.0.113.1 10</span> track <span class="val">1</span>
+<span class="kw">ip route</span> <span class="val">0.0.0.0 0.0.0.0 198.51.100.1 20</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 9. セキュリティ / QoS -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="security">
+  <div class="topic-header">
+    <div class="topic-number c3">09</div>
+    <div>
+      <h2>セキュリティ / QoS</h2>
+      <p class="topic-desc">ACL・CoPP・NGFW・MACsec — そしてQoSの分類・マーキング・キューイング。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">ACL の種類と適用</div>
+      <table class="mt8">
+        <thead><tr><th>種類</th><th>番号</th><th>マッチ条件</th></tr></thead>
+        <tbody>
+          <tr><td>Standard</td><td>1-99 / 1300-1999</td><td>送信元IPのみ</td></tr>
+          <tr><td>Extended</td><td>100-199 / 2000-2699</td><td>src/dst IP・ポート・プロトコル</td></tr>
+          <tr><td>Named Standard</td><td>名前</td><td>送信元IPのみ</td></tr>
+          <tr><td>Named Extended</td><td>名前</td><td>src/dst IP・ポート・プロトコル</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-yellow mt12">
+        <span class="alert-icon">⚠️</span>
+        <div>Standardは送信先に近い側、Extendedは送信元に近い側に適用するのが原則。末尾に暗黙のDenyが存在。</div>
+      </div>
+      <div class="card mt12">
+        <div class="card-title"><div class="dot dot-red"></div>CoPP (Control Plane Policing)</div>
+        <p>コントロールプレーン（CPU）に向かうトラフィックをポリシングし、DoS攻撃から機器自体を守る。ACLで分類しポリシーマップで適用。</p>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">AAA フレームワーク</div>
+      <div class="cards mt8">
+        <div class="card">
+          <div class="card-title"><div class="dot dot-blue"></div>Authentication (認証)</div>
+          <p>「あなたは誰か」— ユーザー名・パスワード・証明書で本人確認。</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot dot-green"></div>Authorization (認可)</div>
+          <p>「何をしていいか」— 権限に応じてアクセス可能なリソース・コマンドを制御。</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot dot-yellow"></div>Accounting (アカウンティング)</div>
+          <p>「何をしたか」— 全操作を記録し監査証跡を残す。</p>
+        </div>
+      </div>
+      <table class="mt12">
+        <thead><tr><th>プロトコル</th><th>ポート</th><th>暗号化範囲</th><th>特徴</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-blue">RADIUS</span></td><td>UDP 1812/1813</td><td>パスワードのみ</td><td>一般ユーザー認証に多用</td></tr>
+          <tr><td><span class="badge badge-purple">TACACS+</span></td><td>TCP 49</td><td>全体</td><td>管理者アクセス・コマンド認可に適す</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">QoS — 処理パイプライン</div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 680 80" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+        <defs>
+          <marker id="qarr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="#30363d"/>
+          </marker>
+        </defs>
+        <!-- Steps -->
+        <rect x="10" y="20" width="90" height="40" rx="7" fill="rgba(88,166,255,0.12)" stroke="rgba(88,166,255,0.4)"/>
+        <text x="55" y="38" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="600">①分類</text>
+        <text x="55" y="52" text-anchor="middle" fill="#8b949e" font-size="9">Class Map</text>
+
+        <line x1="100" y1="40" x2="118" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#qarr)"/>
+
+        <rect x="120" y="20" width="90" height="40" rx="7" fill="rgba(63,185,80,0.1)" stroke="rgba(63,185,80,0.35)"/>
+        <text x="165" y="38" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">②マーキング</text>
+        <text x="165" y="52" text-anchor="middle" fill="#8b949e" font-size="9">DSCP / CoS</text>
+
+        <line x1="210" y1="40" x2="228" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#qarr)"/>
+
+        <rect x="230" y="20" width="90" height="40" rx="7" fill="rgba(210,153,34,0.1)" stroke="rgba(210,153,34,0.35)"/>
+        <text x="275" y="38" text-anchor="middle" fill="#d29922" font-size="11" font-weight="600">③ポリシング</text>
+        <text x="275" y="52" text-anchor="middle" fill="#8b949e" font-size="9">帯域制限</text>
+
+        <line x1="320" y1="40" x2="338" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#qarr)"/>
+
+        <rect x="340" y="20" width="90" height="40" rx="7" fill="rgba(247,129,102,0.1)" stroke="rgba(247,129,102,0.35)"/>
+        <text x="385" y="38" text-anchor="middle" fill="#f78166" font-size="11" font-weight="600">④キューイング</text>
+        <text x="385" y="52" text-anchor="middle" fill="#8b949e" font-size="9">CBWFQ / LLQ</text>
+
+        <line x1="430" y1="40" x2="448" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#qarr)"/>
+
+        <rect x="450" y="20" width="90" height="40" rx="7" fill="rgba(188,140,255,0.1)" stroke="rgba(188,140,255,0.35)"/>
+        <text x="495" y="38" text-anchor="middle" fill="#bc8cff" font-size="11" font-weight="600">⑤スケジューリング</text>
+        <text x="495" y="52" text-anchor="middle" fill="#8b949e" font-size="9">送出順序制御</text>
+
+        <line x1="540" y1="40" x2="558" y2="40" stroke="#30363d" stroke-width="1.5" marker-end="url(#qarr)"/>
+
+        <rect x="560" y="20" width="100" height="40" rx="7" fill="rgba(57,208,216,0.1)" stroke="rgba(57,208,216,0.35)"/>
+        <text x="610" y="38" text-anchor="middle" fill="#39d0d8" font-size="11" font-weight="600">⑥シェーピング</text>
+        <text x="610" y="52" text-anchor="middle" fill="#8b949e" font-size="9">バースト平滑化</text>
+      </svg>
+    </div>
+
+    <div class="g2 mt12">
+      <div class="card">
+        <div class="card-title"><div class="dot dot-blue"></div>マーキング値</div>
+        <table>
+          <thead><tr><th>レイヤ</th><th>フィールド</th><th>値範囲</th><th>用途例</th></tr></thead>
+          <tbody>
+            <tr><td>L2</td><td>CoS (PCP)</td><td>0-7 (3bit)</td><td>802.1Qタグ</td></tr>
+            <tr><td>L3</td><td>DSCP</td><td>0-63 (6bit)</td><td>EF=46(音声)、AF=優先データ</td></tr>
+            <tr><td>L3 (旧)</td><td>IPP (TOS)</td><td>0-7 (3bit)</td><td>DSCPの上位3bitと互換</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-green"></div>キューイング方式</div>
+        <ul class="kv">
+          <li><span class="kv-key">FIFO</span><span class="kv-val">単純な先着順。差別化なし。</span></li>
+          <li><span class="kv-key">WFQ</span><span class="kv-val">フロー単位で重み付け公平配分</span></li>
+          <li><span class="kv-key">CBWFQ</span><span class="kv-val">クラスごとに帯域保証（Policy Map）</span></li>
+          <li><span class="kv-key">LLQ</span><span class="kv-val">CBWFQ + 優先キュー（音声/ビデオ用）</span></li>
+          <li><span class="kv-key">PQ</span><span class="kv-val">絶対優先。空になるまで他は待機。</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 10. 自動化 -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="automation">
+  <div class="topic-header">
+    <div class="topic-number c4">10</div>
+    <div>
+      <h2>ネットワーク自動化</h2>
+      <p class="topic-desc">YANG・NETCONF・RESTCONF・Ansible・EEM — 自動化の全体像。</p>
+    </div>
+  </div>
+
+  <div class="section-label">自動化スタック</div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 660 130" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+      <!-- Orchestration -->
+      <rect x="10" y="10" width="640" height="34" rx="7" fill="rgba(188,140,255,0.1)" stroke="rgba(188,140,255,0.4)"/>
+      <text x="330" y="24" text-anchor="middle" fill="#bc8cff" font-size="11" font-weight="700">オーケストレーション層</text>
+      <text x="330" y="36" text-anchor="middle" fill="#8b949e" font-size="9">Ansible / Terraform / NSO / Python スクリプト / Catalyst Center</text>
+      <!-- API -->
+      <rect x="10" y="52" width="310" height="34" rx="7" fill="rgba(88,166,255,0.1)" stroke="rgba(88,166,255,0.4)"/>
+      <text x="165" y="66" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="700">RESTCONF</text>
+      <text x="165" y="78" text-anchor="middle" fill="#8b949e" font-size="9">HTTP/HTTPS ベース・JSON/XML・REST操作</text>
+      <rect x="340" y="52" width="310" height="34" rx="7" fill="rgba(63,185,80,0.1)" stroke="rgba(63,185,80,0.35)"/>
+      <text x="495" y="66" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="700">NETCONF</text>
+      <text x="495" y="78" text-anchor="middle" fill="#8b949e" font-size="9">SSHベース・XMLエンコーディング・トランザクション対応</text>
+      <!-- Data Model -->
+      <rect x="10" y="94" width="640" height="30" rx="7" fill="rgba(210,153,34,0.08)" stroke="rgba(210,153,34,0.3)"/>
+      <text x="330" y="108" text-anchor="middle" fill="#d29922" font-size="11" font-weight="700">YANG データモデル</text>
+      <text x="330" y="120" text-anchor="middle" fill="#8b949e" font-size="9">設定・状態データの構造を定義するスキーマ言語（RFC 6020/7950）</text>
+    </svg>
+  </div>
+
+  <div class="g2 mt20">
+    <div>
+      <div class="section-label">データフォーマット比較</div>
+      <div class="g2 mt8">
+        <div class="card">
+          <div class="card-title"><div class="dot dot-blue"></div>JSON</div>
+          <div class="code-block">
+{
+  <span class="kw">"hostname"</span>: <span class="val">"R1"</span>,
+  <span class="kw">"interfaces"</span>: [
+    {
+      <span class="kw">"name"</span>: <span class="val">"Gi0/0"</span>,
+      <span class="kw">"ip"</span>: <span class="val">"10.0.0.1"</span>
+    }
+  ]
+}</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="dot dot-green"></div>XML</div>
+          <div class="code-block">
+&lt;<span class="kw">config</span>&gt;
+  &lt;<span class="kw">hostname</span>&gt;<span class="val">R1</span>&lt;/<span class="kw">hostname</span>&gt;
+  &lt;<span class="kw">interface</span>&gt;
+    &lt;<span class="kw">name</span>&gt;<span class="val">Gi0/0</span>&lt;/<span class="kw">name</span>&gt;
+    &lt;<span class="kw">ip</span>&gt;<span class="val">10.0.0.1</span>&lt;/<span class="kw">ip</span>&gt;
+  &lt;/<span class="kw">interface</span>&gt;
+&lt;/<span class="kw">config</span>&gt;</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">自動化ツール比較</div>
+      <table class="mt8">
+        <thead><tr><th>ツール</th><th>タイプ</th><th>言語</th><th>エージェント</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-red">Ansible</span></td><td>構成管理</td><td>YAML (Playbook)</td><td>不要</td></tr>
+          <tr><td><span class="badge badge-purple">Terraform</span></td><td>インフラProvisioning</td><td>HCL</td><td>不要</td></tr>
+          <tr><td><span class="badge badge-blue">Puppet</span></td><td>構成管理</td><td>DSL/Ruby</td><td>必要</td></tr>
+          <tr><td><span class="badge badge-yellow">Chef</span></td><td>構成管理</td><td>Ruby (Cookbook)</td><td>必要</td></tr>
+          <tr><td><span class="badge badge-green">NSO</span></td><td>ネットワーク特化</td><td>YANG/Python</td><td>不要</td></tr>
+        </tbody>
+      </table>
+      <div class="card mt12">
+        <div class="card-title"><div class="dot dot-cyan"></div>EEM (Embedded Event Manager)</div>
+        <p>IOS/IOS-XEに内蔵。イベント（インターフェースダウン、Syslogメッセージ、タイマー等）をトリガーにTCLスクリプトやCLIコマンドを自動実行。</p>
+        <div class="code-block" style="margin-top:8px">
+<span class="cmt">! EEM設定例：IF DOWNでメールとバックアップ起動</span>
+<span class="kw">event manager applet</span> IF_DOWN
+ event syslog pattern <span class="val">"LINEPROTO.*changed state to down"</span>
+ action 1.0 syslog msg <span class="val">"インターフェースがダウンしました"</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 11. ワイヤレス -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="topic" id="wireless">
+  <div class="topic-header">
+    <div class="topic-number c5">11</div>
+    <div>
+      <h2>ワイヤレス技術（オプション / v1.2以降）</h2>
+      <p class="topic-desc">2.4GHz / 5GHz / 6GHz — WLC・CAPWAP・WPA3・802.11規格。</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div class="section-label">周波数帯比較</div>
+      <table class="mt8">
+        <thead><tr><th>項目</th><th>2.4 GHz</th><th>5 GHz</th><th>6 GHz (Wi-Fi 6E)</th></tr></thead>
+        <tbody>
+          <tr><td>干渉</td><td>多い（電子レンジ等）</td><td>少ない</td><td>非常に少ない</td></tr>
+          <tr><td>障害物透過性</td><td>高い</td><td>中程度</td><td>低い</td></tr>
+          <tr><td>速度</td><td>低い</td><td>高い</td><td>最高</td></tr>
+          <tr><td>非重複チャネル数</td><td>3 (1/6/11)</td><td>最大25</td><td>多数</td></tr>
+        </tbody>
+      </table>
+      <div class="card mt12">
+        <div class="card-title"><div class="dot dot-blue"></div>RSSI / SNR</div>
+        <ul class="kv">
+          <li><span class="kv-key">RSSI</span><span class="kv-val">受信信号強度。-65dBm以上が推奨</span></li>
+          <li><span class="kv-key">SNR</span><span class="kv-val">信号対雑音比。25dB以上が推奨</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">WLC アーキテクチャ</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans JP, sans-serif">
+          <!-- WLC -->
+          <rect x="80" y="10" width="120" height="48" rx="8" fill="rgba(88,166,255,0.12)" stroke="rgba(88,166,255,0.5)"/>
+          <text x="140" y="28" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="700">WLC</text>
+          <text x="140" y="42" text-anchor="middle" fill="#8b949e" font-size="9">Wireless LAN Controller</text>
+          <text x="140" y="54" text-anchor="middle" fill="#8b949e" font-size="8">集中管理 / ポリシー適用</text>
+          <!-- CAPWAP label -->
+          <text x="140" y="76" text-anchor="middle" fill="#d29922" font-size="9">← CAPWAP トンネル (UDP 5246/5247) →</text>
+          <!-- APs -->
+          <rect x="20" y="88" width="60" height="40" rx="6" fill="#1c2230" stroke="rgba(63,185,80,0.4)"/>
+          <text x="50" y="108" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">AP 1</text>
+          <text x="50" y="120" text-anchor="middle" fill="#8b949e" font-size="8">Local Mode</text>
+          <rect x="110" y="88" width="60" height="40" rx="6" fill="#1c2230" stroke="rgba(63,185,80,0.4)"/>
+          <text x="140" y="108" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">AP 2</text>
+          <text x="140" y="120" text-anchor="middle" fill="#8b949e" font-size="8">FlexConnect</text>
+          <rect x="200" y="88" width="60" height="40" rx="6" fill="#1c2230" stroke="rgba(63,185,80,0.4)"/>
+          <text x="230" y="108" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">AP 3</text>
+          <text x="230" y="120" text-anchor="middle" fill="#8b949e" font-size="8">Bridge Mode</text>
+          <!-- Clients -->
+          <rect x="20" y="148" width="60" height="30" rx="5" fill="#1c2230" stroke="#30363d"/>
+          <text x="50" y="167" text-anchor="middle" fill="#8b949e" font-size="9">Clients</text>
+          <rect x="110" y="148" width="60" height="30" rx="5" fill="#1c2230" stroke="#30363d"/>
+          <text x="140" y="167" text-anchor="middle" fill="#8b949e" font-size="9">Clients</text>
+          <rect x="200" y="148" width="60" height="30" rx="5" fill="#1c2230" stroke="#30363d"/>
+          <text x="230" y="167" text-anchor="middle" fill="#8b949e" font-size="9">Clients</text>
+          <!-- lines -->
+          <line x1="110" y1="58" x2="50" y2="88" stroke="#30363d" stroke-width="1"/>
+          <line x1="140" y1="58" x2="140" y2="88" stroke="#30363d" stroke-width="1"/>
+          <line x1="170" y1="58" x2="230" y2="88" stroke="#30363d" stroke-width="1"/>
+          <line x1="50" y1="128" x2="50" y2="148" stroke="#30363d" stroke-width="1"/>
+          <line x1="140" y1="128" x2="140" y2="148" stroke="#30363d" stroke-width="1"/>
+          <line x1="230" y1="128" x2="230" y2="148" stroke="#30363d" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt20">
+    <div class="section-label">ワイヤレスセキュリティ</div>
+    <table>
+      <thead><tr><th>規格</th><th>認証</th><th>暗号化</th><th>推奨</th></tr></thead>
+      <tbody>
+        <tr><td>WEP</td><td>Open / Shared Key</td><td>RC4 (40/104bit)</td><td>❌ 脆弱・使用禁止</td></tr>
+        <tr><td>WPA (TKIP)</td><td>PSK / 802.1X</td><td>TKIP+RC4</td><td>❌ 脆弱</td></tr>
+        <tr><td>WPA2 (CCMP)</td><td>PSK / 802.1X</td><td>AES-CCMP</td><td>✅ 現在の標準</td></tr>
+        <tr><td>WPA3 (SAE)</td><td>SAE / 802.1X</td><td>AES-GCMP-256</td><td>⭐ 推奨・最新</td></tr>
+      </tbody>
+    </table>
+    <div class="g2 mt12">
+      <div class="card">
+        <div class="card-title"><div class="dot dot-blue"></div>802.1X (エンタープライズ認証)</div>
+        <div class="flow mt8">
+          <div class="flow-box">クライアント<br><span style="color:#8b949e;font-size:10px">Supplicant</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">AP/SW<br><span style="color:#8b949e;font-size:10px">Authenticator</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">RADIUSサーバー<br><span style="color:#8b949e;font-size:10px">Auth Server</span></div>
+        </div>
+        <p style="margin-top:8px;font-size:12px;color:var(--muted)">EAP (Extensible Authentication Protocol) でやり取り。証明書・ユーザー名等で認証。</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="dot dot-purple"></div>ローミング技術</div>
+        <ul class="kv">
+          <li><span class="kv-key">L2ローミング</span><span class="kv-val">同一サブネット内AP間移動。IPアドレス維持</span></li>
+          <li><span class="kv-key">L3ローミング</span><span class="kv-val">異なるサブネット間移動。アンカーWLCで元IPを維持</span></li>
+          <li><span class="kv-key">802.11r</span><span class="kv-val">Fast BSS Transition。事前に鍵情報を転送して再認証を高速化</span></li>
+          <li><span class="kv-key">802.11k/v</span><span class="kv-val">周辺AP情報提供 / ローミング誘導</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <p>CCNP ENCOR 350-401 学習ガイド ─ 試験バージョン 1.2 対応</p>
+  <p style="margin-top:6px">講師：日本IBM出身 CCIE R&S取得者 ─ 本資料は学習目的で作成</p>
+</footer>
+
+<script>
+// Highlight active nav link on scroll
+const sections = document.querySelectorAll('section.topic');
+const navLinks = document.querySelectorAll('nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+      });
+    }
+  });
+}, { threshold: 0.25 });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
