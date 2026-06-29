@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>curl :: 28年のプロトコル工学</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0f0c;
+  --bg-1:#0d130f;
+  --bg-2:#111a13;
+  --panel:#0f1612;
+  --panel-border:rgba(57,255,122,.18);
+  --green:#3dff85;
+  --green-dim:#1f8a4d;
+  --green-glow:rgba(61,255,133,.35);
+  --amber:#ffb000;
+  --amber-dim:#8a6300;
+  --red:#ff5f56;
+  --text:#cfe8d6;
+  --text-dim:#5f7d68;
+  --text-dimmer:#3c5246;
+  --mono: 'JetBrains Mono', monospace;
+  --display: 'Space Mono', monospace;
+  --body: 'IBM Plex Sans JP', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  line-height:1.85;
+  overflow-x:hidden;
+  font-size:16px;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+  pointer-events:none;
+  z-index:9999;
+  mix-blend-mode:overlay;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(61,255,133,0.06), transparent 60%);
+  pointer-events:none;
+  z-index:1;
+}
+::selection{background:var(--green);color:#03130a;}
+a{color:var(--green);text-decoration:none;}
+img,svg{display:block;max-width:100%;}
+
+/* progress bar */
+#progress{
+  position:fixed;top:0;left:0;height:3px;background:var(--green);
+  box-shadow:0 0 8px var(--green-glow);
+  width:0%;z-index:10000;transition:width .08s linear;
+}
+
+/* sticky nav */
+header.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:9000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 22px;
+  background:rgba(10,15,12,.82);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--panel-border);
+  font-family:var(--mono);
+  font-size:12.5px;
+}
+header.topnav .prompt{
+  color:var(--text-dim);
+  display:flex;align-items:center;gap:8px;
+}
+header.topnav .prompt b{color:var(--green);font-weight:600;}
+header.topnav nav{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;}
+header.topnav nav::-webkit-scrollbar{display:none;}
+header.topnav nav a{
+  color:var(--text-dim);white-space:nowrap;
+  border-bottom:1px solid transparent;
+  padding-bottom:2px;
+  transition:color .15s, border-color .15s;
+}
+header.topnav nav a:hover{color:var(--green);border-color:var(--green-dim);}
+
+main{position:relative;z-index:2;}
+
+.wrap{max-width:980px;margin:0 auto;padding:0 24px;}
+section{padding:120px 0 40px;position:relative;}
+section.tight{padding-top:80px;}
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;letter-spacing:.12em;
+  color:var(--amber);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+  text-transform:uppercase;
+}
+.eyebrow::before{content:"//";color:var(--text-dimmer);}
+
+h2.sec-title{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(26px,4vw,40px);
+  color:var(--text);
+  letter-spacing:-.01em;
+  margin-bottom:8px;
+  line-height:1.3;
+}
+h2.sec-title .accent{color:var(--green);}
+p.lead{
+  color:var(--text-dim);
+  font-size:16px;
+  max-width:640px;
+  margin-bottom:46px;
+}
+p{margin-bottom:1em;}
+strong{color:var(--text);font-weight:600;}
+code,.inline-code{
+  font-family:var(--mono);
+  background:rgba(61,255,133,.08);
+  border:1px solid var(--panel-border);
+  color:var(--green);
+  padding:2px 7px;
+  border-radius:3px;
+  font-size:.88em;
+}
+
+/* ---------------- HERO ---------------- */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:140px 0 80px;
+  position:relative;
+}
+.hero .wrap{width:100%;}
+.term{
+  background:linear-gradient(180deg,#0d1411,#0a0f0c);
+  border:1px solid var(--panel-border);
+  border-radius:10px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.4), 0 30px 80px -20px rgba(61,255,133,.08), inset 0 0 60px rgba(61,255,133,.02);
+  overflow:hidden;
+  max-width:760px;
+}
+.term-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+  background:#0f1814;
+  border-bottom:1px solid var(--panel-border);
+}
+.term-dot{width:10px;height:10px;border-radius:50%;}
+.term-dot.r{background:#ff5f56;}
+.term-dot.y{background:#ffbd2e;}
+.term-dot.g{background:#27c93f;}
+.term-title{margin-left:10px;font-family:var(--mono);font-size:11.5px;color:var(--text-dim);}
+.term-body{
+  padding:22px 22px 26px;
+  font-family:var(--mono);
+  font-size:13.5px;
+  color:var(--text);
+  min-height:230px;
+  white-space:pre-wrap;
+}
+.term-body .ps{color:var(--green);}
+.term-body .path{color:var(--text-dim);}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--green);vertical-align:-2px;animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+.hero h1{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(32px,6vw,58px);
+  line-height:1.25;
+  margin:42px 0 18px;
+  letter-spacing:-.01em;
+  max-width:820px;
+}
+.hero h1 .hl{color:var(--green);}
+.hero .sub{
+  color:var(--text-dim);
+  font-size:17px;
+  max-width:600px;
+  margin-bottom:34px;
+}
+.hero .meta-row{
+  display:flex;gap:28px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:12px;color:var(--text-dimmer);
+  border-top:1px solid var(--panel-border);
+  padding-top:18px;
+}
+.hero .meta-row b{color:var(--text-dim);font-weight:500;}
+
+/* scroll cue */
+.scrollcue{
+  position:absolute;bottom:30px;left:24px;
+  font-family:var(--mono);font-size:11px;color:var(--text-dimmer);
+  display:flex;align-items:center;gap:8px;
+}
+.scrollcue .bar{width:1px;height:24px;background:linear-gradient(var(--green),transparent);animation:cuemove 1.6s ease-in-out infinite;}
+@keyframes cuemove{0%,100%{opacity:.2;}50%{opacity:1;}}
+
+/* ---------------- DEFINITION CARDS ---------------- */
+.def-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px;}
+@media(max-width:760px){.def-grid{grid-template-columns:1fr;}}
+.def-card{
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius:10px;
+  padding:24px 24px 22px;
+}
+.def-card .tag{
+  font-family:var(--mono);font-size:11px;color:var(--amber);
+  letter-spacing:.08em;margin-bottom:10px;display:block;
+}
+.def-card h3{font-family:var(--display);font-size:19px;color:var(--text);margin-bottom:10px;}
+.def-card p{color:var(--text-dim);font-size:14.5px;margin-bottom:0;}
+.def-card .codeline{
+  margin-top:14px;font-family:var(--mono);font-size:12.5px;
+  color:var(--green);background:rgba(0,0,0,.25);
+  padding:8px 10px;border-radius:6px;border:1px solid var(--panel-border);
+}
+
+/* ---------------- TIMELINE ---------------- */
+.timeline{position:relative;margin-top:10px;padding-left:30px;border-left:1px solid var(--panel-border);}
+.t-item{position:relative;padding-bottom:38px;}
+.t-item:last-child{padding-bottom:0;}
+.t-item::before{
+  content:"";position:absolute;left:-35px;top:4px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--green);
+  box-shadow:0 0 0 4px var(--bg);
+}
+.t-item.major::before{background:var(--green);box-shadow:0 0 10px var(--green-glow), 0 0 0 4px var(--bg);}
+.t-year{
+  font-family:var(--mono);font-size:13px;color:var(--green);
+  letter-spacing:.04em;margin-bottom:4px;display:block;font-weight:600;
+}
+.t-item h4{font-family:var(--display);font-size:17px;color:var(--text);margin-bottom:6px;}
+.t-item p{color:var(--text-dim);font-size:14.5px;max-width:620px;margin-bottom:0;}
+
+/* ---------------- ARCH DIAGRAM ---------------- */
+.diagram-box{
+  background:var(--panel);border:1px solid var(--panel-border);
+  border-radius:12px;padding:28px;margin-top:10px;overflow:auto;
+}
+.svg-caption{
+  font-family:var(--mono);font-size:11.5px;color:var(--text-dimmer);
+  text-align:center;margin-top:10px;
+}
+
+/* ---------------- PROTOCOL GRID ---------------- */
+.proto-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));
+  gap:10px;margin-top:8px;
+}
+.proto-chip{
+  font-family:var(--mono);font-size:12.5px;
+  border:1px solid var(--panel-border);
+  background:var(--panel);
+  color:var(--text-dim);
+  padding:11px 8px;border-radius:7px;
+  text-align:center;
+  transition:all .15s;
+  cursor:default;
+}
+.proto-chip:hover{border-color:var(--green);color:var(--green);background:rgba(61,255,133,.06);transform:translateY(-2px);}
+.proto-chip.dead{opacity:.4;text-decoration:line-through;}
+.proto-note{font-family:var(--mono);font-size:11.5px;color:var(--text-dimmer);margin-top:14px;}
+
+/* ---------------- SEQUENCE (request anatomy) -------- */
+.seq-steps{margin-top:20px;}
+.seq-step{
+  display:grid;grid-template-columns:80px 1fr;gap:18px;
+  padding:16px 0;border-top:1px solid var(--panel-border);
+}
+.seq-step:first-child{border-top:none;}
+.seq-num{font-family:var(--mono);color:var(--text-dimmer);font-size:12px;padding-top:2px;}
+.seq-num b{color:var(--green);display:block;font-size:18px;font-weight:700;}
+.seq-step h4{font-family:var(--display);font-size:16px;color:var(--text);margin-bottom:4px;}
+.seq-step p{color:var(--text-dim);font-size:14.5px;margin-bottom:0;}
+.seq-step .tagrow{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;}
+.seq-step .tagrow span{
+  font-family:var(--mono);font-size:11px;color:var(--amber);
+  border:1px solid rgba(255,176,0,.3);padding:2px 7px;border-radius:4px;
+}
+
+/* ---------------- WINDOWS CALLOUT --------------- */
+.win-box{
+  background:linear-gradient(160deg,#0f1612,#0b110d);
+  border:1px solid rgba(255,176,0,.3);
+  border-radius:12px;padding:26px 26px 24px;margin:18px 0;
+}
+.win-box .tag{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.08em;margin-bottom:10px;display:block;}
+.win-box h4{font-family:var(--display);font-size:17px;color:var(--text);margin-bottom:8px;}
+.win-box p{color:var(--text-dim);font-size:14.5px;}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+@media(max-width:700px){.compare{grid-template-columns:1fr;}}
+.compare .col{background:rgba(0,0,0,.25);border:1px solid var(--panel-border);border-radius:8px;padding:16px;}
+.compare .col h5{font-family:var(--mono);font-size:12px;color:var(--green);margin-bottom:10px;letter-spacing:.04em;}
+.compare .col code{display:block;margin-bottom:8px;white-space:pre-wrap;word-break:break-all;}
+
+/* ---------------- CHEATSHEET ---------------- */
+.cheat-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+.cheat-table th{
+  text-align:left;font-family:var(--mono);font-size:11.5px;color:var(--text-dimmer);
+  letter-spacing:.06em;padding:10px 12px;border-bottom:1px solid var(--panel-border);
+}
+.cheat-table td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;}
+.cheat-table tr:hover td{background:rgba(61,255,133,.03);}
+.cheat-table code{white-space:nowrap;}
+.cheat-table .desc{color:var(--text-dim);font-size:13.5px;}
+
+/* ---------------- STAT GRID -------------- */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px;}
+@media(max-width:760px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat{
+  background:var(--panel);border:1px solid var(--panel-border);border-radius:10px;
+  padding:20px 16px;text-align:center;
+}
+.stat .num{font-family:var(--display);font-size:clamp(22px,3vw,30px);color:var(--green);font-weight:700;}
+.stat .lab{font-family:var(--mono);font-size:11px;color:var(--text-dimmer);margin-top:6px;}
+
+/* ---------------- CVE / SECURITY LOG --------------- */
+.log-line{
+  font-family:var(--mono);font-size:13px;color:var(--text-dim);
+  padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.06);
+  display:flex;gap:14px;flex-wrap:wrap;
+}
+.log-line .lv{font-weight:700;}
+.log-line .lv.crit{color:var(--red);}
+.log-line .lv.info{color:var(--green);}
+.log-line .lv.warn{color:var(--amber);}
+.log-line .when{color:var(--text-dimmer);min-width:64px;}
+
+/* ---------------- FOOTER ------------- */
+footer{
+  border-top:1px solid var(--panel-border);
+  padding:50px 0 70px;
+  font-family:var(--mono);font-size:12.5px;color:var(--text-dimmer);
+}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+footer a{color:var(--text-dim);}
+footer a:hover{color:var(--green);}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+.reveal.show{opacity:1;transform:translateY(0);}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+}
+
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--green-dim);border-radius:5px;}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="topnav">
+  <div class="prompt"><b>~</b>$ man curl</div>
+  <nav>
+    <a href="#what">概要</a>
+    <a href="#history">歴史</a>
+    <a href="#arch">構造</a>
+    <a href="#anatomy">通信の解剖</a>
+    <a href="#protocols">プロトコル</a>
+    <a href="#windows">Windows</a>
+    <a href="#cheatsheet">コマンド</a>
+    <a href="#security">セキュリティ</a>
+    <a href="#scale">普及</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div class="term">
+      <div class="term-bar">
+        <div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div>
+        <div class="term-title">cmd.exe</div>
+      </div>
+      <div class="term-body" id="bootText"></div>
+    </div>
+
+    <h1 class="reveal">URLを叩くための<br><span class="hl">300行</span>から始まった、<br>インターネットの配管工事。</h1>
+    <p class="sub reveal">curlは1996年、IRCボットのために為替レートを取りに行く小さなスクリプトとして生まれた。今では火星のヘリコプターから自動車、ゲーム機、そしてあなたのWindows端末まで、推定100億台以上のデバイスで動いている。このページではcurlの歴史・名前の由来・内部構造・通信の仕組み・Windowsでの注意点までを一気に解説する。</p>
+    <div class="meta-row reveal">
+      <div><b>作者</b> Daniel Stenberg</div>
+      <div><b>初版</b> 1998年3月20日</div>
+      <div><b>ライセンス</b> MIT</div>
+      <div><b>言語</b> C</div>
+      <div><b>現行版</b> 8.x系</div>
+    </div>
+  </div>
+  <div class="scrollcue"><div class="bar"></div>scroll</div>
+</section>
+
+<!-- ================= WHAT IS CURL ================= -->
+<section id="what">
+  <div class="wrap">
+    <div class="eyebrow">overview</div>
+    <h2 class="sec-title reveal">curlとは何で、<span class="accent">何ではない</span>のか</h2>
+    <p class="lead reveal">「curl」という単語は実は3つの異なるものを指している。混同されがちなので、まず整理する。</p>
+
+    <div class="def-grid">
+      <div class="def-card reveal">
+        <span class="tag">CLI TOOL</span>
+        <h3>curl（コマンド）</h3>
+        <p>ターミナルやバッチファイルから実行する単体の実行ファイル。URLを指定してデータを送受信する。スクリプトに組み込みやすく、パイプで他のコマンドと連結できるUnix的な設計。</p>
+        <div class="codeline">curl https://example.com</div>
+      </div>
+      <div class="def-card reveal">
+        <span class="tag">LIBRARY</span>
+        <h3>libcurl（ライブラリ）</h3>
+        <p>2000年に切り出されたC言語のライブラリ本体。実際の通信処理はすべてここに入っている。curlコマンドはlibcurlの薄いラッパーに過ぎない。50以上の言語からバインディング経由で呼び出せる。</p>
+        <div class="codeline">curl_easy_perform(handle);</div>
+      </div>
+      <div class="def-card reveal">
+        <span class="tag">PROJECT</span>
+        <h3>cURLプロジェクト</h3>
+        <p>上記2つを開発・保守するオープンソースプロジェクト全体の名称。表記は小文字curlが正式（大文字CURLはPHPバインディングの定数名として紛れて使われることがある）。</p>
+      </div>
+      <div class="def-card reveal">
+        <span class="tag">ETYMOLOGY</span>
+        <h3>名前の由来</h3>
+        <p>"Client" + "URL" = cURL。語感が良く、catのようにUnix流儀でURLを標準出力に流すツールにしたかった、とStenberg本人が回想している。当初はhttpget→urlgetという名前を経て、アップロード機能が増えたことで再命名された。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HISTORY ================= -->
+<section id="history">
+  <div class="wrap">
+    <div class="eyebrow">1996 — present</div>
+    <h2 class="sec-title reveal">28年の<span class="accent">タイムライン</span></h2>
+    <p class="lead reveal">curlの歴史は一人のスウェーデン人エンジニアの「ついカッとなって自動化した」という個人的なモチベーションから始まり、Internet標準の一部にまで成長した記録でもある。</p>
+
+    <div class="timeline">
+      <div class="t-item major reveal">
+        <span class="t-year">1996年11月</span>
+        <h4>HttpGet 0.1 — 発端</h4>
+        <p>ブラジルの開発者Rafael SagulaがHttpGetという小さなHTTPクライアントを公開。Daniel StenbergはAmiga系IRCチャンネル用のボットを書いていて、為替レートを毎日自動取得したいと考え、このツールを拡張し始める。</p>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-year">1996年12月〜1997年</span>
+        <h4>urlget への改名</h4>
+        <p>StenbergがHttpGetの保守を引き継ぎ拡張。GopherやFTPからもレートを取得する必要が出てきたため、HTTP専用を示す名前を捨てて「urlget」に改名。プロキシ対応なども追加された。</p>
+      </div>
+      <div class="t-item major reveal">
+        <span class="t-year">1998年3月20日</span>
+        <h4>curl 4.0 — 正式デビュー</h4>
+        <p>FTPアップロード機能の追加により「get専用」の名前が実情と合わなくなり、最終的に「curl」へ改名。約2,200〜2,400行、コマンドラインオプション25個ほどの規模で初版リリース。バージョン番号はurlgetの3系を引き継ぎ4.0からスタートした。</p>
+      </div>
+      <div class="t-item major reveal">
+        <span class="t-year">2000年夏</span>
+        <h4>libcurl の誕生</h4>
+        <p>内部構造を大きく見直し、他のアプリケーションやプログラミング言語から呼び出せるAPIとしてlibcurlを切り出した。これが転機となり、curlは単なるCLIツールから「インターネット転送のデファクトAPI」へと役割を広げていく。</p>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-year">2001年9月</span>
+        <h4>Mac OS X 10.1 に標準搭載</h4>
+        <p>Linux以外のOSで初めて標準ツールとして採用された大きな節目。同時期にDebianパッケージ化（1999年）も完了し、UnixおよびBSD系の定番ツールとしての地位を確立していた。</p>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-year">2005年3月22日</span>
+        <h4>HTTP/1.1 対応・持続的接続</h4>
+        <p>curl 7.7でHTTP/1.1サポートを実装し、libcurlにpersistent connection（接続の再利用）機能が入る。コード規模は24,000行に到達。</p>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-year">2017年12月</span>
+        <h4>Microsoftが採用を発表</h4>
+        <p>Windows 10のInsider Build 17063でcurlがデフォルト搭載されることが発表される。20年以上を経て、curlは主要OSすべてに標準搭載される存在になった。詳細は後述。</p>
+      </div>
+      <div class="t-item major reveal">
+        <span class="t-year">2018年4月</span>
+        <h4>Windows 10 version 1803 に正式搭載</h4>
+        <p>一般ユーザー向けのWindows 10アップデートでcurl.exeが標準搭載され、数億台規模のWindows端末に一気にcurlが行き渡った。</p>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-year">2021年4月</span>
+        <h4>火星ヘリコプター「Ingenuity」での利用が確認</h4>
+        <p>GitHubがMars 2020ヘリコプター・ミッションへのオープンソース貢献者バッジを配布した際、curlのコントリビューターにもバッジが付与され、curlが地球外で稼働していることが事実上確認された。</p>
+      </div>
+      <div class="t-item reveal">
+        <span class="t-year">2024年〜</span>
+        <h4>HTTP/3・QUIC・耐量子暗号への対応</h4>
+        <p>HTTP/3とQUICのサポートが安定化し、ポスト量子暗号（PQC）のハイブリッドアルゴリズム対応の検討も進む。リリースは8週間ごとのサイクルを維持し続けている。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHITECTURE ================= -->
+<section id="arch">
+  <div class="wrap">
+    <div class="eyebrow">internal structure</div>
+    <h2 class="sec-title reveal">curlコマンドの<span class="accent">内部構造</span></h2>
+    <p class="lead reveal">あなたが打つ <span class="inline-code">curl ...</span> というコマンドは、実際にはlibcurlという巨大なライブラリへの薄いラッパーでしかない。重い処理はすべてlibcurl側にある。</p>
+
+    <div class="diagram-box reveal">
+      <svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#3dff85"/>
+          </marker>
+        </defs>
+        <!-- CLI box -->
+        <rect x="350" y="20" width="200" height="50" rx="8" fill="#0f1612" stroke="#3dff85" stroke-width="1.5"/>
+        <text x="450" y="50" fill="#cfe8d6" font-family="JetBrains Mono" font-size="15" text-anchor="middle">curl（CLIツール）</text>
+
+        <line x1="450" y1="70" x2="450" y2="105" stroke="#3dff85" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- libcurl box -->
+        <rect x="300" y="110" width="300" height="55" rx="8" fill="#0f1612" stroke="#3dff85" stroke-width="1.5"/>
+        <text x="450" y="143" fill="#3dff85" font-family="Space Mono" font-size="16" font-weight="700" text-anchor="middle">libcurl</text>
+
+        <line x1="450" y1="165" x2="450" y2="195" stroke="#3dff85" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- interfaces -->
+        <rect x="220" y="200" width="190" height="50" rx="8" fill="#0d130f" stroke="rgba(61,255,133,.3)" stroke-width="1.2"/>
+        <text x="315" y="222" fill="#cfe8d6" font-family="JetBrains Mono" font-size="12.5" text-anchor="middle">easy interface</text>
+        <text x="315" y="238" fill="#5f7d68" font-family="JetBrains Mono" font-size="10.5" text-anchor="middle">同期・単発の転送</text>
+
+        <rect x="490" y="200" width="190" height="50" rx="8" fill="#0d130f" stroke="rgba(61,255,133,.3)" stroke-width="1.2"/>
+        <text x="585" y="222" fill="#cfe8d6" font-family="JetBrains Mono" font-size="12.5" text-anchor="middle">multi interface</text>
+        <text x="585" y="238" fill="#5f7d68" font-family="JetBrains Mono" font-size="10.5" text-anchor="middle">非同期・並行転送</text>
+
+        <line x1="315" y1="250" x2="315" y2="280" stroke="#3dff85" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="585" y1="250" x2="585" y2="280" stroke="#3dff85" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- protocol handlers row -->
+        <rect x="60" y="285" width="780" height="55" rx="8" fill="#0d130f" stroke="rgba(255,176,0,.3)" stroke-width="1.2"/>
+        <text x="450" y="308" fill="#ffb000" font-family="JetBrains Mono" font-size="12.5" text-anchor="middle">プロトコルハンドラ群（HTTP / FTP / SMTP / IMAP / MQTT / SCP …28種）</text>
+        <text x="450" y="326" fill="#5f7d68" font-family="JetBrains Mono" font-size="10.5" text-anchor="middle">+ 名前解決（c-ares / システムDNS） + クッキー・認証エンジン</text>
+
+        <line x1="450" y1="340" x2="450" y2="368" stroke="#3dff85" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- TLS backends -->
+        <rect x="60" y="373" width="780" height="42" rx="8" fill="#0d130f" stroke="rgba(255,95,86,.3)" stroke-width="1.2"/>
+        <text x="450" y="399" fill="#ff8f88" font-family="JetBrains Mono" font-size="12" text-anchor="middle">TLSバックエンド（OpenSSL / Schannel / GnuTLS / wolfSSL / rustls …選択可能）</text>
+      </svg>
+      <div class="svg-caption">curl.exeはWindowsではOSの暗号API「Schannel」を、Linuxでは多くがOpenSSLを使う、というようにビルド時の選択でTLS実装が変わる。</div>
+    </div>
+
+    <p class="reveal" style="margin-top:30px;">easy interfaceは1回の転送を順番に処理するシンプルなAPIで、<span class="inline-code">curl_easy_init()</span> → <span class="inline-code">curl_easy_setopt()</span> → <span class="inline-code">curl_easy_perform()</span> → <span class="inline-code">curl_easy_cleanup()</span> という4ステップで完結する。multi interfaceはこれを複数同時に、ノンブロッキングで動かすための仕組みで、ブラウザやダウンローダーのような並行接続を必要とするソフトウェアで使われる。</p>
+  </div>
+</section>
+
+<!-- ================= ANATOMY OF A REQUEST ================= -->
+<section id="anatomy">
+  <div class="wrap">
+    <div class="eyebrow">request lifecycle</div>
+    <h2 class="sec-title reveal"><span class="inline-code">curl https://...</span> の<span class="accent">舞台裏</span></h2>
+    <p class="lead reveal">1行のコマンドが実行されてから画面に結果が表示されるまで、curlは何段階もの処理を踏んでいる。</p>
+
+    <div class="seq-steps">
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>01</b>URL解析</div>
+        <div>
+          <h4>スキームとホストの分解</h4>
+          <p>入力された文字列をスキーム（https）・ホスト名・パス・クエリに分解し、どのプロトコルハンドラを使うか決定する。</p>
+        </div>
+      </div>
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>02</b>名前解決</div>
+        <div>
+          <h4>DNSルックアップ</h4>
+          <p>ホスト名をIPアドレスに変換する。OSのリゾルバを使う方法と、curl組み込みの非同期リゾルバ「c-ares」を使う方法（AsynchDNS機能）がある。結果はlibcurl内部でキャッシュされる。</p>
+          <div class="tagrow"><span>DNS-over-HTTPS対応可</span><span>カスタムDNS指定可</span></div>
+        </div>
+      </div>
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>03</b>TCP接続</div>
+        <div>
+          <h4>3ウェイハンドシェイク</h4>
+          <p>解決したIPアドレスへSYN→SYN/ACK→ACKの手順でTCP接続を確立する。HTTP/3を使う場合はここがQUIC（UDPベース）に置き換わる。</p>
+        </div>
+      </div>
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>04</b>TLSハンドシェイク</div>
+        <div>
+          <h4>暗号化チャネルの確立</h4>
+          <p>httpsの場合、ここでTLSハンドシェイクが入る。サーバー証明書を取得し、内部のCA証明書ストアと照合して正当性を検証。Windows版curlはこの部分をOS標準のSchannelに委ねている。</p>
+          <div class="tagrow"><span>証明書検証</span><span>ECH対応</span><span>セッション再利用</span></div>
+        </div>
+      </div>
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>05</b>リクエスト送信</div>
+        <div>
+          <h4>メソッド・ヘッダー・ボディの構築</h4>
+          <p>指定したHTTPメソッド（GET/POST等）、<span class="inline-code">-H</span>で追加したヘッダー、<span class="inline-code">-d</span>で渡したボディをワイヤーフォーマットに組み立てて送信する。</p>
+        </div>
+      </div>
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>06</b>応答受信</div>
+        <div>
+          <h4>ステータス・ヘッダー・ボディの解析</h4>
+          <p>サーバーからのレスポンスを受信し、ステータスライン・ヘッダー・ボディに分解。リダイレクト（3xx）の場合は<span class="inline-code">-L</span>指定があれば追従し、再度02〜06を繰り返す。</p>
+        </div>
+      </div>
+      <div class="seq-step reveal">
+        <div class="seq-num"><b>07</b>出力</div>
+        <div>
+          <h4>標準出力 or ファイルへ書き出し</h4>
+          <p>デフォルトではボディをそのまま標準出力（stdout）に流す。catコマンドのように振る舞わせたいというStenbergの当初の意図がここに表れている。<span class="inline-code">-o</span>でファイル保存に切り替えられる。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROTOCOLS ================= -->
+<section id="protocols">
+  <div class="wrap">
+    <div class="eyebrow">protocol support</div>
+    <h2 class="sec-title reveal">対応<span class="accent">プロトコル</span>の広さ</h2>
+    <p class="lead reveal">curlはHTTPクライアントとして使われることが圧倒的に多いが、実際には20種類以上のプロトコルを1つのバイナリで扱える。</p>
+
+    <div class="proto-grid">
+      <div class="proto-chip">HTTP</div>
+      <div class="proto-chip">HTTPS</div>
+      <div class="proto-chip">FTP</div>
+      <div class="proto-chip">FTPS</div>
+      <div class="proto-chip">SFTP</div>
+      <div class="proto-chip">SCP</div>
+      <div class="proto-chip">SMTP</div>
+      <div class="proto-chip">SMTPS</div>
+      <div class="proto-chip">POP3</div>
+      <div class="proto-chip">POP3S</div>
+      <div class="proto-chip">IMAP</div>
+      <div class="proto-chip">IMAPS</div>
+      <div class="proto-chip">LDAP</div>
+      <div class="proto-chip">LDAPS</div>
+      <div class="proto-chip">TELNET</div>
+      <div class="proto-chip">TFTP</div>
+      <div class="proto-chip">DICT</div>
+      <div class="proto-chip">FILE</div>
+      <div class="proto-chip">RTMP</div>
+      <div class="proto-chip">RTSP</div>
+      <div class="proto-chip">MQTT</div>
+      <div class="proto-chip">SMB</div>
+      <div class="proto-chip">WS / WSS</div>
+      <div class="proto-chip">GOPHER</div>
+      <div class="proto-chip dead">GOPHER (旧)</div>
+    </div>
+    <p class="proto-note">※ GOPHERは一度バグの末に2014年に削除され、後に復活した経緯がある（図中の打消し線はその一時撤廃の比喩）。実際の対応状況はビルドオプションに依存する。</p>
+  </div>
+</section>
+
+<!-- ================= TLS BACKENDS ================= -->
+<section class="tight">
+  <div class="wrap">
+    <div class="eyebrow">tls backends</div>
+    <h2 class="sec-title reveal">なぜ環境ごとに<span class="accent">挙動が違う</span>のか</h2>
+    <p class="lead reveal">curlはTLS（暗号化通信）の実装を1つに固定していない。ビルド時に選んだ「バックエンド」によって、対応する暗号スイートや証明書ストアの扱いが変わる。これが「同じcurlコマンドでも環境によって動作が違う」と感じる主な原因のひとつ。</p>
+
+    <table class="cheat-table">
+      <thead><tr><th>バックエンド</th><th class="desc">特徴</th></tr></thead>
+      <tbody>
+        <tr><td><code>OpenSSL</code></td><td class="desc">最も広く使われる実装。Linux配布版の大半が採用。</td></tr>
+        <tr><td><code>Schannel</code></td><td class="desc">Windows OS標準の暗号API。Microsoft配布のcurl.exeが採用し、証明書管理をWindowsの証明書ストアに委ねる。</td></tr>
+        <tr><td><code>wolfSSL</code></td><td class="desc">組込み機器向けの軽量実装。Stenberg自身が現在所属する企業の製品でもある。</td></tr>
+        <tr><td><code>GnuTLS / mbedTLS</code></td><td class="desc">ライセンス上の理由やフットプリントの小さい用途で選ばれることがある。</td></tr>
+        <tr><td><code>rustls</code></td><td class="desc">Rust製の比較的新しい実装。メモリ安全性を重視する文脈で採用が進む。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= WINDOWS SPECIAL SECTION ================= -->
+<section id="windows">
+  <div class="wrap">
+    <div class="eyebrow">on windows</div>
+    <h2 class="sec-title reveal">Windowsで<span class="accent">curlを使うときの注意点</span></h2>
+    <p class="lead reveal">Windowsユーザーが最初にぶつかる罠は、ほぼ確実に「PowerShellのcurlは本物のcurlではない」という事実。</p>
+
+    <div class="win-box reveal">
+      <span class="tag">⚠ ALIAS TRAP</span>
+      <h4>PowerShellの<code class="inline-code">curl</code>は別物</h4>
+      <p>Windows 10 build 1803（2018年4月）以降、<code class="inline-code">C:\Windows\System32\curl.exe</code> として本物のcurlが標準搭載されている。一方でWindows PowerShell（5.1系）には昔から <code class="inline-code">curl</code> という名前で <code class="inline-code">Invoke-WebRequest</code> コマンドレットへのエイリアスが張られており、こちらが優先して呼ばれてしまう。オプションの意味も出力形式もまったく異なるため、Linux/macOSと同じ感覚で <code class="inline-code">curl -O ...</code> のようなオプションを打つとエラーになる。</p>
+
+      <div class="compare">
+        <div class="col">
+          <h5>cmd.exe（コマンドプロンプト）</h5>
+          <code class="inline-code" style="display:block;">curl https://example.com</code>
+          <p style="font-size:13px;color:var(--text-dim);margin:0;">エイリアスが存在しないため、そのまま本物のcurl.exeが呼ばれる。</p>
+        </div>
+        <div class="col">
+          <h5>PowerShell</h5>
+          <code class="inline-code" style="display:block;">curl.exe https://example.com</code>
+          <p style="font-size:13px;color:var(--text-dim);margin:0;">必ず<code class="inline-code">.exe</code>を明示する。エイリアス解除は<br><code class="inline-code">Remove-Item alias:curl</code></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="win-box reveal">
+      <span class="tag">⚠ QUOTING TRAP</span>
+      <h4>シェルによって引用符のルールが違う</h4>
+      <p>JSONボディを <code class="inline-code">-d</code> で渡すような場面で特に問題になる。bash系の慣習で書いた <code class="inline-code">'...'</code>（シングルクオート）は、cmd.exeでは特別な意味を持たず文字としてそのまま渡ってしまう。PowerShellでは <code class="inline-code">"</code> のエスケープルールがcmdともbashとも異なるため、同じコマンドをそのままコピペすると壊れることが多い。</p>
+      <div class="compare">
+        <div class="col">
+          <h5>bash / zsh（参考・動かない例ではない）</h5>
+          <code class="inline-code" style="display:block;">curl -d '{"key":"value"}' URL</code>
+        </div>
+        <div class="col">
+          <h5>cmd.exe で動かす場合</h5>
+          <code class="inline-code" style="display:block;">curl -d "{\"key\":\"value\"}" URL</code>
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:13.5px;color:var(--text-dim);">PowerShellではバックスラッシュではなくバッククオート <code class="inline-code">`</code> でのエスケープや、ここで示した二重引用符の入れ子ルールがさらに異なるため、複雑なペイロードはファイルに書いて <code class="inline-code">-d @body.json</code> のように読み込ませる方が事故が少ない。</p>
+    </div>
+
+    <div class="win-box reveal">
+      <span class="tag">ℹ KNOWN LIMITATION</span>
+      <h4>Microsoft配布版は機能が一部削られている</h4>
+      <p>Windows標準搭載のcurl.exeはMicrosoftが独自にビルドしており、TLSバックエンドはSchannel固定。Public Suffix List（PSL）対応が省略されているなど、curl.se配布版や他パッケージマネージャ経由の版と機能差がある。最新機能や完全な機能セットが必要な場合は、<code class="inline-code">winget install curl.curl</code> や <code class="inline-code">choco install curl</code>、またはWSL経由でのインストールが選択肢になる。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHEATSHEET ================= -->
+<section id="cheatsheet">
+  <div class="wrap">
+    <div class="eyebrow">field reference</div>
+    <h2 class="sec-title reveal">よく使う<span class="accent">オプション</span>一覧</h2>
+    <p class="lead reveal">curlには250近いコマンドラインオプションがあるが、実務で頻出するのはこの一部に絞られる。</p>
+
+    <table class="cheat-table">
+      <thead><tr><th>オプション</th><th class="desc">意味</th></tr></thead>
+      <tbody>
+        <tr><td><code>-X, --request</code></td><td class="desc">HTTPメソッドを指定（GET/POST/PUT/DELETE等）</td></tr>
+        <tr><td><code>-H, --header</code></td><td class="desc">リクエストヘッダーを追加</td></tr>
+        <tr><td><code>-d, --data</code></td><td class="desc">リクエストボディを送信（自動でPOSTになる）</td></tr>
+        <tr><td><code>-o, --output</code></td><td class="desc">レスポンスを指定ファイルに保存</td></tr>
+        <tr><td><code>-O, --remote-name</code></td><td class="desc">URLのファイル名のまま保存</td></tr>
+        <tr><td><code>-L, --location</code></td><td class="desc">リダイレクト（3xx）を自動で追従</td></tr>
+        <tr><td><code>-I, --head</code></td><td class="desc">ヘッダーのみ取得（HEADリクエスト）</td></tr>
+        <tr><td><code>-v, --verbose</code></td><td class="desc">通信の詳細（リクエスト/レスポンス両方）を表示</td></tr>
+        <tr><td><code>-s, --silent</code></td><td class="desc">プログレス表示やエラーメッセージを抑制</td></tr>
+        <tr><td><code>-k, --insecure</code></td><td class="desc">TLS証明書の検証をスキップ（検証・デバッグ専用、本番では非推奨）</td></tr>
+        <tr><td><code>-A, --user-agent</code></td><td class="desc">User-Agentヘッダーを上書き</td></tr>
+        <tr><td><code>-b / -c</code></td><td class="desc">クッキーの読み込み / 保存先を指定</td></tr>
+        <tr><td><code>-F, --form</code></td><td class="desc">multipart/form-dataでのファイルアップロード</td></tr>
+        <tr><td><code>-T, --upload-file</code></td><td class="desc">指定ファイルをPUT/FTPアップロード</td></tr>
+        <tr><td><code>-u, --user</code></td><td class="desc">Basic/Digest等の認証情報を指定</td></tr>
+        <tr><td><code>-w, --write-out</code></td><td class="desc">ステータスコード等を任意の書式で出力</td></tr>
+        <tr><td><code>--limit-rate</code></td><td class="desc">転送速度を制限</td></tr>
+        <tr><td><code>-x, --proxy</code></td><td class="desc">プロキシを指定（SOCKS/HTTPプロキシ対応）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= SECURITY ================= -->
+<section id="security">
+  <div class="wrap">
+    <div class="eyebrow">security & release model</div>
+    <h2 class="sec-title reveal">8週間サイクルと<span class="accent">バグ報奨金</span></h2>
+    <p class="lead reveal">curlは長年、ほぼ機械のように一定のリズムでリリースを続けている。これは「重要インフラ」として扱われるソフトウェアの安定運用モデルとして参照されることが多い。</p>
+
+    <div class="stat-grid reveal">
+      <div class="stat"><div class="num">8週</div><div class="lab">標準リリース間隔</div></div>
+      <div class="stat"><div class="num">2,300+</div><div class="lab">歴代コントリビューター数</div></div>
+      <div class="stat"><div class="num">28年</div><div class="lab">継続開発年数</div></div>
+      <div class="stat"><div class="num">250</div><div class="lab">CLIオプション数（概算）</div></div>
+    </div>
+
+    <p class="reveal" style="margin-top:30px;">セキュリティ面では、発見された脆弱性ごとに詳細なアドバイザリ（影響範囲・該当バージョン・修正方法）を公開する透明性の高い運用を貫いている。バグ報奨金制度（Bug Bounty）も運営し、発見者への謝礼を支払う体制を取る。</p>
+    <div class="diagram-box reveal" style="padding:20px 24px;">
+      <div class="log-line"><span class="when">2000s</span><span class="lv warn">WARN</span><span>libcurl URLバッファオーバーフロー系の初期の脆弱性が複数報告される。以降、入力処理の堅牢化が継続的に進む。</span></div>
+      <div class="log-line"><span class="when">2014</span><span class="lv info">INFO</span><span>長年使われていなかったGopherサポートにバグが見つかり、一度削除（後に復活）。「使われない機能は脆弱性の温床になる」という教訓的事例。</span></div>
+      <div class="log-line"><span class="when">継続</span><span class="lv crit">CRIT</span><span>libcurlは無数のアプリ・OS・IoT機器に組み込まれているため、1つの脆弱性が広範囲に影響する「サプライチェーンの中心」としての側面を持つ。</span></div>
+      <div class="log-line"><span class="when">現在</span><span class="lv info">INFO</span><span>すべての脆弱性に重大度評価・影響バージョン範囲・回避策を付けて公開する方針を継続中。</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCALE ================= -->
+<section id="scale">
+  <div class="wrap">
+    <div class="eyebrow">ubiquity</div>
+    <h2 class="sec-title reveal">推定<span class="accent">100億台以上</span>での稼働</h2>
+    <p class="lead reveal">curlの作者Stenbergは「自分のコードはほぼ確実にあなたの持っているデバイスのどこかで動いている」と語っている。誇張ではなく、実際の採用範囲は驚くほど広い。</p>
+
+    <div class="def-grid">
+      <div class="def-card reveal">
+        <span class="tag">MOBILE</span>
+        <h3>スマートフォン</h3>
+        <p>Android/iOSはOS自体としてはlibcurlをAPIとして公開していないため、YouTube・Instagram・Spotify・Netflixなど主要アプリの多くが各自のビルドを内包している。結果、1台のスマホに複数のcurlが入っていることが多い。</p>
+      </div>
+      <div class="def-card reveal">
+        <span class="tag">DESKTOP / OS</span>
+        <h3>主要OSすべてに標準搭載</h3>
+        <p>macOS（2001年〜）、各種Linuxディストリビューション、Windows 10/11（2018年〜）。デスクトップOSで標準搭載されていない主要環境はほぼ存在しない。</p>
+      </div>
+      <div class="def-card reveal">
+        <span class="tag">ENTERTAINMENT</span>
+        <h3>ゲーム機・ゲームタイトル</h3>
+        <p>Nintendo Switch、Xbox、PlayStation 5などのゲーム機本体に加え、Grand Theft Auto V、Fortnite、Red Dead Redemption 2などの大型タイトルにも組み込まれている。</p>
+      </div>
+      <div class="def-card reveal">
+        <span class="tag">EVERYTHING ELSE</span>
+        <h3>自動車・家電・宇宙</h3>
+        <p>20以上の自動車メーカーの「コネクテッドカー」機能、Roku/Apple TVのようなセットトップボックス、プリンターやスマートウォッチなどのIoT機器、そして2021年には火星ヘリコプター「Ingenuity」での稼働も確認された。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GOVERNANCE / FUTURE ================= -->
+<section class="tight">
+  <div class="wrap">
+    <div class="eyebrow">governance & future</div>
+    <h2 class="sec-title reveal">運営体制と<span class="accent">これから</span></h2>
+    <p class="lead reveal">curlはMITライセンスで配布され、誰でも無償で使用・改変・再配布できる。開発はDaniel Stenbergを中心に、グローバルなボランティアコミュニティがGitHub上で支えている。Stenberg自身は現在wolfSSL社に所属しながらcurlの開発をフルタイムの仕事として続けている。</p>
+    <p class="reveal">今後の方向性としては、HTTP/3とQUICの安定運用、そして将来の量子コンピュータによる暗号解読リスクに備えたポスト量子暗号（PQC）のハイブリッド方式対応が進められている。28年間「派手な野望は持たず、ただインターネット転送を良く・速く・確実にする」ことだけを目標にしてきたプロジェクトが、いま最先端の暗号技術の実験場のひとつにもなっている。</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>curl :: a protocol engineering retrospective — 個人学習用に作成</div>
+    <div><a href="https://curl.se" target="_blank" rel="noopener">curl.se</a> / <a href="https://daniel.haxx.se" target="_blank" rel="noopener">daniel.haxx.se</a></div>
+  </div>
+</footer>
+
+<script>
+// progress bar
+const progress = document.getElementById('progress');
+function updateProgress(){
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progress.style.width = scrolled + '%';
+}
+document.addEventListener('scroll', updateProgress);
+updateProgress();
+
+// reveal on scroll
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('show');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.12});
+revealEls.forEach(el=>io.observe(el));
+
+// boot typewriter
+const bootLines = [
+  {t:'C:\\Users\\masaki>', cls:'ps', pause:300},
+  {t:' curl --version\n', cls:'', pause:500},
+  {t:'curl 8.13.0 (Windows) libcurl/8.13.0 Schannel zlib/1.3.1 WinIDN\n', cls:'path', pause:120},
+  {t:'Protocols: dict file ftp ftps http https imap imaps ldap ldaps\n', cls:'path', pause:60},
+  {t:'           mqtt pop3 pop3s smb smbs smtp smtps telnet tftp ws wss\n', cls:'path', pause:60},
+  {t:'Features: AsynchDNS HSTS HTTPS-proxy IPv6 Kerberos Largefile\n', cls:'path', pause:60},
+  {t:'          NTLM SPNEGO SSL SSPI threadsafe Unicode UnixSockets\n\n', cls:'path', pause:400},
+  {t:'C:\\Users\\masaki>', cls:'ps', pause:200},
+  {t:' curl -s https://your.life --proto-default https\n', cls:'', pause:300},
+  {t:'200 OK — connection has been open since 1996.\n', cls:'path', pause:200},
+];
+
+const bootEl = document.getElementById('bootText');
+let li = 0, ci = 0;
+function typeBoot(){
+  if(li >= bootLines.length){
+    bootEl.innerHTML += '<span class="cursor"></span>';
+    return;
+  }
+  const line = bootLines[li];
+  if(ci === 0){
+    bootEl.innerHTML = bootEl.innerHTML; // noop, keep history
+  }
+  if(ci < line.t.length){
+    const span = document.createElement('span');
+    if(line.cls) span.className = line.cls;
+    span.textContent = line.t[ci];
+    bootEl.appendChild(span);
+    ci++;
+    setTimeout(typeBoot, line.t[ci-1] === '\n' ? 10 : 14);
+  } else {
+    li++; ci = 0;
+    setTimeout(typeBoot, line.pause || 0);
+  }
+}
+typeBoot();
+</script>
+
+</body>
+</html>
