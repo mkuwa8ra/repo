@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コールオプション完全ガイド — 損益シミュレーターとグリークス</title>
+<style>
+  :root{
+    --bg: #0a0d11;
+    --bg-raised: #0e1319;
+    --surface: #11171f;
+    --surface-2: #151d26;
+    --border: #212b35;
+    --text: #d7dee5;
+    --text-dim: #8592a1;
+    --text-faint: #4d5966;
+    --up: #00d68f;
+    --down: #ff5c7a;
+    --amber: #ffb454;
+    --blue: #4ea8de;
+    --mono: 'IBM Plex Mono','SF Mono', Consolas, monospace;
+    --sans: 'Inter','Hiragino Kaku Gothic ProN','Noto Sans JP', sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.75;
+  }
+  ::selection{ background: rgba(0,214,143,0.25); }
+
+  a{ color: var(--blue); }
+
+  .ticker-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 900px 500px at 85% -5%, rgba(0,214,143,0.06), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 5% 20%, rgba(78,168,222,0.05), transparent 60%);
+  }
+
+  /* ---- nav ---- */
+  .topnav{
+    position:sticky; top:0; z-index:20;
+    background: rgba(10,13,17,0.9);
+    backdrop-filter: blur(8px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:18px;
+    padding: 14px 26px;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .topnav .brand{
+    font-family: var(--mono);
+    font-size:13px;
+    color: var(--up);
+    margin-right:10px;
+    flex-shrink:0;
+  }
+  .topnav a{
+    font-family: var(--mono);
+    font-size:12.5px;
+    color: var(--text-dim);
+    text-decoration:none;
+    padding:6px 2px;
+    border-bottom:2px solid transparent;
+  }
+  .topnav a:hover{ color:#eef4fa; border-color: var(--border); }
+  .topnav .back{
+    margin-left:auto; flex-shrink:0;
+    color: var(--text-faint);
+  }
+
+  section{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 70px 26px;
+    position:relative; z-index:1;
+  }
+
+  /* ---- hero ---- */
+  .hero{ padding-top:64px; padding-bottom: 40px; }
+  .hero .eyebrow{
+    font-family: var(--mono);
+    font-size:12px;
+    color: var(--up);
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  .hero h1{
+    font-family: var(--mono);
+    font-size: clamp(30px, 5vw, 50px);
+    font-weight:600;
+    color:#eef4fa;
+    margin:0 0 20px;
+    letter-spacing:-0.01em;
+    line-height:1.3;
+  }
+  .hero h1 .call{ color: var(--up); }
+  .hero p.lead{
+    color: var(--text-dim);
+    font-size:16px;
+    max-width:640px;
+    margin:0 0 28px;
+  }
+  .hero .ticker-line{
+    font-family: var(--mono);
+    font-size:14px;
+    color: var(--text-faint);
+    display:flex; gap:22px; flex-wrap:wrap;
+  }
+  .hero .ticker-line b{ color:#eef4fa; }
+  .hero .ticker-line .up{ color: var(--up); }
+
+  h2.section-title{
+    font-family: var(--mono);
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--text-faint);
+    margin: 0 0 8px;
+  }
+  h2.section-title::before{ content:'// '; color: var(--border); }
+  h3.section-head{
+    font-size: clamp(22px, 3vw, 30px);
+    color:#eef4fa;
+    margin: 0 0 22px;
+    font-weight:600;
+  }
+  p{ color: var(--text-dim); }
+
+  /* ---- definition cards ---- */
+  .rights-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px;
+    margin-top: 28px;
+  }
+  .rights-card{
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px;
+  }
+  .rights-card .who{
+    font-family: var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-bottom:10px;
+  }
+  .rights-card.buyer .who{ color: var(--up); }
+  .rights-card.seller .who{ color: var(--down); }
+  .rights-card h4{ color:#eef4fa; margin:0 0 10px; font-size:17px; }
+  .rights-card p{ font-size:14px; margin:0; }
+
+  /* ---- glossary chips ---- */
+  .glossary{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+    gap:14px; margin-top:26px;
+  }
+  .gterm{
+    background: var(--bg-raised);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:16px 18px;
+  }
+  .gterm .k{
+    font-family: var(--mono); font-size:12.5px; color: var(--amber);
+    margin-bottom:6px;
+  }
+  .gterm .v{ font-size:13.5px; color: var(--text-dim); margin:0; }
+
+  /* ---- simulator ---- */
+  .sim-panel{
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding: 28px;
+    margin-top: 26px;
+  }
+  .sim-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:32px;
+    align-items:start;
+  }
+  .sim-controls .row{ margin-bottom:20px; }
+  .sim-controls label{
+    display:flex; justify-content:space-between;
+    font-family: var(--mono);
+    font-size:12.5px;
+    color: var(--text-dim);
+    margin-bottom:8px;
+  }
+  .sim-controls label .val{ color:#eef4fa; font-weight:600; }
+  input[type=range]{
+    width:100%;
+    -webkit-appearance:none;
+    height:4px;
+    border-radius:2px;
+    background: var(--border);
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:16px; height:16px; border-radius:50%;
+    background: var(--up);
+    cursor:pointer;
+    box-shadow: 0 0 0 4px rgba(0,214,143,0.15);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:16px; height:16px; border-radius:50%;
+    background: var(--up); border:none; cursor:pointer;
+  }
+
+  .sim-readout{
+    display:grid; grid-template-columns: 1fr 1fr; gap:12px;
+    margin-top:6px;
+  }
+  .readout-box{
+    background: var(--bg-raised);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:14px 16px;
+  }
+  .readout-box .lbl{
+    font-family:var(--mono); font-size:10.5px; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;
+  }
+  .readout-box .num{
+    font-family:var(--mono); font-size:20px; color:#eef4fa; font-weight:600;
+  }
+  .readout-box .num.pos{ color: var(--up); }
+  .readout-box .num.neg{ color: var(--down); }
+
+  #payoffChart{ width:100%; height:auto; display:block; }
+  .chart-wrap{ background: var(--bg-raised); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .chart-legend{
+    display:flex; gap:18px; margin-top:12px; font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+    flex-wrap:wrap;
+  }
+  .chart-legend span{ display:flex; align-items:center; gap:6px; }
+  .chart-legend i{ width:14px; height:2px; display:inline-block; }
+
+  /* ---- value split bar ---- */
+  .value-bar-wrap{ margin-top:30px; }
+  .value-bar{
+    height:34px; border-radius:8px; overflow:hidden;
+    display:flex; border:1px solid var(--border);
+  }
+  .value-bar .intrinsic{ background: var(--up); }
+  .value-bar .timevalue{ background: var(--amber); }
+  .value-bar-labels{
+    display:flex; justify-content:space-between;
+    font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:10px;
+  }
+
+  /* ---- greeks ---- */
+  .greeks-grid{
+    display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:16px; margin-top:26px;
+  }
+  .greek-card{
+    background: var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:18px 20px;
+  }
+  .greek-card .head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+  .greek-card .name{ font-family:var(--mono); font-size:13px; color:#eef4fa; }
+  .greek-card .symbol{ font-family:var(--mono); font-size:20px; color: var(--blue); }
+  .greek-card .value{ font-family:var(--mono); font-size:22px; font-weight:600; margin:6px 0; }
+  .greek-card .value.negative{ color: var(--down); }
+  .greek-card .value.positive{ color: var(--up); }
+  .greek-card p{ font-size:12.5px; margin:0; }
+
+  /* ---- strategies ---- */
+  .strategy-grid{
+    display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap:18px; margin-top:26px;
+  }
+  .strategy-card{
+    background: var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:20px;
+  }
+  .strategy-card h4{ color:#eef4fa; margin:0 0 6px; font-size:16px; }
+  .strategy-card .desc{ font-size:13px; color:var(--text-dim); margin:0 0 14px; min-height:60px; }
+  .strategy-card svg{ width:100%; height:80px; }
+
+  /* ---- risk list ---- */
+  .risk-list{ margin-top:24px; display:flex; flex-direction:column; gap:14px; }
+  .risk-item{
+    display:flex; gap:14px;
+    background: var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:16px 18px;
+  }
+  .risk-item .mark{ color: var(--down); font-family:var(--mono); font-weight:700; }
+  .risk-item p{ margin:0; font-size:14px; }
+  .risk-item strong{ color:#eef4fa; }
+
+  /* ---- faq ---- */
+  details{
+    background: var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding: 14px 18px; margin-bottom:10px;
+  }
+  summary{
+    cursor:pointer; color:#eef4fa; font-weight:600; font-size:14.5px;
+    list-style:none;
+  }
+  summary::-webkit-details-marker{ display:none; }
+  summary::before{ content:'▸ '; color: var(--up); font-family:var(--mono); }
+  details[open] summary::before{ content:'▾ '; }
+  details p{ margin: 12px 0 2px; font-size:14px; }
+
+  footer{
+    max-width:980px; margin:0 auto; padding: 40px 26px 70px;
+    border-top:1px solid var(--border);
+    font-family:var(--mono); font-size:11.5px; color: var(--text-faint);
+  }
+  .disclaimer{
+    background: rgba(255,92,122,0.06);
+    border:1px solid rgba(255,92,122,0.25);
+    border-radius:8px;
+    padding:16px 18px;
+    font-size:12.5px;
+    color: var(--text-dim);
+    margin-bottom:18px;
+  }
+  .disclaimer b{ color: var(--down); }
+
+  @media (max-width: 760px){
+    .rights-grid, .sim-grid{ grid-template-columns: 1fr; }
+    section{ padding: 46px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="ticker-bg"></div>
+
+<nav class="topnav">
+  <span class="brand">CALL::OPTION</span>
+  <a href="#def">定義</a>
+  <a href="#glossary">用語</a>
+  <a href="#sim">シミュレーター</a>
+  <a href="#value">本質・時間価値</a>
+  <a href="#greeks">グリークス</a>
+  <a href="#strategy">使い方</a>
+  <a href="#risk">注意点</a>
+  <a href="#faq">FAQ</a>
+  <a class="back" href="index.html">← 一覧へ</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">option education / call options</div>
+  <h1>コール<span class="call">オプション</span>を<br>根本から理解する</h1>
+  <p class="lead">
+    「権利を買う」というシンプルな仕組みが、なぜ損失は限定的で利益は無限大になり得るのか。
+    定義から損益図、ブラック・ショールズ式によるプレミアム計算、グリークスまで、実際に数値を動かしながら学べる構成にしています。
+  </p>
+  <div class="ticker-line">
+    <span>原資産 <b>S</b></span>
+    <span>行使価格 <b>K</b></span>
+    <span>プレミアム <b class="up">C</b></span>
+    <span>満期 <b>T</b></span>
+  </div>
+</section>
+
+<section id="def">
+  <h2 class="section-title">01 / definition</h2>
+  <h3 class="section-head">コールオプションとは何か</h3>
+  <p>
+    コールオプションとは、「あらかじめ決めた価格（行使価格）で、原資産を、決められた期日（満期日）までに買う権利」を売買する契約です。
+    株式そのものを売買するのではなく、その「買う権利」だけが取引の対象になります。買い手はこの権利を得る対価としてプレミアム（オプション料）を売り手に支払います。
+  </p>
+  <div class="rights-grid">
+    <div class="rights-card buyer">
+      <div class="who">買い手（ロング・コール）</div>
+      <h4>権利はあるが義務はない</h4>
+      <p>原資産価格が上昇すれば権利を行使して利益を得られる。価格が上がらなければ権利を放棄すればよく、損失はプレミアム分に限定される。</p>
+    </div>
+    <div class="rights-card seller">
+      <div class="who">売り手（ショート・コール）</div>
+      <h4>義務はあるが権利はない</h4>
+      <p>プレミアムを受け取る代わりに、買い手が権利行使を選んだ場合は原資産を行使価格で売り渡す義務を負う。得られる利益はプレミアムに限定され、損失は理論上無限大になり得る。</p>
+    </div>
+  </div>
+</section>
+
+<section id="glossary">
+  <h2 class="section-title">02 / vocabulary</h2>
+  <h3 class="section-head">最初に押さえる基本用語</h3>
+  <div class="glossary">
+    <div class="gterm"><div class="k">原資産（げんししさん）</div><p class="v">オプションの対象となる株式・指数などそのもの。英語では underlying。</p></div>
+    <div class="gterm"><div class="k">行使価格（ストライク）</div><p class="v">権利を行使する際に原資産を買い取る価格。契約時に固定される。</p></div>
+    <div class="gterm"><div class="k">プレミアム</div><p class="v">オプションそのものの価格。買い手が売り手に支払う対価で、株価とは別物。</p></div>
+    <div class="gterm"><div class="k">満期日（限月）</div><p class="v">権利を行使できる期限。これを過ぎると権利は消滅する。</p></div>
+    <div class="gterm"><div class="k">ITM（イン・ザ・マネー）</div><p class="v">原資産価格＞行使価格。今すぐ行使すれば利益が出る状態。</p></div>
+    <div class="gterm"><div class="k">ATM（アット・ザ・マネー）</div><p class="v">原資産価格≒行使価格。損益分岐点付近にある状態。</p></div>
+    <div class="gterm"><div class="k">OTM（アウト・オブ・ザ・マネー）</div><p class="v">原資産価格＜行使価格。今行使すると損になる状態で、プレミアムは時間的価値のみ。</p></div>
+  </div>
+</section>
+
+<section id="sim">
+  <h2 class="section-title">03 / simulator</h2>
+  <h3 class="section-head">損益シミュレーター（ブラック・ショールズ式）</h3>
+  <p>
+    下のスライダーで原資産価格・行使価格・残存日数・ボラティリティ・金利を動かすと、ブラック・ショールズ式に基づいてプレミアムとグリークスがリアルタイムに再計算されます。
+    右側のグラフは、このプレミアムで買った場合の「満期時点」での損益を示しています。
+  </p>
+
+  <div class="sim-panel">
+    <div class="sim-grid">
+      <div class="sim-controls">
+        <div class="row">
+          <label>原資産価格 S <span class="val" id="valS">3,000円</span></label>
+          <input type="range" id="rangeS" min="2000" max="4000" step="10" value="3000">
+        </div>
+        <div class="row">
+          <label>行使価格 K <span class="val" id="valK">3,000円</span></label>
+          <input type="range" id="rangeK" min="2000" max="4000" step="50" value="3000">
+        </div>
+        <div class="row">
+          <label>残存日数 T <span class="val" id="valT">30日</span></label>
+          <input type="range" id="rangeT" min="1" max="180" step="1" value="30">
+        </div>
+        <div class="row">
+          <label>ボラティリティ σ <span class="val" id="valSigma">25%</span></label>
+          <input type="range" id="rangeSigma" min="5" max="80" step="1" value="25">
+        </div>
+        <div class="row">
+          <label>無リスク金利 r <span class="val" id="valR">1.0%</span></label>
+          <input type="range" id="rangeR" min="0" max="5" step="0.1" value="1.0">
+        </div>
+
+        <div class="sim-readout">
+          <div class="readout-box">
+            <div class="lbl">理論プレミアム</div>
+            <div class="num" id="outPremium">—</div>
+          </div>
+          <div class="readout-box">
+            <div class="lbl">損益分岐点</div>
+            <div class="num" id="outBreakeven">—</div>
+          </div>
+          <div class="readout-box">
+            <div class="lbl">最大損失（買い手）</div>
+            <div class="num neg" id="outMaxLoss">—</div>
+          </div>
+          <div class="readout-box">
+            <div class="lbl">最大利益（買い手）</div>
+            <div class="num pos" id="outMaxProfit">無限大</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <svg id="payoffChart" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="chart-legend">
+          <span><i style="background:var(--up)"></i>買い手の損益</span>
+          <span><i style="background:var(--down)"></i>売り手の損益</span>
+          <span><i style="background:var(--text-faint)"></i>損益分岐点</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="value">
+  <h2 class="section-title">04 / price components</h2>
+  <h3 class="section-head">本質的価値と時間的価値</h3>
+  <p>
+    プレミアムは大きく2つの要素に分解できます。「今すぐ行使したら得られる価値（本質的価値）」と、「満期までに原資産価格が動くかもしれない可能性への期待（時間的価値）」です。
+    満期が近づくほど時間的価値は縮小し、満期日には本質的価値だけが残ります。
+  </p>
+  <div class="value-bar-wrap">
+    <div class="value-bar">
+      <div class="intrinsic" id="barIntrinsic" style="width:50%"></div>
+      <div class="timevalue" id="barTimevalue" style="width:50%"></div>
+    </div>
+    <div class="value-bar-labels">
+      <span id="labelIntrinsic">本質的価値: —</span>
+      <span id="labelTimevalue">時間的価値: —</span>
+    </div>
+  </div>
+</section>
+
+<section id="greeks">
+  <h2 class="section-title">05 / the greeks</h2>
+  <h3 class="section-head">プレミアムを動かす感応度（グリークス）</h3>
+  <p>上のシミュレーターで設定した条件における、現在のグリークスの値です。それぞれ「何に対してどれだけ敏感か」を表します。</p>
+  <div class="greeks-grid">
+    <div class="greek-card">
+      <div class="head"><span class="name">デルタ Delta</span><span class="symbol">Δ</span></div>
+      <div class="value positive" id="gDelta">—</div>
+      <p>原資産価格が1円動いたときのプレミアムの変化量。0〜1の範囲を取り、ITMに近づくほど1に近づく。</p>
+    </div>
+    <div class="greek-card">
+      <div class="head"><span class="name">ガンマ Gamma</span><span class="symbol">Γ</span></div>
+      <div class="value" id="gGamma">—</div>
+      <p>原資産価格が1円動いたときのデルタの変化量。ATM付近かつ満期が近いほど大きくなる。</p>
+    </div>
+    <div class="greek-card">
+      <div class="head"><span class="name">セータ Theta</span><span class="symbol">Θ</span></div>
+      <div class="value negative" id="gTheta">—</div>
+      <p>1日経過するごとのプレミアムの減少額（タイムディケイ）。買い手にとっては基本的にマイナスに働く。</p>
+    </div>
+    <div class="greek-card">
+      <div class="head"><span class="name">ベガ Vega</span><span class="symbol">V</span></div>
+      <div class="value positive" id="gVega">—</div>
+      <p>ボラティリティが1%変化したときのプレミアムの変化額。残存期間が長いほど影響が大きい。</p>
+    </div>
+    <div class="greek-card">
+      <div class="head"><span class="name">ロー Rho</span><span class="symbol">ρ</span></div>
+      <div class="value" id="gRho">—</div>
+      <p>金利が1%変化したときのプレミアムの変化額。他のグリークスに比べ影響は小さいことが多い。</p>
+    </div>
+  </div>
+</section>
+
+<section id="strategy">
+  <h2 class="section-title">06 / usage</h2>
+  <h3 class="section-head">代表的な使い方</h3>
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <h4>ロング・コール</h4>
+      <p class="desc">コールを単純に買うだけの最も基本的な形。少ない資金で上昇に賭けられる一方、損失はプレミアムに限定される。投機・レバレッジ目的が中心。</p>
+      <svg viewBox="0 0 200 60"><polyline points="10,50 100,50 190,10" fill="none" stroke="#00d68f" stroke-width="2.5"/></svg>
+    </div>
+    <div class="strategy-card">
+      <h4>カバードコール</h4>
+      <p class="desc">原資産を保有しながら、その銘柄のコールを売る戦略。プレミアム収入を得られるが、株価が大きく上昇した場合の利益は行使価格までに制限される。</p>
+      <svg viewBox="0 0 200 60"><polyline points="10,50 100,30 130,20 190,20" fill="none" stroke="#ffb454" stroke-width="2.5"/></svg>
+    </div>
+    <div class="strategy-card">
+      <h4>ブル・コール・スプレッド</h4>
+      <p class="desc">行使価格の低いコールを買い、高いコールを売って組み合わせる。プレミアム負担を抑えつつ、利益・損失ともに上限を設けた戦略。</p>
+      <svg viewBox="0 0 200 60"><polyline points="10,45 80,45 130,15 190,15" fill="none" stroke="#4ea8de" stroke-width="2.5"/></svg>
+    </div>
+  </div>
+</section>
+
+<section id="risk">
+  <h2 class="section-title">07 / risk notes</h2>
+  <h3 class="section-head">学習時に押さえておきたい注意点</h3>
+  <div class="risk-list">
+    <div class="risk-item"><span class="mark">!</span><p><strong>時間的価値は満期に向けて必ず減衰する。</strong>原資産価格が横ばいでも、プレミアムだけが目減りしていく点はロング・コールの構造上のデメリット。</p></div>
+    <div class="risk-item"><span class="mark">!</span><p><strong>コールの売り（特にカバーなし）は損失が理論上無制限。</strong>買いとはリスクの非対称性が逆転する点を混同しないこと。</p></div>
+    <div class="risk-item"><span class="mark">!</span><p><strong>ボラティリティ急低下（IVクラッシュ）でプレミアムが急落することがある。</strong>価格が想定通りに動いても、ボラティリティ低下により損をするケースがある。</p></div>
+    <div class="risk-item"><span class="mark">!</span><p><strong>限月・権利行使方式（アメリカン型／ヨーロピアン型）は銘柄ごとに異なる。</strong>取引前に必ず商品仕様を確認する。</p></div>
+  </div>
+</section>
+
+<section id="faq">
+  <h2 class="section-title">08 / faq</h2>
+  <h3 class="section-head">よくある疑問</h3>
+  <details>
+    <summary>プレミアムと株価はどう違うのか</summary>
+    <p>株価は原資産そのものの取引価格。プレミアムはその原資産を「買う権利」自体の価格で、行使価格・満期までの期間・ボラティリティなど複数の要因で決まる、まったく別の値です。</p>
+  </details>
+  <details>
+    <summary>満期日に何もしなかったらどうなるのか</summary>
+    <p>OTM（行使価格より原資産価格が低い）のまま満期を迎えると、権利は自動的に消滅し、買い手が失うのはプレミアムのみです。ITMの場合は多くの取引所で自動権利行使が行われます。</p>
+  </details>
+  <details>
+    <summary>ボラティリティが高いとプレミアムはどうなるのか</summary>
+    <p>ボラティリティが高いほど、満期までに原資産価格が大きく動く可能性が高まるため、コール・プットともにプレミアムは上昇する傾向があります（ベガがプラスであることに対応）。</p>
+  </details>
+  <details>
+    <summary>このシミュレーターの数値は実際の取引に使えるか</summary>
+    <p>ブラック・ショールズ式は配当や早期権利行使を考慮しない理論値です。学習・概念理解を目的としており、実際の市場価格（気配値）とは乖離することがあります。</p>
+  </details>
+</section>
+
+<footer>
+  <div class="disclaimer">
+    <b>本ページについて：</b> 本コンテンツはコールオプションの仕組みを理解するための教育目的の資料であり、特定の銘柄・取引の推奨や投資助言を行うものではありません。実際の投資判断は自己責任で行い、必要に応じて専門家にご相談ください。
+  </div>
+  <span>static · black-scholes model · educational use only</span>
+</footer>
+
+<script>
+function erf(x){
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x);
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const t = 1/(1+p*x);
+  const y = 1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+function normCDF(x){ return 0.5*(1+erf(x/Math.sqrt(2))); }
+function normPDF(x){ return Math.exp(-x*x/2)/Math.sqrt(2*Math.PI); }
+
+function blackScholesCall(S,K,T,r,sigma){
+  if(T<=0 || sigma<=0){
+    const intrinsic = Math.max(S-K,0);
+    return { price:intrinsic, delta: S>K?1:0, gamma:0, theta:0, vega:0, rho:0 };
+  }
+  const sqrtT = Math.sqrt(T);
+  const d1 = (Math.log(S/K) + (r + sigma*sigma/2)*T) / (sigma*sqrtT);
+  const d2 = d1 - sigma*sqrtT;
+  const Nd1 = normCDF(d1), Nd2 = normCDF(d2);
+  const price = S*Nd1 - K*Math.exp(-r*T)*Nd2;
+  const delta = Nd1;
+  const gamma = normPDF(d1)/(S*sigma*sqrtT);
+  const theta = ( -(S*normPDF(d1)*sigma)/(2*sqrtT) - r*K*Math.exp(-r*T)*Nd2 ) / 365;
+  const vega = (S*normPDF(d1)*sqrtT) / 100;
+  const rho = (K*T*Math.exp(-r*T)*Nd2) / 100;
+  return { price, delta, gamma, theta, vega, rho };
+}
+
+const els = {
+  S: document.getElementById('rangeS'),
+  K: document.getElementById('rangeK'),
+  T: document.getElementById('rangeT'),
+  sigma: document.getElementById('rangeSigma'),
+  r: document.getElementById('rangeR'),
+};
+const valEls = {
+  S: document.getElementById('valS'),
+  K: document.getElementById('valK'),
+  T: document.getElementById('valT'),
+  sigma: document.getElementById('valSigma'),
+  r: document.getElementById('valR'),
+};
+
+const fmtYen = n => '¥' + Math.round(n).toLocaleString('ja-JP');
+const fmtYenSigned = n => (n>=0?'+':'') + '¥' + Math.round(n).toLocaleString('ja-JP');
+
+function drawChart(S,K,premium){
+  const svg = document.getElementById('payoffChart');
+  const W=480,H=300, pad=40;
+  const sMin = Math.max(0, K*0.5);
+  const sMax = K*1.6;
+  const xScale = s => pad + (s - sMin)/(sMax - sMin) * (W - pad*2);
+
+  // determine y-range based on max possible payoff shown (buyer) and seller mirrored
+  const maxPayoff = (sMax - K) - premium;
+  const minPayoff = -premium;
+  const yRange = Math.max(Math.abs(maxPayoff), Math.abs(minPayoff), 10) * 1.15;
+  const yScale = p => (H/2) - (p / yRange) * (H/2 - pad*0.6);
+
+  const steps = 60;
+  let buyerPts = [], sellerPts = [];
+  for(let i=0;i<=steps;i++){
+    const s = sMin + (sMax-sMin)*(i/steps);
+    const intrinsic = Math.max(s-K,0);
+    const buyerPL = intrinsic - premium;
+    const sellerPL = -buyerPL;
+    buyerPts.push([xScale(s), yScale(buyerPL)]);
+    sellerPts.push([xScale(s), yScale(sellerPL)]);
+  }
+  const toPath = pts => pts.map((p,i)=> (i===0?'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+
+  const breakeven = K + premium;
+  const zeroY = yScale(0);
+  const beX = xScale(breakeven);
+  const curX = xScale(S);
+
+  svg.innerHTML = `
+    <line x1="${pad}" y1="${zeroY}" x2="${W-pad}" y2="${zeroY}" stroke="#212b35" stroke-width="1"/>
+    <line x1="${beX}" y1="${pad*0.4}" x2="${beX}" y2="${H-pad*0.4}" stroke="#4d5966" stroke-width="1" stroke-dasharray="4 4"/>
+    <path d="${toPath(sellerPts)}" fill="none" stroke="#ff5c7a" stroke-width="2"/>
+    <path d="${toPath(buyerPts)}" fill="none" stroke="#00d68f" stroke-width="2.5"/>
+    <line x1="${curX}" y1="${pad*0.4}" x2="${curX}" y2="${H-pad*0.4}" stroke="#4ea8de" stroke-width="1.2" stroke-dasharray="2 3"/>
+    <circle cx="${curX}" cy="${yScale(Math.max(S-K,0)-premium)}" r="4" fill="#eef4fa"/>
+    <text x="${beX+6}" y="${pad*0.4+12}" fill="#8592a1" font-size="10" font-family="monospace">損益分岐点</text>
+    <text x="${pad}" y="${H-14}" fill="#4d5966" font-size="10" font-family="monospace">S=${Math.round(sMin)}</text>
+    <text x="${W-pad-40}" y="${H-14}" fill="#4d5966" font-size="10" font-family="monospace">S=${Math.round(sMax)}</text>
+  `;
+}
+
+function update(){
+  const S = parseFloat(els.S.value);
+  const K = parseFloat(els.K.value);
+  const days = parseFloat(els.T.value);
+  const sigma = parseFloat(els.sigma.value)/100;
+  const r = parseFloat(els.r.value)/100;
+  const T = days/365;
+
+  valEls.S.textContent = Math.round(S).toLocaleString('ja-JP') + '円';
+  valEls.K.textContent = Math.round(K).toLocaleString('ja-JP') + '円';
+  valEls.T.textContent = days + '日';
+  valEls.sigma.textContent = Math.round(sigma*100) + '%';
+  valEls.r.textContent = (r*100).toFixed(1) + '%';
+
+  const bs = blackScholesCall(S,K,T,r,sigma);
+  const premium = Math.max(bs.price, 0.01);
+  const breakeven = K + premium;
+  const intrinsic = Math.max(S-K,0);
+  const timevalue = Math.max(premium - intrinsic, 0);
+
+  document.getElementById('outPremium').textContent = fmtYen(premium);
+  document.getElementById('outBreakeven').textContent = fmtYen(breakeven);
+  document.getElementById('outMaxLoss').textContent = fmtYen(premium);
+
+  const intrinsicPct = premium>0 ? Math.round((intrinsic/premium)*100) : 0;
+  const timePct = 100 - intrinsicPct;
+  document.getElementById('barIntrinsic').style.width = (premium>0?intrinsicPct:0) + '%';
+  document.getElementById('barTimevalue').style.width = (premium>0?timePct:100) + '%';
+  document.getElementById('labelIntrinsic').textContent = `本質的価値: ${fmtYen(intrinsic)}`;
+  document.getElementById('labelTimevalue').textContent = `時間的価値: ${fmtYen(timevalue)}`;
+
+  document.getElementById('gDelta').textContent = bs.delta.toFixed(3);
+  document.getElementById('gGamma').textContent = bs.gamma.toFixed(5);
+  document.getElementById('gTheta').textContent = fmtYenSigned(bs.theta) + ' / 日';
+  document.getElementById('gVega').textContent = fmtYenSigned(bs.vega) + ' / 1%vol';
+  document.getElementById('gRho').textContent = fmtYenSigned(bs.rho) + ' / 1%rate';
+
+  drawChart(S,K,premium);
+}
+
+Object.values(els).forEach(el => el.addEventListener('input', update));
+update();
+</script>
+</body>
+</html>
