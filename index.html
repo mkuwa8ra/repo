@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>show ip route :: document index</title>
+<style>
+  :root{
+    --bg: #0a0e14;
+    --bg-raised: #0f151d;
+    --surface: #121a24;
+    --border: #1e2a37;
+    --border-soft: #17212b;
+    --text: #c9d6e3;
+    --text-dim: #7d8ea1;
+    --text-faint: #4c5a6a;
+    --accent-nw: #55b8ff;
+    --accent-tech: #f0a83c;
+    --accent-study: #6fd88a;
+    --accent-finance: #ff8f6b;
+    --accent-econ: #d585ff;
+    --accent-history: #ffd166;
+    --up: #3fd67d;
+    --mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+    --sans: 'IBM Plex Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  }
+
+  @font-face{
+    font-family:'IBM Plex Mono';
+    src: local('IBM Plex Mono');
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height:100vh;
+  }
+
+  body{
+    background-image:
+      radial-gradient(ellipse 1200px 600px at 15% -10%, rgba(85,184,255,0.06), transparent 60%),
+      radial-gradient(ellipse 900px 500px at 100% 10%, rgba(213,133,255,0.05), transparent 60%);
+  }
+
+  /* ---------- scanline / crt texture, subtle ---------- */
+  .crt-overlay{
+    pointer-events:none;
+    position:fixed; inset:0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.012) 0px,
+      rgba(255,255,255,0.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index:100;
+    mix-blend-mode:overlay;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    border-bottom:1px solid var(--border);
+    background: linear-gradient(180deg, var(--bg-raised), var(--bg));
+    padding: 18px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(6px);
+  }
+  .topbar .prompt{
+    font-family: var(--mono);
+    font-size:13px;
+    color: var(--text-dim);
+    letter-spacing:0.02em;
+  }
+  .topbar .prompt .user{ color: var(--accent-nw); }
+  .topbar .prompt .path{ color: var(--accent-study); }
+  .topbar .prompt .cmd{ color: var(--text); }
+  .topbar .clock{
+    font-family: var(--mono);
+    font-size:12px;
+    color: var(--text-faint);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding: 56px 28px 32px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .hero .eyebrow{
+    font-family: var(--mono);
+    font-size:12px;
+    color: var(--accent-nw);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .hero .eyebrow::before{
+    content:'';
+    width:7px; height:7px; border-radius:50%;
+    background: var(--up);
+    box-shadow: 0 0 8px var(--up);
+    display:inline-block;
+  }
+  .hero h1{
+    font-family: var(--mono);
+    font-size: clamp(28px, 4.4vw, 46px);
+    line-height:1.25;
+    margin:0 0 18px;
+    font-weight:600;
+    color:#eef4fa;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 .grey{ color: var(--text-faint); }
+  .hero p.sub{
+    color: var(--text-dim);
+    font-size:15px;
+    max-width: 640px;
+    line-height:1.8;
+    margin:0;
+  }
+
+  .stat-row{
+    display:flex; gap:28px; flex-wrap:wrap;
+    margin-top:34px;
+    font-family: var(--mono);
+  }
+  .stat{
+    border-left:2px solid var(--border);
+    padding-left:14px;
+  }
+  .stat .num{ font-size:22px; color:#eef4fa; font-weight:600; }
+  .stat .lbl{ font-size:11px; color: var(--text-faint); letter-spacing:0.06em; text-transform:uppercase; margin-top:2px;}
+
+  /* ---------- controls ---------- */
+  .controls{
+    max-width:1180px;
+    margin: 0 auto;
+    padding: 0 28px 20px;
+  }
+  .search-wrap{
+    display:flex; align-items:center; gap:10px;
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding: 12px 16px;
+    font-family: var(--mono);
+    font-size:13px;
+    color: var(--text-dim);
+  }
+  .search-wrap .glyph{ color: var(--accent-nw); }
+  .search-wrap input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#eef4fa;
+    font-family: var(--mono);
+    font-size:13px;
+  }
+  .search-wrap input::placeholder{ color: var(--text-faint); }
+
+  .filters{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-top:14px;
+  }
+  .chip{
+    font-family: var(--mono);
+    font-size:12px;
+    padding:7px 13px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background: var(--bg-raised);
+    color: var(--text-dim);
+    cursor:pointer;
+    display:flex; align-items:center; gap:7px;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+    user-select:none;
+  }
+  .chip .dot{ width:6px; height:6px; border-radius:50%; }
+  .chip:hover{ color:#eef4fa; border-color: var(--text-faint); }
+  .chip.active{
+    color:#0a0e14;
+    background: var(--chip-color, var(--accent-nw));
+    border-color: var(--chip-color, var(--accent-nw));
+    font-weight:600;
+  }
+  .chip.active .dot{ background:#0a0e14; }
+
+  /* ---------- table ---------- */
+  .table-wrap{
+    max-width:1180px;
+    margin: 10px auto 80px;
+    padding: 0 28px;
+  }
+  .table-head{
+    display:grid;
+    grid-template-columns: 84px 1.6fr 1fr 84px;
+    gap:16px;
+    padding: 10px 18px;
+    font-family: var(--mono);
+    font-size:11px;
+    color: var(--text-faint);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+  }
+
+  .route{
+    display:grid;
+    grid-template-columns: 84px 1.6fr 1fr 84px;
+    gap:16px;
+    align-items:center;
+    padding: 16px 18px;
+    border-bottom:1px solid var(--border-soft);
+    text-decoration:none;
+    color:inherit;
+    transition: background .15s ease, transform .15s ease;
+    position:relative;
+  }
+  .route:hover{
+    background: var(--surface);
+  }
+  .route:hover .title{ color: #ffffff; }
+  .route:hover .arrow{ transform: translateX(3px); opacity:1; }
+
+  .route .proto{
+    font-family: var(--mono);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    padding:4px 8px;
+    border-radius:4px;
+    width:fit-content;
+    border:1px solid currentColor;
+  }
+
+  .route .main .title{
+    font-size:15px;
+    color:#dfe8f1;
+    font-weight:500;
+    line-height:1.5;
+    transition: color .15s ease;
+  }
+  .route .main .path{
+    font-family: var(--mono);
+    font-size:11.5px;
+    color: var(--text-faint);
+    margin-top:5px;
+  }
+  .route .main .path .arrow{
+    display:inline-block;
+    margin-left:4px;
+    opacity:0;
+    transition: transform .15s ease, opacity .15s ease;
+  }
+
+  .route .tags{
+    display:flex; flex-wrap:wrap; gap:6px;
+  }
+  .route .tags span{
+    font-size:11px;
+    color: var(--text-dim);
+    background: var(--bg-raised);
+    border:1px solid var(--border);
+    padding:3px 8px;
+    border-radius:4px;
+    font-family: var(--mono);
+  }
+
+  .route .status{
+    display:flex; align-items:center; gap:6px;
+    font-family: var(--mono);
+    font-size:11px;
+    color: var(--up);
+    justify-content:flex-end;
+  }
+  .route .status .dot{
+    width:6px; height:6px; border-radius:50%;
+    background: var(--up);
+    box-shadow: 0 0 6px var(--up);
+  }
+
+  .empty-state{
+    padding: 60px 20px;
+    text-align:center;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size:13px;
+    display:none;
+  }
+
+  /* category color mapping via inline CSS var --cat */
+  .cat-NW{ color: var(--accent-nw); }
+  .cat-TECH{ color: var(--accent-tech); }
+  .cat-STUDY{ color: var(--accent-study); }
+  .cat-FINANCE{ color: var(--accent-finance); }
+  .cat-ECON{ color: var(--accent-econ); }
+  .cat-HISTORY{ color: var(--accent-history); }
+
+  footer{
+    max-width:1180px;
+    margin: 0 auto;
+    padding: 24px 28px 60px;
+    font-family: var(--mono);
+    font-size:11.5px;
+    color: var(--text-faint);
+    border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (max-width: 760px){
+    .table-head{ display:none; }
+    .route{
+      grid-template-columns: 1fr;
+      gap:10px;
+      padding: 18px;
+    }
+    .route .status{ justify-content:flex-start; }
+    .hero{ padding: 40px 20px 24px; }
+    .controls{ padding: 0 20px 16px; }
+    .table-wrap{ padding: 0 20px; }
+    .topbar{ padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="crt-overlay"></div>
+
+<div class="topbar">
+  <div class="prompt"><span class="user">masaki@repo</span>:<span class="path">~/docs</span>$ <span class="cmd">show ip route</span></div>
+  <div class="clock" id="clock"></div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">all routes reachable</div>
+  <h1>公開ドキュメント<span class="grey"> — </span>経路表</h1>
+  <p class="sub">
+    ネットワーク、資格学習、技術解説、雑多な調べ物まで。公開している各HTMLを、宛先(カテゴリ)ごとの経路として一覧化しています。
+    ジャンルは今後も増える予定なので、フィルタで絞り込んでください。
+  </p>
+
+  <div class="stat-row" id="statRow">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="glyph">&gt;</span>
+    <input id="searchInput" type="text" placeholder="show ip route | include ___　（タイトルやタグで検索）">
+  </div>
+  <div class="filters" id="filters"></div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-head">
+    <div>proto</div>
+    <div>destination</div>
+    <div>tags</div>
+    <div style="text-align:right">state</div>
+  </div>
+  <div id="routeList"></div>
+  <div class="empty-state" id="emptyState">-- no matching routes --<br>条件に一致するドキュメントがありません</div>
+</div>
+
+<footer>
+  <span id="footCount"></span>
+  <span>static · no backend · last rebuilt by hand</span>
+</footer>
+
+<script>
+const CATS = {
+  NW:      { label: 'NW',      color: 'var(--accent-nw)',      name: 'ネットワーク' },
+  TECH:    { label: 'TECH',    color: 'var(--accent-tech)',    name: '技術・システム' },
+  STUDY:   { label: 'STUDY',   color: 'var(--accent-study)',   name: '資格・学習' },
+  FINANCE: { label: 'FIN',     color: 'var(--accent-finance)', name: '資産運用' },
+  ECON:    { label: 'ECON',    color: 'var(--accent-econ)',    name: '経済・政治' },
+  HISTORY: { label: 'HIST',    color: 'var(--accent-history)', name: '歴史・文化' },
+};
+
+const ROUTES = [
+  {
+    title: 'curl :: 28年のプロトコル工学',
+    path: 'curl-explained.html',
+    cat: 'TECH',
+    tags: ['CLI', 'HTTP', 'プロトコル']
+  },
+  {
+    title: 'IFAと社債投資における手数料の実態',
+    path: 'ifa_shasai_analysis.html',
+    cat: 'FINANCE',
+    tags: ['社債', '手数料']
+  },
+  {
+    title: 'ザイム真理教 — 財務省洗脳の実態',
+    path: 'zaimu_shinrikyo_infographic.html',
+    cat: 'ECON',
+    tags: ['財政', '政治']
+  },
+  {
+    title: 'インサイドWindows 第7版 — システムアーキテクチャ図解',
+    path: 'inside_windows_infographic.html',
+    cat: 'TECH',
+    tags: ['OS', 'カーネル']
+  },
+  {
+    title: 'ITIL® 4 ファンデーション 模擬試験',
+    path: 'itil4-exam_v3.html',
+    cat: 'STUDY',
+    tags: ['資格試験', 'ITSM']
+  },
+  {
+    title: '日本史図解：鎌倉〜明治',
+    path: 'nihonshi_zukan.html',
+    cat: 'HISTORY',
+    tags: ['日本史', '図解']
+  },
+  {
+    title: '中小企業診断士 反復学習アプリ',
+    path: 'shindanshi_qa_study_app.html',
+    cat: 'STUDY',
+    tags: ['資格試験', '一問一答']
+  },
+  {
+    title: 'BGP 体系図解 - Border Gateway Protocol',
+    path: 'nw/bgp_system_diagram.html',
+    cat: 'NW',
+    tags: ['BGP', 'ルーティング']
+  },
+  {
+    title: 'CCIE Routing and Switching 総合目次',
+    path: 'nw/ccie_r_and_s.html',
+    cat: 'NW',
+    tags: ['CCIE', '目次']
+  },
+  {
+    title: 'CCNP ENCOR 完全学習ガイド',
+    path: 'nw/ccnp_encor_study_guide.html',
+    cat: 'NW',
+    tags: ['CCNP', '資格試験']
+  },
+  {
+    title: 'FortiSASE 技術者向け包括的図解資料',
+    path: 'nw/fortisase.html',
+    cat: 'NW',
+    tags: ['SASE', 'セキュリティ']
+  },
+];
+
+const routeList = document.getElementById('routeList');
+const filtersEl = document.getElementById('filters');
+const statRow = document.getElementById('statRow');
+const emptyState = document.getElementById('emptyState');
+const footCount = document.getElementById('footCount');
+const searchInput = document.getElementById('searchInput');
+
+let activeCat = 'ALL';
+let query = '';
+
+// build stats
+function buildStats(){
+  const total = ROUTES.length;
+  const nwCount = ROUTES.filter(r => r.cat === 'NW').length;
+  const catCount = new Set(ROUTES.map(r=>r.cat)).size;
+  statRow.innerHTML = `
+    <div class="stat"><div class="num">${total}</div><div class="lbl">total routes</div></div>
+    <div class="stat"><div class="num">${nwCount}</div><div class="lbl">network</div></div>
+    <div class="stat"><div class="num">${catCount}</div><div class="lbl">categories</div></div>
+  `;
+}
+
+// build filter chips
+function buildFilters(){
+  const allChip = document.createElement('div');
+  allChip.className = 'chip active';
+  allChip.dataset.cat = 'ALL';
+  allChip.innerHTML = `<span class="dot" style="background:var(--text-dim)"></span>ALL`;
+  allChip.style.setProperty('--chip-color', '#c9d6e3');
+  filtersEl.appendChild(allChip);
+
+  Object.keys(CATS).forEach(key=>{
+    const c = CATS[key];
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.cat = key;
+    chip.style.setProperty('--chip-color', c.color);
+    chip.innerHTML = `<span class="dot" style="background:${c.color}"></span>${c.name}`;
+    filtersEl.appendChild(chip);
+  });
+
+  filtersEl.addEventListener('click', (e)=>{
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    activeCat = chip.dataset.cat;
+    [...filtersEl.children].forEach(ch=>ch.classList.toggle('active', ch===chip));
+    render();
+  });
+}
+
+function render(){
+  const q = query.trim().toLowerCase();
+  const filtered = ROUTES.filter(r=>{
+    const catOk = activeCat === 'ALL' || r.cat === activeCat;
+    if(!catOk) return false;
+    if(!q) return true;
+    const hay = (r.title + ' ' + r.tags.join(' ') + ' ' + CATS[r.cat].name).toLowerCase();
+    return hay.includes(q);
+  });
+
+  routeList.innerHTML = '';
+  filtered.forEach(r=>{
+    const c = CATS[r.cat];
+    const a = document.createElement('a');
+    a.className = 'route';
+    a.href = r.path;
+    a.innerHTML = `
+      <div class="proto cat-${r.cat}" style="color:${c.color}">${c.label}</div>
+      <div class="main">
+        <div class="title">${r.title}</div>
+        <div class="path">${r.path}<span class="arrow">→</span></div>
+      </div>
+      <div class="tags">${r.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+      <div class="status"><span class="dot"></span>up</div>
+    `;
+    routeList.appendChild(a);
+  });
+
+  emptyState.style.display = filtered.length ? 'none' : 'block';
+  footCount.textContent = `${filtered.length} / ${ROUTES.length} routes shown`;
+}
+
+searchInput.addEventListener('input', (e)=>{
+  query = e.target.value;
+  render();
+});
+
+// clock
+function tick(){
+  const el = document.getElementById('clock');
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  el.textContent = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+tick();
+setInterval(tick, 1000);
+
+buildStats();
+buildFilters();
+render();
+</script>
+</body>
+</html>
