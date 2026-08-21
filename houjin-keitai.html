@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本の法人形態 全部証明書 ｜ 株式会社・合同会社・NPO・宗教法人・医療法人ほか完全比較</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-deep:#0a0e1a;
+  --navy:#12182b;
+  --navy-soft:#1b2338;
+  --paper:#f4ead7;
+  --paper-shade:#e9dcc0;
+  --paper-line:#cdb98d;
+  --ink:#2a2318;
+  --ink-soft:#6b5f48;
+  --vermillion:#b23a2f;
+  --vermillion-deep:#7f2a21;
+  --gold:#c99a3c;
+  --gold-soft:#e0bd6c;
+  --cream:#ece7d7;
+  --cream-dim:#a9a794;
+  --line-gold:rgba(201,154,60,.32);
+  --serif:'Noto Serif JP',serif;
+  --sans:'Noto Sans JP',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--navy-deep);
+  color:var(--cream);
+  font-family:var(--sans);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;}
+img,svg{display:block;}
+
+/* ---------- shared bits ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.14em;
+  color:var(--gold-soft);
+  text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--gold-soft);display:inline-block;}
+h1,h2,h3{font-family:var(--serif);font-weight:900;margin:0;}
+.hairline{border:none;border-top:1px solid var(--line-gold);margin:0;}
+
+/* ---------- hanko stamp ---------- */
+.hanko{
+  --size:64px;
+  width:var(--size);height:var(--size);
+  border-radius:50%;
+  border:2.5px solid var(--vermillion);
+  color:var(--vermillion);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);
+  font-weight:900;
+  font-size:20px;
+  letter-spacing:-1px;
+  flex-shrink:0;
+  position:relative;
+  filter:url(#inkRough);
+  mix-blend-mode:multiply;
+  background:transparent;
+}
+.hanko span{writing-mode:vertical-rl;text-orientation:upright;}
+.hanko.small{--size:34px;font-size:11px;border-width:1.6px;}
+
+/* ================= HEADER ================= */
+.doc-header{
+  position:relative;
+  padding:56px 0 40px;
+  background:
+    radial-gradient(ellipse at 15% -10%, rgba(178,58,47,.14), transparent 55%),
+    radial-gradient(ellipse at 85% 0%, rgba(201,154,60,.10), transparent 50%),
+    var(--navy-deep);
+  border-bottom:1px solid var(--line-gold);
+  overflow:hidden;
+}
+.doc-header::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px);
+}
+.doc-frame{
+  border:1px solid var(--line-gold);
+  padding:26px 30px;
+  position:relative;
+}
+.doc-frame::before{
+  content:"参考資料 No.01";
+  position:absolute;top:-11px;left:24px;background:var(--navy-deep);
+  padding:0 10px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);letter-spacing:.08em;
+}
+.doc-frame::after{
+  content:"整理番号 REF-JPCORP-2026";
+  position:absolute;bottom:-11px;right:24px;background:var(--navy-deep);
+  padding:0 10px;font-family:var(--mono);font-size:11px;color:var(--cream-dim);letter-spacing:.08em;
+}
+.doc-top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;}
+.doc-header h1{font-size:clamp(28px,4.4vw,44px);line-height:1.35;color:var(--cream);margin-top:14px;}
+.doc-header h1 em{font-style:normal;color:var(--gold-soft);}
+.doc-lede{max-width:640px;color:var(--cream-dim);font-size:15px;margin-top:14px;}
+.stamp-row{display:flex;gap:10px;flex-shrink:0;}
+
+.stat-strip{
+  margin-top:34px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--line-gold);
+  border:1px solid var(--line-gold);
+}
+.stat-cell{background:var(--navy-deep);padding:16px 18px;}
+.stat-cell .num{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--gold-soft);}
+.stat-cell .unit{font-size:12px;color:var(--cream-dim);margin-left:2px;}
+.stat-cell .label{font-size:12px;color:var(--cream-dim);margin-top:6px;}
+
+/* ================= TOC / 目次 ================= */
+.toc-section{padding:44px 0 10px;}
+.toc-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13.5px;}
+.toc-table thead th{
+  text-align:left;padding:8px 10px;color:var(--gold-soft);
+  border-bottom:1px solid var(--line-gold);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+}
+.toc-table tbody tr{border-bottom:1px dashed rgba(255,255,255,.08);transition:background .15s;}
+.toc-table tbody tr:hover{background:rgba(201,154,60,.06);}
+.toc-table td{padding:10px;vertical-align:top;}
+.toc-table a{text-decoration:none;color:var(--cream);font-family:var(--sans);font-weight:700;font-size:14.5px;}
+.toc-table a:hover{color:var(--gold-soft);}
+.toc-no{color:var(--vermillion);opacity:.85;}
+.toc-tag{
+  display:inline-block;font-size:10.5px;padding:2px 7px;border:1px solid var(--line-gold);border-radius:2px;color:var(--cream-dim);
+  font-family:var(--sans);
+}
+.toc-note{color:var(--cream-dim);font-family:var(--sans);font-size:12.5px;}
+
+/* ================= MATRIX ================= */
+.matrix-section{padding:64px 0 20px;}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
+.section-head h2{font-size:26px;color:var(--cream);}
+.section-head p{color:var(--cream-dim);font-size:13.5px;max-width:480px;margin-top:6px;}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;}
+.tab-btn{
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  background:transparent;border:1px solid var(--line-gold);color:var(--cream-dim);
+  padding:7px 14px;cursor:pointer;transition:.15s;
+}
+.tab-btn:hover{color:var(--cream);}
+.tab-btn.active{background:var(--vermillion);border-color:var(--vermillion);color:#fdf6ec;}
+
+.matrix-scroll{overflow-x:auto;border:1px solid var(--line-gold);}
+table.matrix{width:100%;border-collapse:collapse;min-width:920px;font-size:13px;}
+table.matrix th{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--navy-soft);color:var(--gold-soft);text-align:left;padding:12px 14px;
+  position:sticky;top:0;border-bottom:1px solid var(--line-gold);
+}
+table.matrix td{padding:13px 14px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top;color:var(--cream);}
+table.matrix td.name{font-weight:700;white-space:nowrap;}
+table.matrix td.name a{text-decoration:none;color:var(--cream);}
+table.matrix td.name a:hover{color:var(--gold-soft);}
+table.matrix tr.hidden{display:none;}
+table.matrix td small{display:block;color:var(--cream-dim);font-size:11.5px;margin-top:2px;}
+.badge{
+  display:inline-block;font-size:10.5px;padding:1px 8px;border-radius:10px;font-family:var(--sans);font-weight:700;
+}
+.badge.hi{background:rgba(178,58,47,.22);color:#e79287;}
+.badge.mid{background:rgba(201,154,60,.2);color:var(--gold-soft);}
+.badge.lo{background:rgba(255,255,255,.08);color:var(--cream-dim);}
+
+/* ================= ENTITY CARDS ================= */
+.entities-section{padding:70px 0 20px;}
+.entity{
+  scroll-margin-top:20px;
+  margin-bottom:46px;
+  background:var(--paper);
+  color:var(--ink);
+  position:relative;
+  box-shadow:0 22px 50px rgba(0,0,0,.35);
+  background-image:
+    repeating-linear-gradient(180deg, rgba(0,0,0,.018) 0 1px, transparent 1px 26px);
+}
+.entity-inner{padding:34px 36px 30px;}
+.entity-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:20px;}
+.entity-head-left{display:flex;gap:16px;align-items:center;}
+.entity-title{font-size:23px;color:var(--ink);}
+.entity-kana{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:4px;}
+.entity-meta{text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+.entity-meta .std{
+  margin-top:6px;display:inline-flex;align-items:center;gap:6px;
+  border:1.3px solid var(--vermillion);color:var(--vermillion-deep);padding:3px 10px;font-family:var(--sans);font-weight:700;font-size:11.5px;
+}
+
+.ledger{display:grid;grid-template-columns:132px 1fr;border-top:1px solid var(--paper-line);}
+.ledger .row{display:contents;}
+.ledger dt{
+  padding:11px 12px;border-bottom:1px solid var(--paper-line);border-right:1px solid var(--paper-line);
+  font-family:var(--mono);font-size:12px;color:var(--ink-soft);font-weight:500;
+  background:rgba(0,0,0,.02);
+}
+.ledger dd{padding:11px 14px;border-bottom:1px solid var(--paper-line);margin:0;font-size:14px;}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:22px;border:1px solid var(--paper-line);}
+.pair .col{padding:16px 18px;}
+.pair .col + .col{border-left:1px solid var(--paper-line);}
+.pair h4{font-family:var(--sans);font-size:12.5px;letter-spacing:.08em;margin:0 0 10px;display:flex;align-items:center;gap:7px;}
+.pair.merit .col:first-child h4{color:#3f6b3a;}
+.pair.merit .col:last-child h4{color:var(--vermillion-deep);}
+.pair ul{margin:0;padding-left:18px;font-size:13.5px;}
+.pair li{margin-bottom:6px;}
+
+.narrative{margin-top:22px;}
+.narrative h4{font-family:var(--sans);font-size:12.5px;letter-spacing:.08em;color:var(--ink-soft);margin:0 0 8px;text-transform:uppercase;}
+.narrative p{margin:0 0 12px;font-size:14px;}
+.narrative p:last-child{margin-bottom:0;}
+.narrative .figure{font-family:var(--mono);color:var(--vermillion-deep);font-weight:700;}
+
+/* ================= FLOW ================= */
+.flow-section{padding:70px 0;}
+.flow-box{border:1px solid var(--line-gold);padding:28px;overflow-x:auto;}
+
+/* ================= FOOTER ================= */
+footer{padding:50px 0 70px;border-top:1px solid var(--line-gold);margin-top:20px;}
+footer p{color:var(--cream-dim);font-size:12.5px;max-width:760px;}
+footer .sources{font-family:var(--mono);font-size:11px;color:var(--cream-dim);margin-top:18px;line-height:2;}
+footer .sources span{color:var(--gold-soft);margin-right:8px;}
+
+@media (max-width:760px){
+  .stat-strip{grid-template-columns:repeat(2,1fr);}
+  .ledger{grid-template-columns:104px 1fr;}
+  .pair{grid-template-columns:1fr;}
+  .pair .col + .col{border-left:none;border-top:1px solid var(--paper-line);}
+  .entity-inner{padding:26px 20px;}
+  table.matrix{min-width:760px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG filter used by every hanko stamp for a hand-pressed ink look -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="inkRough">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="noise" seed="7"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2"/>
+  </filter>
+</svg>
+
+<!-- ================= HEADER ================= -->
+<header class="doc-header">
+  <div class="wrap">
+    <div class="doc-frame">
+      <div class="doc-top-row">
+        <div>
+          <p class="eyebrow">法人格 完全比較資料</p>
+          <h1>日本の法人形態、<br><em>11種を1枚で</em>把握する。</h1>
+          <p class="doc-lede">株式会社・合同会社・一般社団法人・NPO法人・宗教法人・医療法人・個人事業主……。名前は聞いたことがあっても、法律上の位置づけ・費用・税金・実際のシェアまで整理して答えられる人は少ない。制度、実態、費用、収益構造をひとつの台帳にまとめた。</p>
+        </div>
+        <div class="stamp-row" aria-hidden="true">
+          <div class="hanko"><span>株式</span></div>
+          <div class="hanko" style="transform:rotate(-6deg)"><span>合同</span></div>
+          <div class="hanko" style="transform:rotate(4deg)"><span>非営利</span></div>
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div><span class="num">157,011</span><span class="unit">社</span></div>
+          <div class="label">2025年の新設法人数（過去最多水準）</div>
+        </div>
+        <div class="stat-cell">
+          <div><span class="num">64.0</span><span class="unit">%</span></div>
+          <div class="label">新設法人に占める株式会社の割合</div>
+        </div>
+        <div class="stat-cell">
+          <div><span class="num">28.6</span><span class="unit">%</span></div>
+          <div class="label">新設法人に占める合同会社の割合（急拡大中）</div>
+        </div>
+        <div class="stat-cell">
+          <div><span class="num">91</span><span class="unit">%</span></div>
+          <div class="label">全法人ストックに占める株式会社比率</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= TOC ================= -->
+<section class="toc-section">
+  <div class="wrap">
+    <p class="eyebrow">目次 / Index</p>
+    <table class="toc-table">
+      <thead>
+        <tr><th>号</th><th>法人形態</th><th>区分</th><th>ひとことで言うと</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="toc-no">01</td><td><a href="#kk">株式会社</a></td><td><span class="toc-tag">営利</span></td><td class="toc-note">対外信用と資金調達力の事実上の標準</td></tr>
+        <tr><td class="toc-no">02</td><td><a href="#gk">合同会社</a></td><td><span class="toc-tag">営利</span></td><td class="toc-note">安く速く始められる日本版LLC、急拡大中</td></tr>
+        <tr><td class="toc-no">03</td><td><a href="#gomei">合名会社・合資会社</a></td><td><span class="toc-tag">営利</span></td><td class="toc-note">無限責任が残る旧型、ほぼ新設されない</td></tr>
+        <tr><td class="toc-no">04</td><td><a href="#yugen">特例有限会社</a></td><td><span class="toc-tag">営利</span></td><td class="toc-note">新規設立不可、既存分だけが今も現役</td></tr>
+        <tr><td class="toc-no">05</td><td><a href="#shadan">一般社団法人</a></td><td><span class="toc-tag">非営利</span></td><td class="toc-note">協会・団体・資格ビジネスの定番</td></tr>
+        <tr><td class="toc-no">06</td><td><a href="#zaidan">一般財団法人・公益法人</a></td><td><span class="toc-tag">非営利</span></td><td class="toc-note">「財産」が主役、奨学財団や美術館に多い</td></tr>
+        <tr><td class="toc-no">07</td><td><a href="#npo">NPO法人</a></td><td><span class="toc-tag">非営利</span></td><td class="toc-note">設立費用ゼロ、その分だけ情報公開が重い</td></tr>
+        <tr><td class="toc-no">08</td><td><a href="#kojin">個人事業主</a></td><td><span class="toc-tag">法人格なし</span></td><td class="toc-note">全てのビジネスの出発点、無限責任</td></tr>
+        <tr><td class="toc-no">09</td><td><a href="#shukyo">宗教法人</a></td><td><span class="toc-tag">特別法人</span></td><td class="toc-note">神社・寺院・教会の事実上の唯一解</td></tr>
+        <tr><td class="toc-no">10</td><td><a href="#iryo">医療法人</a></td><td><span class="toc-tag">特別法人</span></td><td class="toc-note">クリニックの分院展開・事業承継の受け皿</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= MATRIX ================= -->
+<section class="matrix-section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>早見表：費用・課税・意思決定</h2>
+        <p>タブで営利／非営利／その他に絞り込める。まず「自分がどこに座るか」を掴むための一覧。</p>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" data-f="all">すべて</button>
+        <button class="tab-btn" data-f="eiri">営利法人</button>
+        <button class="tab-btn" data-f="hieiri">非営利法人</button>
+        <button class="tab-btn" data-f="other">その他</button>
+      </div>
+    </div>
+
+    <div class="matrix-scroll">
+      <table class="matrix" id="matrixTable">
+        <thead>
+          <tr>
+            <th>形態</th><th>設立費用の目安</th><th>出資者の責任</th><th>意思決定</th><th>剰余金の分配</th><th>新設シェア(2025)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-cat="eiri">
+            <td class="name"><a href="#kk">株式会社</a></td>
+            <td>約20〜25万円<small>登録免許税15万円〜＋定款認証</small></td>
+            <td>有限責任</td>
+            <td>株主総会＋取締役<small>役員は定期的な重任登記</small></td>
+            <td>配当できる</td>
+            <td><span class="badge hi">64.0%</span></td>
+          </tr>
+          <tr data-cat="eiri">
+            <td class="name"><a href="#gk">合同会社</a></td>
+            <td>約6〜10万円<small>登録免許税6万円〜、定款認証不要</small></td>
+            <td>有限責任</td>
+            <td>社員（出資者）全員<small>定款自治の自由度が高い</small></td>
+            <td>出資比率と無関係に配分可</td>
+            <td><span class="badge hi">28.6%</span></td>
+          </tr>
+          <tr data-cat="eiri">
+            <td class="name"><a href="#gomei">合名・合資会社</a></td>
+            <td>約6〜10万円<small>合同会社とほぼ同水準</small></td>
+            <td>無限責任<small>合資は有限責任社員も混在</small></td>
+            <td>社員全員の合意が基本</td>
+            <td>配当できる</td>
+            <td><span class="badge lo">0.02%未満</span></td>
+          </tr>
+          <tr data-cat="eiri">
+            <td class="name"><a href="#yugen">特例有限会社</a></td>
+            <td>新規設立不可</td>
+            <td>有限責任</td>
+            <td>株式会社に準じる</td>
+            <td>配当できる</td>
+            <td><span class="badge lo">対象外</span></td>
+          </tr>
+          <tr data-cat="hieiri">
+            <td class="name"><a href="#shadan">一般社団法人</a></td>
+            <td>約11〜13万円<small>資本金は不要</small></td>
+            <td>有限責任</td>
+            <td>社員総会＋理事</td>
+            <td>分配禁止</td>
+            <td><span class="badge mid">約4.0%</span></td>
+          </tr>
+          <tr data-cat="hieiri">
+            <td class="name"><a href="#zaidan">一般財団法人</a></td>
+            <td>約20万円＋財産300万円以上<small>基本財産の拠出が必須</small></td>
+            <td>（財産が主体）</td>
+            <td>評議員会＋理事会</td>
+            <td>分配禁止</td>
+            <td><span class="badge lo">1%未満</span></td>
+          </tr>
+          <tr data-cat="hieiri">
+            <td class="name"><a href="#npo">NPO法人</a></td>
+            <td>実質0円<small>認証まで約4か月</small></td>
+            <td>有限責任</td>
+            <td>社員総会（10人以上）</td>
+            <td>分配禁止</td>
+            <td><span class="badge mid">約0.7%</span></td>
+          </tr>
+          <tr data-cat="other">
+            <td class="name"><a href="#kojin">個人事業主</a></td>
+            <td>0円<small>開業届のみ</small></td>
+            <td>無限責任</td>
+            <td>本人</td>
+            <td>概念なし（全て本人所得）</td>
+            <td><span class="badge lo">法人格なし</span></td>
+          </tr>
+          <tr data-cat="other">
+            <td class="name"><a href="#shukyo">宗教法人</a></td>
+            <td>認証手続き主体<small>新設ハードルは非常に高い</small></td>
+            <td>有限責任</td>
+            <td>責任役員会</td>
+            <td>分配禁止</td>
+            <td><span class="badge lo">全国約18万法人</span></td>
+          </tr>
+          <tr data-cat="other">
+            <td class="name"><a href="#iryo">医療法人</a></td>
+            <td>都道府県認可<small>登記費用自体は小さい</small></td>
+            <td>有限責任</td>
+            <td>社員総会＋理事会</td>
+            <td>分配禁止</td>
+            <td><span class="badge lo">全国約5.8万法人</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ENTITIES ================= -->
+<section class="entities-section">
+  <div class="wrap">
+
+    <!-- 01 KK -->
+    <article class="entity" id="kk">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko"><span>株式</span></div>
+            <div>
+              <div class="entity-kana">01 ｜ KABUSHIKI-GAISHA</div>
+              <h3 class="entity-title">株式会社</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            会社法（2006年）<br>登録免許税 最低15万円
+            <div class="std">事実上の標準：BtoB・上場志向</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立費用</dt><dd>約20〜25万円。登録免許税は資本金の0.7%（最低15万円）、加えて定款認証手数料（資本金額に応じ1.5〜5万円）と謄本交付手数料が必要。電子定款なら印紙税4万円は不要。</dd></div>
+          <div class="row"><dt>課税</dt><dd>法人税（中小法人は所得800万円以下の部分に軽減税率）＋地方法人税＋法人住民税・事業税。赤字でも法人住民税の均等割（最低約7万円）は発生する。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>株主は出資額を限度とする間接有限責任。所有（株主）と経営（取締役）を分離できる。役員には任期があり、非公開会社でも最長10年ごとに重任登記が必要。</dd></div>
+        </dl>
+
+        <div class="pair merit">
+          <div class="col">
+            <h4>メリット</h4>
+            <ul>
+              <li>対外的な信用力が最も高く、金融機関融資・大企業との取引で有利</li>
+              <li>株式発行による増資、将来のVC出資・上場（IPO）まで資金調達の選択肢が最も広い</li>
+              <li>建設業・人材派遣業など、許認可要件で暗黙に想定されていることが多い</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>デメリット</h4>
+            <ul>
+              <li>設立費用・維持コストが合同会社より高い（決算公告義務、役員重任登記の手間と費用）</li>
+              <li>役員が1人でも社会保険（厚生年金・健康保険）への加入義務が発生する</li>
+              <li>株主総会の招集・議事録など、合議のための手続き負担がある</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>2025年の新設法人15万7,011社のうち、株式会社は<span class="figure">10万558社（構成比約64%）</span>で法人格別トップを維持する一方、新設数自体は<span class="figure">2年連続で前年を下回って</span>おり、合同会社への一部シフトが続いている。それでも全法人のストック（既存企業数）で見ると、日本の法人の<span class="figure">約9割</span>は今も株式会社であり、「会社＝株式会社」という認識は依然として社会の共通前提になっている。</p>
+          <h4>収益・運営の特徴</h4>
+          <p>決算公告義務（官報等での貸借対照表の開示）があり、剰余金の配当には分配可能額の規制がかかる。信用力の高さを裏付けとして、金融機関からの借入や取引先の与信枠が最も通りやすい形態でもある。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 GK -->
+    <article class="entity" id="gk">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(-5deg)"><span>合同</span></div>
+            <div>
+              <div class="entity-kana">02 ｜ GODO-GAISHA（日本版LLC）</div>
+              <h3 class="entity-title">合同会社</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            会社法（2006年、有限会社の後継）<br>登録免許税 最低6万円
+            <div class="std">事実上の標準：外資子会社・ひとり社長</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立費用</dt><dd>約6〜10万円。登録免許税は資本金の0.7%（最低6万円）のみで、株式会社に必須の定款認証（3〜5万円）が不要なため、株式会社の半分以下で済む。</dd></div>
+          <div class="row"><dt>課税</dt><dd>株式会社とほぼ同一の法人税体系。税務上の有利不利は基本的にない。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>出資者（社員）全員が有限責任で、原則として出資者＝経営者（所有と経営が一致）。役員任期の定めがなく、株主総会や決算公告の義務もない。利益配分を出資比率と無関係に定款で自由に設計できる。</dd></div>
+        </dl>
+
+        <div class="pair merit">
+          <div class="col">
+            <h4>メリット</h4>
+            <ul>
+              <li>設立費用が安く、準備期間も短い。決算公告義務がなく、財務を非公開のまま運営できる</li>
+              <li>役員任期がないため重任登記が不要。社員の合意だけで機動的な意思決定ができる</li>
+              <li>出資比率と異なる利益配分ができ、少人数の共同事業に向く</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>デメリット</h4>
+            <ul>
+              <li>株式を発行できないため、VCからの大型出資や上場（IPO）には不向き（株式会社への組織変更は可能）</li>
+              <li>知名度が伸びたとはいえ、取引先や採用市場では株式会社より信用面で一歩譲られる場面が残る</li>
+              <li>社員間で対立した際のルールを、あらかじめ定款で作り込んでおく必要がある</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>2025年の新設数は<span class="figure">4万4,991社（前年比6.8%増、構成比28.6%）</span>で、新設法人の実に4社に1社以上を占めるまでに拡大した。2011年はわずか9,000社弱だったが、2015年に2万社、2019年に3万社、2023年に4万社を突破と一貫して右肩上がり。<span class="figure">Apple Japan合同会社・Amazonジャパン合同会社</span>など外資系企業も採用し、2023年開始のインボイス制度を機に法人化する個人事業主の受け皿としても選ばれている。</p>
+          <h4>収益・運営の特徴</h4>
+          <p>資産管理会社（不動産投資・節税目的）、介護事業のように許認可要件に法人格だけが必要な業種、ITやコンサルなど属人性の高いビジネスとの相性がよい。近年は自由度の高さの裏返しとして、投資スキームなどでの悪用事例も指摘されており、金融庁が注意喚起を行っている。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 合名合資 -->
+    <article class="entity" id="gomei">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko small" style="transform:rotate(3deg)"><span>合名資</span></div>
+            <div>
+              <div class="entity-kana">03 ｜ GOMEI / GOSHI-GAISHA</div>
+              <h3 class="entity-title">合名会社・合資会社</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            会社法上の持分会社<br>登録免許税 最低6万円
+            <div class="std">事実上の標準：歴史的経緯で残る老舗のみ</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立費用</dt><dd>合同会社とほぼ同水準（登録免許税最低6万円、定款認証不要）。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>合名会社は社員全員が無限責任、合資会社は無限責任社員と有限責任社員が併存する。無限責任社員は会社の債務を個人資産でも弁済する義務を負う。</dd></div>
+        </dl>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>2024年の全国新設数は合名会社が<span class="figure">11社</span>、合資会社が<span class="figure">19社</span>のみで、統計上ほぼ選ばれない形態になっている。現存する法人も酒蔵・料亭・老舗商店など、歴史的経緯で無限責任のまま残っているケースが中心で、新規に選ぶ実務的なメリットはほとんどなく、無限責任というリスクだけが際立つ。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 有限 -->
+    <article class="entity" id="yugen">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(4deg)"><span>有限</span></div>
+            <div>
+              <div class="entity-kana">04 ｜ TOKUREI-YUGEN-GAISHA</div>
+              <h3 class="entity-title">特例有限会社（旧・有限会社）</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            旧有限会社法（2006年廃止）<br>新規設立は不可
+            <div class="std">事実上の標準：昭和〜平成創業の中小企業</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>制度上の位置づけ</dt><dd>2006年の会社法施行で有限会社法が廃止され、新規設立はできなくなった。既存の有限会社は「特例有限会社」として存続し、実質的には株式会社の一種として扱われる。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>株式会社と同様の有限責任。決算公告義務なし・役員任期の定めなしという、旧有限会社時代の特典をそのまま維持できる点が特徴。</dd></div>
+        </dl>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>ピーク時には全国で百数十万社が存在したが、以後は自然減少が続いている。相続や事業承継のタイミングで「株式会社」へ商号変更するケースが多く、「（有）」を掲げる会社は今も現役だが、新たにこの形態を選ぶことはもうできない。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 05 一般社団 -->
+    <article class="entity" id="shadan">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(-4deg)"><span>社団</span></div>
+            <div>
+              <div class="entity-kana">05 ｜ IPPAN-SHADAN-HOJIN</div>
+              <h3 class="entity-title">一般社団法人</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            一般法人法（2008年）<br>登録免許税6万円＋定款認証5万円
+            <div class="std">事実上の標準：業界団体・資格ビジネス</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立費用</dt><dd>約11〜13万円（定款認証約5万円＋登録免許税6万円）。資本金は不要で、社員（会員）2名以上で設立できる。</dd></div>
+          <div class="row"><dt>課税</dt><dd>「非営利型」の要件（剰余金の分配をしない旨の定款規定など）を満たせば、法人税法上の34業種の収益事業のみに課税され、それ以外の会費収入等は非課税。要件を満たさない「普通型」は全所得が課税対象になる。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>社員は原則有限責任。社員総会と理事会でガバナンスするが、株式会社と違い剰余金を社員に分配することは禁止されている（非営利性）。</dd></div>
+        </dl>
+
+        <div class="pair merit">
+          <div class="col">
+            <h4>メリット</h4>
+            <ul>
+              <li>事業目的の制限がなく、公益性の審査なしに準則主義（登記のみ）で設立できる</li>
+              <li>会費制・会員制のビジネス、業界団体、民間資格・検定の運営母体に向く</li>
+              <li>資本金が不要で、少人数からでもすぐ始められる</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>デメリット</h4>
+            <ul>
+              <li>剰余金を出資者に分配できないため、株式会社のような利益還元はできない</li>
+              <li>より税制優遇の大きい「公益社団法人」への移行には別途、行政庁の公益認定が必要でハードルが高い</li>
+              <li>登記に一定期間動きがないと「休眠法人」とみなされ解散扱いになる制度がある</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>2025年の新設数は新設法人全体の約4%にあたる水準で推移している。2010年代、いわゆる「協会ビジネス」（民間資格認定など）の受け皿として急増した経緯があり、現在も士業関連団体、学会、スポーツ・文化団体、地域おこし団体など幅広い分野の事実上の標準形態になっている。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 06 財団+公益 -->
+    <article class="entity" id="zaidan">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(5deg)"><span>財団</span></div>
+            <div>
+              <div class="entity-kana">06 ｜ IPPAN-ZAIDAN-HOJIN / KOEKI</div>
+              <h3 class="entity-title">一般財団法人・公益社団／財団法人</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            一般法人法（2008年）ほか<br>財産拠出300万円以上が必須
+            <div class="std">事実上の標準：企業系の奨学財団・美術館</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立費用</dt><dd>登記費用は約20万円前後だが、それとは別に基本財産として<strong>300万円以上の財産拠出</strong>が法律上必須。「人の集まり」である社団法人と違い、「財産の集まり」自体が法人格を持つ。</dd></div>
+          <div class="row"><dt>統治</dt><dd>評議員会・理事会・監事によるガバナンス体制が求められる。</dd></div>
+          <div class="row"><dt>公益法人への移行</dt><dd>一般社団・一般財団法人が行政庁（内閣府等）の公益認定を受けると「公益社団法人」「公益財団法人」になれる。寄付金の税額控除やみなし寄付金など税制優遇は大きいが、収支相償の原則など継続的な行政監督下に置かれる。</dd></div>
+        </dl>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>財産拠出のハードルが高いため、新設数は一般社団法人よりかなり少なく、新設法人全体の1%にも満たない。企業が創業家の名を冠して設立する奨学財団や、美術館・研究助成の運営母体として選ばれることが多い。旧・主務官庁制のもとで設立された伝統ある「社団法人」「財団法人」の多くは、2008年の制度改革を機にこの一般法人・公益法人体系へ移行した。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 07 NPO -->
+    <article class="entity" id="npo">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(-3deg)"><span>特非</span></div>
+            <div>
+              <div class="entity-kana">07 ｜ TOKUTEI-HIEIRI-KATSUDO-HOJIN</div>
+              <h3 class="entity-title">NPO法人（特定非営利活動法人）</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            NPO法（1998年）<br>設立費用は実質0円
+            <div class="std">事実上の標準：福祉・環境・国際協力</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立費用</dt><dd>登録免許税や認証手数料がなく実質0円。ただし正会員10人以上の確保が必要で、所轄庁の審査に約4か月前後かかる。</dd></div>
+          <div class="row"><dt>課税</dt><dd>一般社団法人の非営利型と同様、法人税法上の34業種の収益事業のみに課税。認定NPO法人になると、寄付者側が寄付金の税額控除を受けられる。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>社員総会（正会員10人以上）による民主的な運営が制度上求められ、事業報告書・活動計算書などを毎年所轄庁へ提出し、公開する義務が非常に重い。</dd></div>
+        </dl>
+
+        <div class="pair merit">
+          <div class="col">
+            <h4>メリット</h4>
+            <ul>
+              <li>設立費用がゼロで、資本金も不要</li>
+              <li>「非営利」であることの社会的信用が強く、寄付や行政からの委託事業を受けやすい</li>
+              <li>認定NPO法人になれば寄付者への税制優遇があり、ファンドレイジングで有利</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>デメリット</h4>
+            <ul>
+              <li>情報公開の負担が重く、事務局の運営コストがかさみやすい</li>
+              <li>認証まで数か月かかり、正会員10人の確保自体がハードルになることもある</li>
+              <li>活動できる事業目的が法定の20分野に限定される</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>認証法人数は<span class="figure">2025年時点で約4.9万件</span>。2017年度の約5.2万件をピークに微減傾向が続いており、新設は年1,200件前後まで縮小、解散が新設を上回る局面も出ている。設立が簡便で活動分野の制限もない一般社団法人にニーズが流れていることが背景にあると見られる。それでも福祉・環境・まちづくり・国際協力など、「非営利であること」自体が事業の生命線になる分野では今も標準的な受け皿であり続けている。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 08 個人 -->
+    <article class="entity" id="kojin">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(6deg)"><span>個人</span></div>
+            <div>
+              <div class="entity-kana">08 ｜ KOJIN-JIGYONUSHI</div>
+              <h3 class="entity-title">個人事業主</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            法人格なし（所得税法）<br>開業届のみ・費用0円
+            <div class="std">事実上の標準：フリーランス・副業・開業初期</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>開業手続き</dt><dd>税務署へ開業届を提出するだけで、費用は0円。法人格がないため登記は不要。</dd></div>
+          <div class="row"><dt>課税</dt><dd>所得税（累進税率5〜45%）＋住民税（約10%）＋個人事業税（業種により3〜5%、290万円の事業主控除あり）に加え、インボイス制度導入以降は消費税の課税事業者になるかどうかの判断も必要になった。</dd></div>
+          <div class="row"><dt>責任</dt><dd>事業上の借金や損害賠償を、事業用資産だけでなく個人資産全体で負う無限責任。</dd></div>
+        </dl>
+
+        <div class="pair merit">
+          <div class="col">
+            <h4>メリット</h4>
+            <ul>
+              <li>開業手続きが最も簡単で、赤字であれば所得税・住民税の負担はほぼ発生しない</li>
+              <li>青色申告特別控除（最大65万円）や小規模企業共済など、節税の仕組みが整っている</li>
+              <li>社会保険料（国民健康保険・国民年金）が、法人の社会保険より低く抑えられる場合が多い</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>デメリット</h4>
+            <ul>
+              <li>社会的信用が法人に劣り、与信審査・賃貸借契約・入札などで不利になることがある</li>
+              <li>所得が伸びるほど法人より税負担が重くなりやすく、目安として課税所得800万〜1,000万円あたりから法人成りが有利になりやすいとされる</li>
+              <li>厚生年金に加入できず、将来受け取る年金額の面で法人の役員・従業員より不利になりやすい</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative">
+          <h4>実態・トレンド</h4>
+          <p>フリーランス人口は推計で1,000万人を超えるとも言われ、副業やスモールビジネスの出発点として最も裾野の広い形態。2023年開始のインボイス制度をきっかけに、設立費用の安い合同会社への法人成りを選ぶ個人事業主が増えている。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 09 宗教 -->
+    <article class="entity" id="shukyo">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(-5deg)"><span>宗教</span></div>
+            <div>
+              <div class="entity-kana">09 ｜ SHUKYO-HOJIN</div>
+              <h3 class="entity-title">宗教法人</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            宗教法人法（1951年）<br>所轄庁（都道府県／文化庁）の認証制
+            <div class="std">事実上の標準：神社・寺院・教会</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立</dt><dd>所轄庁（原則は都道府県知事、複数都道府県にまたがる場合は文化庁）の認証が必要。通常、宗教団体としての活動実績（3年程度が目安とされることが多い）を求められ、新規認証のハードルは他のどの法人形態よりも高い。</dd></div>
+          <div class="row"><dt>課税</dt><dd>お布施・お守りの授与など本来の宗教活動に伴う収入は非課税。物品販売や駐車場・不動産賃貸などの収益事業のみ法人税が課税されるが、税率は公益法人等向けの軽減税率が適用される。境内建物・境内地は固定資産税も非課税。</dd></div>
+          <div class="row"><dt>統治</dt><dd>代表役員・責任役員による合議制で運営される。</dd></div>
+        </dl>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>全国の宗教法人数は<span class="figure">約18万法人</span>（神道系8.4万、仏教系7.7万、キリスト教系0.5万、諸教1.3万）で、ここ数年ほぼ横ばい〜微減。過疎地では檀家・氏子の減少で活動実態のない「休眠宗教法人」が増えており、その法人格自体が節税や資金洗浄目的で売買される問題がたびたび報道され、行政の認証・監督が強化される傾向にある。神社・寺院・教会といった伝統的宗教施設の運営体としては、事実上これ以外の選択肢がほぼない。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 10 医療 -->
+    <article class="entity" id="iryo">
+      <div class="entity-inner">
+        <div class="entity-head">
+          <div class="entity-head-left">
+            <div class="hanko" style="transform:rotate(4deg)"><span>医療</span></div>
+            <div>
+              <div class="entity-kana">10 ｜ IRYO-HOJIN</div>
+              <h3 class="entity-title">医療法人</h3>
+            </div>
+          </div>
+          <div class="entity-meta">
+            医療法（1950年、1985年改正で普及）<br>都道府県知事の認可制
+            <div class="std">事実上の標準：分院展開・事業承継</div>
+          </div>
+        </div>
+
+        <dl class="ledger">
+          <div class="row"><dt>設立</dt><dd>資本金の概念はないが、運転資金2か月分相当などの財産要件があり、都道府県知事の認可が必要。理事長は原則として医師・歯科医師でなければならない（例外的な認可あり）。</dd></div>
+          <div class="row"><dt>課税・出資</dt><dd>「持分あり」医療法人は出資持分に応じた財産権を持つため相続税が課題になりやすい一方、2007年の医療法改正以降に新設される医療法人は原則「持分なし」に一本化され、この問題を回避している。</dd></div>
+          <div class="row"><dt>責任・統治</dt><dd>剰余金の配当は禁止（非営利性）。社員総会・理事会によるガバナンスのもと、個人開業医と異なり複数施設（分院）の展開が可能になる。</dd></div>
+        </dl>
+
+        <div class="pair merit">
+          <div class="col">
+            <h4>メリット</h4>
+            <ul>
+              <li>高所得帯では所得税より法人税の方が有利になりやすく、役員報酬や退職金の設計で節税余地が生まれる</li>
+              <li>個人事業では制約のある分院展開・事業拡大がしやすい</li>
+              <li>事業承継やM&amp;Aの受け皿として制度設計しやすい</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>デメリット</h4>
+            <ul>
+              <li>理事長個人による資産の自由な処分に制限がかかる</li>
+              <li>個人事業にあった社会保険診療報酬の非課税措置など、一部の税制優遇を失う場合がある</li>
+              <li>都道府県への決算届出など、行政の監督・事務負担が個人事業より重い</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="narrative">
+          <h4>実態・シェア／トレンド</h4>
+          <p>全国の医療法人数は<span class="figure">約5.8万法人</span>（令和5年時点）で、うち医師・歯科医師が常時3人未満の診療所である「一人医師医療法人」が<span class="figure">全体の8割超</span>を占める。「持分あり」医療法人は2007年以降新設できず、既存法人の「持分なし」への移行が政策的に推進されているが、出資者側の資産権への抵抗もあり移行は緩やか。個人開業医が複数施設展開や本格的な事業承継を見据えた際の、事実上の標準的な次のステップになっている。</p>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= FLOW ================= -->
+<section class="flow-section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 style="color:var(--cream)">どれを選ぶか：判断の道筋</h2>
+        <p>厳密な法律判断ではなく、実務上の「まず何を見るか」の順番の目安。</p>
+      </div>
+    </div>
+    <div class="flow-box">
+      <svg viewBox="0 0 1040 300" width="100%" style="min-width:820px">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#c99a3c"/>
+          </marker>
+        </defs>
+        <style>
+          .fbox{fill:#12182b;stroke:#c99a3c;stroke-width:1.2;}
+          .fbox.leaf{fill:#1b2338;stroke:#b23a2f;}
+          .ftext{font-family:'Noto Sans JP',sans-serif;fill:#ece7d7;font-size:13px;}
+          .ftext.small{font-size:11px;fill:#a9a794;}
+          .fline{stroke:#c99a3c;stroke-width:1.2;fill:none;marker-end:url(#arrow);}
+        </style>
+
+        <rect class="fbox" x="20" y="120" width="150" height="60" rx="2"/>
+        <text class="ftext" x="40" y="145">事業に法人格は</text>
+        <text class="ftext" x="40" y="163">必要か？</text>
+
+        <path class="fline" d="M170,135 H230"/>
+        <text class="ftext small" x="176" y="128">不要・小さく試したい</text>
+        <rect class="fbox leaf" x="230" y="105" width="150" height="60" rx="2"/>
+        <text class="ftext" x="250" y="130">個人事業主</text>
+        <text class="ftext small" x="250" y="148">まずはここから</text>
+
+        <path class="fline" d="M170,165 H230" transform="translate(0,20)"/>
+        <text class="ftext small" x="176" y="205">利益を出資者に</text>
+        <text class="ftext small" x="176" y="217">還元したい</text>
+        <rect class="fbox" x="230" y="195" width="150" height="60" rx="2"/>
+        <text class="ftext" x="250" y="220">営利法人へ</text>
+        <text class="ftext small" x="250" y="238">株式・合同会社系</text>
+
+        <path class="fline" d="M380,225 H440"/>
+        <text class="ftext small" x="386" y="218">対外信用・資金調達</text>
+        <text class="ftext small" x="386" y="230">を最優先</text>
+        <rect class="fbox leaf" x="440" y="195" width="150" height="60" rx="2"/>
+        <text class="ftext" x="460" y="220">株式会社</text>
+        <text class="ftext small" x="460" y="238">上場・大型調達も視野</text>
+
+        <path class="fline" d="M380,255 H440" transform="translate(0,20)"/>
+        <text class="ftext small" x="386" y="292">費用・速さ・</text>
+        <text class="ftext small" x="386" y="304">意思決定の速さ優先</text>
+        <rect class="fbox leaf" x="440" y="275" width="150" height="30" rx="2"/>
+        <text class="ftext" x="460" y="295">合同会社</text>
+
+        <path class="fline" d="M170,135 H230" transform="translate(0,-95)"/>
+        <text class="ftext small" x="176" y="35" transform="translate(0,-5)">利益分配せず</text>
+        <text class="ftext small" x="176" y="47" transform="translate(0,-5)">公益的に活動したい</text>
+        <rect class="fbox" x="230" y="15" width="150" height="60" rx="2"/>
+        <text class="ftext" x="250" y="40">非営利法人へ</text>
+        <text class="ftext small" x="250" y="58">社団・財団・NPO系</text>
+
+        <path class="fline" d="M380,45 H440"/>
+        <text class="ftext small" x="386" y="20">とにかく早く・</text>
+        <text class="ftext small" x="386" y="32">分野に制限なく</text>
+        <rect class="fbox leaf" x="440" y="10" width="150" height="45" rx="2"/>
+        <text class="ftext" x="460" y="32">一般社団法人</text>
+
+        <path class="fline" d="M380,65 H440" transform="translate(0,20)"/>
+        <text class="ftext small" x="386" y="78">非営利の社会的</text>
+        <text class="ftext small" x="386" y="90">信用を重視</text>
+        <rect class="fbox leaf" x="440" y="65" width="150" height="45" rx="2"/>
+        <text class="ftext" x="460" y="87">NPO法人</text>
+
+        <path class="fline" d="M380,85 H440" transform="translate(0,45)"/>
+        <text class="ftext small" x="386" y="135">拠出財産で</text>
+        <text class="ftext small" x="386" y="147">事業を回したい</text>
+        <rect class="fbox leaf" x="440" y="122" width="150" height="45" rx="2"/>
+        <text class="ftext" x="460" y="144">一般財団法人</text>
+
+        <text class="ftext small" x="640" y="30">※ 宗教法人・医療法人は業種が</text>
+        <text class="ftext small" x="640" y="45">　最初から限定されるため、この</text>
+        <text class="ftext small" x="640" y="60">　フローの対象外（実質一択）。</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:var(--cream)">免責事項：</strong>本ページは法人形態を横断的に理解するための一般的な整理・参考資料であり、法律・税務上の助言ではありません。設立費用・税率・要件は法改正や個別事情（資本金額、業種、自治体の運用等）により変動します。実際の設立・法人化にあたっては、税理士・司法書士・行政書士など専門家に確認してください。</p>
+    <div class="sources">
+      <div><span>出典</span>法務省「登記統計」、国税庁「会社標本調査」、東京商工リサーチ・帝国データバンク「新設法人動向調査」（2023〜2025年）</div>
+      <div><span>出典</span>内閣府NPOホームページ「認証・認定数の推移」（2025年）、法務省「一般社団法人及び一般財団法人制度Q&A」</div>
+      <div><span>出典</span>文化庁「宗教統計調査」（令和4年）、厚生労働省「種類別医療法人数の年次推移」（令和5年）</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.f;
+    document.querySelectorAll('#matrixTable tbody tr').forEach(tr=>{
+      tr.classList.toggle('hidden', f!=='all' && tr.dataset.cat!==f);
+    });
+  });
+});
+</script>
+</body>
+</html>
