@@ -602,8 +602,8 @@ flowchart LR
     J2[Japan]
     T2[Taiwan]
   end
-  J1 -.カーブアウト.-> J2
-  T1 -.カーブアウト.-> T2
+  J1 -. カーブアウト .-> J2
+  T1 -. カーブアウト .-> T2
 </pre>
 <figcaption>図2 ― カーブアウトによる事業の切り離しイメージ</figcaption>
 </figure>
@@ -854,11 +854,17 @@ flowchart LR
 <pre class="mermaid">
 timeline
     title クロージング前後のタイムライン
-    Day -30 : TSA最終版締結 : 移行リハーサル開始
-    Day 0 : Closing（株式譲渡実行） : 資金決済
-    Day 1 : ログイン確認 : メール疎通確認 : 業務システム稼働確認
-    Day 30 : 初回PMIレビュー : 課題の優先順位付け
-    Day 100 : 100日プラン評価 : シナジー計画の具体化
+    Day -30 : TSA最終版締結
+            : 移行リハーサル開始
+    Day 0 : Closing 株式譲渡実行
+          : 資金決済
+    Day 1 : ログイン確認
+          : メール疎通確認
+          : 業務システム稼働確認
+    Day 30 : 初回PMIレビュー
+           : 課題の優先順位付け
+    Day 100 : 100日プラン評価
+            : シナジー計画の具体化
 </pre>
 <figcaption>図3 ― クロージング前後のマイルストーン</figcaption>
 </figure>
@@ -937,7 +943,7 @@ flowchart TD
   Mitsui --> Mid[中間流通]
   Mitsui --> Logi[物流センター事業]
   Mitsui --> Net[海外ネットワーク]
-  Logi --> Havi[HAVI Japan/Taiwan]
+  Logi --> Havi["HAVI Japan・Taiwan"]
   Havi --> Store[外食店舗]
 </pre>
 <figcaption>図4 ― 買収後の事業ポジショニング</figcaption>
@@ -1007,19 +1013,23 @@ flowchart TD
 <figure class="diagram">
 <pre class="mermaid">
 flowchart TB
-  subgraph Sell[売却側 HAVI]
-    S1[Portfolio Strategy]-->S2[売却方針]-->S3[買い手候補選定]-->S4[交渉]-->S5[契約]
+  subgraph Sell["売却側 HAVI"]
+    S1[Portfolio Strategy] --> S2[売却方針]
+    S2 --> S3[買い手候補選定]
+    S3 --> S4[交渉]
+    S4 --> S5[契約]
   end
-  subgraph Buy[買い手側 三井物産]
-    B1[Investment Thesis]-->B2[投資委員会承認]-->B3[Valuation]
-    B3-->B4[DD 財務/税務/法務/人事/IT/事業]
-    B4-->B5[SPA交渉]
-    B5-->B6[Financing]
-    B6-->B7[Regulatory Approval]
-    B7-->B8[TSA]
-    B8-->B9[Closing]
-    B9-->B10[PMI]
-    B10-->NewCo[新しい会社]
+  subgraph Buy["買い手側 三井物産"]
+    B1[Investment Thesis] --> B2[投資委員会承認]
+    B2 --> B3[Valuation]
+    B3 --> B4["DD 財務・税務・法務・人事・IT・事業"]
+    B4 --> B5[SPA交渉]
+    B5 --> B6[Financing]
+    B6 --> B7[Regulatory Approval]
+    B7 --> B8[TSA]
+    B8 --> B9[Closing]
+    B9 --> B10[PMI]
+    B10 --> NewCo[新しい会社]
   end
   Sell --> Buy
 </pre>
