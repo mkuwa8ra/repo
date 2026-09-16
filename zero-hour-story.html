@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>31日、ゼロ時の向こう側 ―三井物産×HAVI 日本・台湾物流事業カーブアウトの記録―</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f2;
+  --bg-elevated:#ffffff;
+  --text:#231f1a;
+  --text-muted:#5a5348;
+  --accent:#8a2e2e;
+  --accent-soft:#f3e4e0;
+  --border:#e4dcd0;
+  --term-bg:#eef2ec;
+  --term-border:#7c8f6f;
+  --code-bg:#2b2621;
+  --code-text:#e8e0d3;
+  --quote-bg:#f6efe6;
+  --shadow: 0 2px 10px rgba(60,45,30,0.08);
+  --font-serif: "Noto Serif JP", serif;
+  --font-sans: "Noto Sans JP", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#181512;
+    --bg-elevated:#221e1a;
+    --text:#ece5d8;
+    --text-muted:#a89e8e;
+    --accent:#e0837a;
+    --accent-soft:#3a2422;
+    --border:#3a332b;
+    --term-bg:#25291f;
+    --term-border:#7c8f6f;
+    --code-bg:#0f0d0b;
+    --code-text:#e8e0d3;
+    --quote-bg:#241f1a;
+    --shadow: 0 2px 14px rgba(0,0,0,0.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#181512;
+  --bg-elevated:#221e1a;
+  --text:#ece5d8;
+  --text-muted:#a89e8e;
+  --accent:#e0837a;
+  --accent-soft:#3a2422;
+  --border:#3a332b;
+  --term-bg:#25291f;
+  --term-border:#7c8f6f;
+  --code-bg:#0f0d0b;
+  --code-text:#e8e0d3;
+  --quote-bg:#241f1a;
+  --shadow: 0 2px 14px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-serif);
+  line-height:1.95;
+  font-size:17px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 120px;}
+header.cover{
+  padding:64px 20px 40px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  margin-bottom:8px;
+}
+.kicker{
+  font-family:var(--font-sans);
+  letter-spacing:0.25em;
+  font-size:12px;
+  color:var(--accent);
+  font-weight:700;
+}
+h1.title{
+  font-size:2.1em;
+  font-weight:900;
+  margin:18px 0 10px;
+  line-height:1.5;
+}
+.subtitle{
+  font-family:var(--font-sans);
+  color:var(--text-muted);
+  font-size:0.95em;
+}
+.badge-row{margin-top:22px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.badge{
+  font-family:var(--font-sans);
+  font-size:12px;
+  padding:4px 12px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--text-muted);
+}
+.disclaimer{
+  font-family:var(--font-sans);
+  font-size:13px;
+  color:var(--text-muted);
+  background:var(--term-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px 18px;
+  margin:28px auto 0;
+  max-width:640px;
+  text-align:left;
+  line-height:1.8;
+}
+.disclaimer b{color:var(--accent);}
+nav.toc{
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin:36px 0 48px;
+  box-shadow:var(--shadow);
+}
+nav.toc h2{
+  font-family:var(--font-sans);
+  font-size:13px;
+  letter-spacing:0.15em;
+  color:var(--text-muted);
+  margin:0 0 12px;
+}
+nav.toc ol{
+  columns:2;
+  column-gap:28px;
+  padding-left:1.1em;
+  margin:0;
+  font-family:var(--font-sans);
+  font-size:13.5px;
+}
+nav.toc li{margin-bottom:7px;break-inside:avoid;}
+nav.toc a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--border);}
+nav.toc a:hover{color:var(--accent);}
+@media (max-width:520px){ nav.toc ol{columns:1;} }
+
+section.part{margin-top:0;}
+h2.chapter-num{
+  font-family:var(--font-sans);
+  font-size:12px;
+  letter-spacing:0.3em;
+  color:var(--accent);
+  margin:64px 0 4px;
+  text-transform:uppercase;
+}
+h2.chapter-title{
+  font-size:1.55em;
+  font-weight:900;
+  margin:0 0 8px;
+  border-bottom:3px solid var(--accent-soft);
+  padding-bottom:14px;
+}
+.dateline{
+  font-family:var(--font-sans);
+  font-size:13px;
+  color:var(--text-muted);
+  margin-bottom:22px;
+}
+p{margin:0 0 1.3em;}
+.dialogue{margin:0 0 0.9em;}
+.scene-break{
+  text-align:center;
+  color:var(--text-muted);
+  margin:2.4em 0;
+  letter-spacing:0.6em;
+  font-size:13px;
+}
+blockquote.pull{
+  font-family:var(--font-sans);
+  font-weight:700;
+  font-size:1.15em;
+  color:var(--accent);
+  border-left:4px solid var(--accent);
+  margin:2em 0;
+  padding:0.3em 0 0.3em 1.1em;
+  background:var(--quote-bg);
+  border-radius:0 8px 8px 0;
+}
+.term-box{
+  background:var(--term-bg);
+  border:1px solid var(--term-border);
+  border-left:5px solid var(--term-border);
+  border-radius:10px;
+  padding:18px 20px;
+  margin:2em 0;
+  font-family:var(--font-sans);
+  font-size:0.92em;
+  line-height:1.85;
+}
+.term-box .term-label{
+  display:inline-block;
+  font-weight:700;
+  color:var(--term-border);
+  font-size:11px;
+  letter-spacing:0.15em;
+  margin-bottom:6px;
+}
+.term-box h4{margin:0 0 6px;font-size:1.05em;}
+.term-box p{margin:0 0 0.6em;}
+.term-box p:last-child{margin-bottom:0;}
+figure.diagram{
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  margin:2em 0;
+  overflow-x:auto;
+  box-shadow:var(--shadow);
+}
+figure.diagram figcaption{
+  font-family:var(--font-sans);
+  font-size:12px;
+  color:var(--text-muted);
+  margin-top:10px;
+  text-align:center;
+}
+pre.mermaid{ margin:0; }
+.figure-number{color:var(--accent);}
+table.number-table{
+  width:100%;
+  border-collapse:collapse;
+  font-family:var(--font-sans);
+  font-size:0.9em;
+  margin:1.6em 0;
+}
+table.number-table th, table.number-table td{
+  border:1px solid var(--border);
+  padding:8px 12px;
+  text-align:left;
+}
+table.number-table th{background:var(--term-bg);}
+.callout-num{
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:2.4em;
+  color:var(--accent);
+  text-align:center;
+  margin:0.6em 0 0.2em;
+}
+.callout-num-label{
+  font-family:var(--font-sans);
+  font-size:12px;
+  color:var(--text-muted);
+  text-align:center;
+  letter-spacing:0.1em;
+  margin-bottom:1.8em;
+}
+code, .mono{font-family:var(--font-mono); font-size:0.92em;}
+.code-block{
+  background:var(--code-bg);
+  color:var(--code-text);
+  border-radius:10px;
+  padding:16px 18px;
+  overflow-x:auto;
+  font-family:var(--font-mono);
+  font-size:0.85em;
+  line-height:1.7;
+  margin:1.6em 0;
+}
+footer.refs{
+  margin-top:80px;
+  padding-top:24px;
+  border-top:1px solid var(--border);
+  font-family:var(--font-sans);
+  font-size:12px;
+  color:var(--text-muted);
+  line-height:2;
+}
+footer.refs a{color:var(--text-muted);}
+.glossary-index{
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  margin:2.5em 0;
+  box-shadow:var(--shadow);
+}
+.glossary-index dt{font-family:var(--font-sans);font-weight:700;color:var(--accent);margin-top:14px;}
+.glossary-index dd{margin:4px 0 0;font-family:var(--font-sans);font-size:0.93em;color:var(--text);}
+.top-link{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:var(--accent);
+  color:#fff;
+  font-family:var(--font-sans);
+  font-size:12px;
+  padding:10px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  box-shadow:var(--shadow);
+  opacity:0.9;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="cover">
+  <div class="kicker">FICTION × M&amp;A CASE STUDY</div>
+  <h1 class="title">31日、ゼロ時の向こう側</h1>
+  <div class="subtitle">――三井物産×HAVI、日本・台湾物流事業カーブアウトの記録――</div>
+  <div class="badge-row">
+    <span class="badge">長編フィクション・完全版</span>
+    <span class="badge">全23章＋あとがき</span>
+    <span class="badge">M&amp;A実務解説付き</span>
+  </div>
+  <div class="disclaimer">
+    <b>注意（フィクションについて）</b><br>
+    本作は、三井物産による HAVI の日本・台湾物流事業取得という<b>実際の案件の骨格</b>をもとにした長編フィクションです。2024年10月25日の公表、2025年1月31日の日本法人取得、支払対価294.3億円などの数字・日付は公開資料に基づきますが、登場人物・会話・社内会議の内容・感情・交渉の具体的経緯・IT構成・人物名はすべて、M&amp;A実務としてあり得る形を想定した創作です。実在の個人の発言として読まないでください。
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>目次 / CONTENTS</h2>
+  <ol>
+    <li><a href="#prologue">序章　1月31日、午前0時</a></li>
+    <li><a href="#ch01">第一章　「売りませんか」</a></li>
+    <li><a href="#ch02">第二章　三井物産</a></li>
+    <li><a href="#ch03">第三章　投資委員会という壁</a></li>
+    <li><a href="#ch04">第四章　企業価値という数字</a></li>
+    <li><a href="#ch05">第五章　DD開幕</a></li>
+    <li><a href="#ch06">第六章　IT担当・相馬</a></li>
+    <li><a href="#ch07">第七章　Carve-out</a></li>
+    <li><a href="#ch08">第八章　「社員は資産じゃない」</a></li>
+    <li><a href="#ch09">第九章　独占禁止法という関門</a></li>
+    <li><a href="#ch10">第十章　SPAの一行</a></li>
+    <li><a href="#ch11">第十一章　TSA</a></li>
+    <li><a href="#ch12">第十二章　最後の交渉</a></li>
+    <li><a href="#ch13">第十三章　HAVIの側</a></li>
+    <li><a href="#ch14">第十四章　発表</a></li>
+    <li><a href="#ch15">第十五章　発表後の朝</a></li>
+    <li><a href="#ch16">第十六章　許認可と前提条件</a></li>
+    <li><a href="#ch17">第十七章　DNS、深夜二時</a></li>
+    <li><a href="#ch18">第十八章　12月31日、Day0/1/30</a></li>
+    <li><a href="#ch19">第十九章　最後の夜</a></li>
+    <li><a href="#ch20">第二十章　0時</a></li>
+    <li><a href="#ch21">第二十一章　朝</a></li>
+    <li><a href="#ch22">第二十二章　三井物産の新しい地図</a></li>
+    <li><a href="#ch23">第二十三章　一年後</a></li>
+    <li><a href="#epilogue">終章　見えない仕事</a></li>
+    <li><a href="#afterword">あとがき／M&amp;A実務ガイド</a></li>
+    <li><a href="#glossary">用語集（保存版）</a></li>
+  </ol>
+</nav>
+
+<!-- PROLOGUE -->
+<section class="part" id="prologue">
+<h2 class="chapter-num">Prologue</h2>
+<h2 class="chapter-title">序章　1月31日、午前0時</h2>
+<div class="dateline">東京・大手町 ― 2025年1月31日</div>
+
+<p>午前0時を過ぎても、ビルの一角だけは明かりが消えていなかった。</p>
+<p>窓の向こうには、深夜の東京駅が静かに浮かんでいる。昼間なら人波に埋もれている道路に、タクシーのヘッドライトが一本、また一本と流れていく。</p>
+<p>会議室には七人いた。誰も大きな声では話さない。テーブルの中央には、製本された<span class="mono">Closing Binder</span>――クロージング書類一式が置かれている。表紙には、半年間で何度も書き換えられた末の、最終版という文字だけが押されていた。</p>
+<p class="dialogue">「……Incoming funds、確認しました」</p>
+<p>モニターを見ていた財務担当の佐伯が言った。誰も拍手しない。佐伯はもう一度画面を見る。</p>
+<p class="dialogue">「着金、確認済みです」</p>
+<p>向かいに座る法務の黒田が時計を見る。0:02。黒田は一枚の紙を机に置いた。</p>
+<p class="dialogue">「では、Closing条件はすべて充足ということで」</p>
+<p>事業部長の榊が、ゆっくり息を吐いた。半年以上、追い続けてきた案件だった。だが、榊は知っていた。これは終わりではない。むしろ――ここから始まる。</p>
+<p class="dialogue">「……皆さん、お疲れさまでした」</p>
+<p>そう言ってから、榊は少しだけ笑った。</p>
+<p class="dialogue">「明日から、この会社は我々の会社です」</p>
+<p>窓の外で、新しい一日が始まっていた。誰も知らないところで、サーバーの向こうでは数千の従業員のアカウント権限が、静かに書き換えられようとしていた。</p>
+</section>
+
+<!-- CH1 -->
+<section class="part" id="ch01">
+<h2 class="chapter-num">Chapter 01</h2>
+<h2 class="chapter-title">「売りませんか」</h2>
+<div class="dateline">シカゴ ― 2024年春</div>
+
+<p>HAVIのグローバル会議室では、窓の外に薄い雨が降っていた。</p>
+<p>HAVIは1974年にシカゴで生まれ、食品・外食産業のサプライチェーンを世界規模で支える企業へ成長していた。需要予測、物流、倉庫、輸配送などを一体で提供し、世界の数多くの外食ブランドを支えている。</p>
+<p>その会議室に、日本と台湾の事業を担当する幹部が集まっていた。日本担当のマーク・デイヴィスは、この事業に14年間関わってきた。入社したときはまだ日本のオペレーションは小さな一拠点にすぎなかった。今では複数の物流センターと、数百台の車両ネットワークを抱えている。</p>
+<p class="dialogue">「We need to discuss Japan and Taiwan.」</p>
+<p>それだけで、部屋の空気が変わった。日本。台湾。どちらも長年積み上げてきた事業だ。だが、経営環境は変わっていた。原材料費の高騰、人件費の上昇、そして本社が進める「コア事業への資本集中」という方針。</p>
+<p class="dialogue">「売却……ですか？」</p>
+<p>マークが聞いた。</p>
+<p class="dialogue">「Precisely.」</p>
+<p>一瞬、沈黙。M&amp;Aでは、「売る」という言葉を最初から使わないことがある。</p>
+<p class="dialogue">「Portfolio review」「Strategic alternatives」「Capital allocation」――言葉を変えれば、印象も変わる。だが本質は同じだ。</p>
+
+<blockquote class="pull">何を持ち続け、何を手放すか。</blockquote>
+
+<p>マークは黙って窓の外を見る。</p>
+<p class="dialogue">「日本は、悪い事業ではありません」</p>
+<p class="dialogue">「分かっています」</p>
+<p class="dialogue">「顧客も安定しています」</p>
+<p class="dialogue">「それも分かっている」</p>
+<p class="dialogue">「では、なぜ？」</p>
+<p>上司のデイヴィッド・チェンは少し考えてから答えた。</p>
+<p class="dialogue">「だから売れるんだ」</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語①</span>
+  <h4>ポートフォリオ・レビュー（事業ポートフォリオの見直し）</h4>
+  <p>企業がグループ内の複数事業を、成長性・収益性・戦略的重要度で棚卸しし、「どの事業を伸ばし、どの事業から撤退・売却するか」を判断するプロセス。優良な事業でも、全社の資本配分の観点から「コア事業ではない」と判断されれば売却対象になり得る。これは事業自体の失敗を意味しない――むしろ買い手にとっては「健全な状態で売りに出される」魅力的な案件になることが多い。</p>
+</div>
+</section>
+
+<!-- CH2 -->
+<section class="part" id="ch02">
+<h2 class="chapter-num">Chapter 02</h2>
+<h2 class="chapter-title">三井物産</h2>
+<div class="dateline">東京・三井物産 流通事業本部</div>
+
+<p>田辺修司、45歳。M&amp;Aを専門にして十年以上。投資銀行出身ではない。事業会社の人間だ。新卒で三井物産に入り、食品原料のトレーディングから始まり、物流子会社への出向を経て、いまは新規投資の検討チームを率いている。数字だけでなく「現場」を知っているのが田辺の強みだった。</p>
+<p>彼は資料の一枚目をめくった。そこには、<b>HAVI</b>という文字。</p>
+<p class="dialogue">「外食物流か……」</p>
+<p>隣に座る事業担当の美濃部が言う。</p>
+<p class="dialogue">「物流だけじゃないですよ」</p>
+<p class="dialogue">「というと？」</p>
+<p class="dialogue">「需要予測。Planning。Inventory。Warehouse。Temperature control。Delivery。」</p>
+<p>美濃部はホワイトボードに書いた。</p>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A[需要] --> B[予測]
+  B --> C[発注]
+  C --> D[在庫]
+  D --> E[倉庫]
+  E --> F[配送]
+  F --> G[店舗]
+</pre>
+<figcaption>図1 ― HAVIが担う外食サプライチェーンの一連の機能</figcaption>
+</figure>
+
+<p class="dialogue">「外食チェーンの裏側を、ほぼ一本で握ってる」</p>
+<p>田辺は腕を組んだ。</p>
+<p class="dialogue">「つまり、トラックを買う話じゃない」</p>
+<p class="dialogue">「はい」美濃部は頷いた。「サプライチェーンを買う話です」</p>
+<p>三井物産は以前からHAVIと日本・台湾で取引関係を持っていた。今回の構想は、その既存関係を土台として、三井物産自身の中間流通機能、物流センター事業、国内外ネットワークを組み合わせることだった。</p>
+<p>田辺は資料を閉じた。</p>
+<p class="dialogue">「じゃあ、まず仮説を作ろう」</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語②</span>
+  <h4>インベストメント・シーシス（Investment Thesis／投資仮説）</h4>
+  <p>「なぜこの会社を買うのか」「買った後、何と組み合わせて、どんな価値を生むのか」を一枚のロジックにまとめたもの。単に「良い会社だから買う」ではなく、自社の既存事業とのシナジー、業界内でのポジション強化、将来の成長ドライバーを明確に言語化する。投資仮説が曖昧なM&amp;Aは、たとえ買収自体は成立しても、後のPMI（統合）で迷走しやすい。</p>
+</div>
+</section>
+
+<!-- CH3 -->
+<section class="part" id="ch03">
+<h2 class="chapter-num">Chapter 03</h2>
+<h2 class="chapter-title">投資委員会という壁</h2>
+<div class="dateline">東京 ― 2024年初夏</div>
+
+<p>仮説ができても、それだけでは一円も動かない。大企業のM&amp;Aには、社内の「投資委員会」という関門がある。</p>
+<p>田辺と美濃部は、投資仮説を10ページのプレゼンテーションにまとめ、役員会の下部組織である投資委員会に提出した。</p>
+<p class="dialogue">「この事業の成長率は？」委員の一人が聞く。</p>
+<p class="dialogue">「外食産業全体としては緩やかな成長ですが、アウトソーシング比率が伸びています」</p>
+<p class="dialogue">「つまり、市場が伸びるんじゃなく、内製から外注への切り替えで伸びると」</p>
+<p class="dialogue">「その通りです」</p>
+<p>別の委員が資料をめくる。</p>
+<p class="dialogue">「カーブアウト案件だな。ITもオペレーションも切り離しが必要になる。リスクは？」</p>
+<p>田辺は少し間を置いてから答えた。</p>
+<p class="dialogue">「あります。ですが、切り離しのリスクを織り込んだ上で、価格と契約条件で吸収できると考えています」</p>
+<p>沈黙。誰も即答しない大企業の会議室特有の間。やがて委員長が言った。</p>
+<p class="dialogue">「一次検討の続行を認める。ただし、DDでカーブアウトの負担を定量化すること」</p>
+<p>会議室を出た美濃部が小さく息を吐いた。</p>
+<p class="dialogue">「通りましたね」</p>
+<p class="dialogue">「まだ入口だ」田辺は言った。「ここからが本番だよ」</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語③</span>
+  <h4>投資委員会（Investment Committee）</h4>
+  <p>企業が大型投資・M&amp;Aを実行する前に、案件の妥当性を審査する社内機関。財務・法務・事業・リスク管理などの責任者が集まり、投資仮説、想定リターン、リスクを多角的に検証する。多くの場合、検討の進捗に応じて「一次承認（Discovery承認）」「DD実施の承認」「最終投資承認（Final Investment Decision）」と、段階を踏んで意思決定される。</p>
+</div>
+</section>
+
+<!-- CH4 -->
+<section class="part" id="ch04">
+<h2 class="chapter-num">Chapter 04</h2>
+<h2 class="chapter-title">企業価値という数字</h2>
+
+<p>M&amp;Aで最初に出てくるのは、「この会社はいくらか」という問いだ。しかし会社には値札がついていない。コンビニで飲み物を買うようにはいかない。</p>
+<p>田辺は財務モデルを開いた。</p>
+<p class="dialogue">「EBITDAは？」「暫定でこれです」「ネットデット」「こちら」「CAPEXは？」「物流設備があるので、それなりに」「Working Capitalは？」「大きいです」</p>
+<p>田辺は頷いた。ここから先は、数字の世界になる。</p>
+<p><b>EBITDA</b>とは、簡単にいえば本業がどれくらいキャッシュを生む力を持っているかを見るための代表的な指標だ。だが物流業は設備産業でもある。冷凍庫を増やす。倉庫を改修する。トラックを更新する。ITシステムを入れ替える。その度に金が必要になる。</p>
+<p>だから、「利益がある」だけでは足りない。「その利益から、設備更新を引いたらいくら残る？」という問いに変わる。</p>
+
+<table class="number-table">
+<tr><th>指標</th><th>意味</th><th>今回の論点</th></tr>
+<tr><td>EBITDA</td><td>営業利益＋減価償却費</td><td>本業のキャッシュ創出力</td></tr>
+<tr><td>Net Debt</td><td>有利子負債－現預金</td><td>取得後に引き継ぐ実質負担</td></tr>
+<tr><td>CAPEX</td><td>設備投資</td><td>冷凍設備・車両更新の頻度</td></tr>
+<tr><td>Working Capital</td><td>運転資本</td><td>季節変動・与信条件の影響</td></tr>
+</table>
+
+<p>田辺は画面の数字をじっと見た。</p>
+<p class="dialogue">「……294億」</p>
+<p>誰かが小さく呟いた。まだ最終契約前。まだ公表されていない。しかし社内では、その価格水準を前提とする検討が現実味を帯びていた。</p>
+
+<div class="callout-num">294.3<span style="font-size:0.4em;">億円</span></div>
+<div class="callout-num-label">日本事業会社への最終的な支払対価（2025年1月31日実行）</div>
+
+<p>田辺は思う。高い。安い。その判断ではない。問題は、</p>
+<blockquote class="pull">294億円を払って、10年後に何を残すのか。</blockquote>
+<p>だった。後の三井物産の開示では、2025年1月31日に日本事業会社の全持分を取得し、支払対価は29,430百万円、すなわち294.3億円だったことが明らかになっている。</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語④</span>
+  <h4>企業価値（EV）と株式価値（Equity Value）</h4>
+  <p>会社の値段には二つの見方がある。<b>企業価値（Enterprise Value）</b>は事業そのものの価値、<b>株式価値（Equity Value）</b>はそこから有利子負債を引き、現預金を足した「株主が最終的に受け取る対価」。買収対価のニュース記事に出る金額は、多くの場合この株式価値ベースであり、EBITDA倍率（EV/EBITDA）で価格の妥当性を検証するのが一般的な手法のひとつ。</p>
+</div>
+</section>
+
+<!-- CH5 -->
+<section class="part" id="ch05">
+<h2 class="chapter-num">Chapter 05</h2>
+<h2 class="chapter-title">DD開幕</h2>
+<div class="dateline">夏 ― 会議室「Orchid」</div>
+
+<p>会議室の名前は「Orchid」。プロジェクトコードネームだった。本物の社名は資料の表紙から消されている。案件が外部に漏れれば、従業員の不安、競合の妨害、株価への影響など、あらゆる問題が起こり得るからだ。</p>
+<p class="dialogue">「Data Room Open」</p>
+<p>スクリーンに表示された。<b>VDR――Virtual Data Room。</b>M&amp;Aにおいて、売り手が買い手へ資料を安全に開示するためのオンライン上のデータ保管・閲覧環境だ。</p>
+<p>そこには、契約書、財務諸表、税務資料、人事情報、不動産資料、訴訟情報、IT資産一覧、システム構成、ライセンス契約、セキュリティ監査資料が並んでいる。一見すると、ただのフォルダだ。しかしその一つ一つに値段が付いている。</p>
+<p>法務。財務。税務。人事。IT。事業。それぞれの専門家が入り込む。</p>
+<p class="dialogue">「この契約、Change of Control条項あります」</p>
+<p>法務の黒田が言った。</p>
+<p class="dialogue">「つまり？」</p>
+<p class="dialogue">「株主が変わったとき、相手の承認が必要になる可能性があります」</p>
+<p>美濃部が眉をひそめる。</p>
+<p class="dialogue">「主要顧客ですか？」</p>
+<p>黒田は答えなかった。ただ、</p>
+<p class="dialogue">「重要です」</p>
+<p>と言った。M&amp;Aの現場では、この「重要です」が怖い。重要という言葉の後ろに、数億円、数十億円、時には案件破談が隠れている。</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑤</span>
+  <h4>チェンジ・オブ・コントロール（COC）条項</h4>
+  <p>取引先との契約に「会社の株主・支配権が変わった場合、相手方が契約を解除・変更できる」と定める条項。買収によって主要顧客との契約が失効するリスクがあるため、DDでは重要契約すべてにCOC条項の有無を確認し、必要に応じてクロージング前に取引先から個別の同意（Third-party Consent）を取得する交渉が発生する。</p>
+</div>
+</section>
+
+<!-- CH6 -->
+<section class="part" id="ch06">
+<h2 class="chapter-num">Chapter 06</h2>
+<h2 class="chapter-title">IT担当・相馬</h2>
+
+<p>その頃、ITデューデリジェンスを担当していたのが相馬だった。38歳。インフラエンジニア出身。M&amp;Aは初めてだ。</p>
+<p>資料を見ながら呟く。</p>
+<p class="dialogue">「……なるほど」</p>
+<p>HAVI JapanのIT環境。クラウド。ネットワーク。PC。ID管理。メール。ERP。物流システム。倉庫システム。セキュリティ。バックアップ。問題は「何があるか」ではない。<b>誰のものか。</b>だった。</p>
+<p>相馬は質問票を作る。</p>
+<p class="dialogue">Q：本システムの契約主体は？ ／ 回答：HAVI Group.</p>
+<p>相馬は赤丸をつけた。次。</p>
+<p class="dialogue">Q：Microsoft 365テナントは？ ／ 回答：Global shared environment.</p>
+<p>また赤丸。次。</p>
+<p class="dialogue">Q：EDRは？ ／ 回答：Group standard product.</p>
+<p>また赤丸。相馬は椅子にもたれた。</p>
+<p class="dialogue">「……全部、共有じゃん」</p>
+<p>隣にいた若手が笑った。</p>
+<p class="dialogue">「それ、ダメなんですか？」</p>
+<p class="dialogue">「ダメなんじゃない」相馬は答えた。「<b>切るときに難しいんだよ</b>」</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑥</span>
+  <h4>ITデューデリジェンス（IT DD）</h4>
+  <p>対象会社が利用するシステム・インフラ・契約・セキュリティ体制を調査するプロセス。特にカーブアウト案件では「グループ共有システムをどこまで切り離せるか」「切り離しにどれだけコストと時間がかかるか」が焦点になる。ここで見落とすと、クロージング後に業務が止まる、あるいは想定外のIT移行コストが発生するという形で顕在化する。</p>
+</div>
+</section>
+
+<!-- CH7 -->
+<section class="part" id="ch07">
+<h2 class="chapter-num">Chapter 07</h2>
+<h2 class="chapter-title">Carve-out</h2>
+
+<p>M&amp;Aの世界には、<b>Carve-out</b>という言葉がある。会社や事業の一部だけを切り出して売ること。今回はまさにそれだった。HAVI Group全体を売るわけではない。日本と台湾の事業だけを切り出す。</p>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart LR
+  subgraph Before[買収前 HAVI Group]
+    E1[Europe]
+    A1[Americas]
+    AS1[Asia]
+    J1[Japan]
+    T1[Taiwan]
+  end
+  subgraph After1[買収後 HAVI Group]
+    E2[Europe]
+    A2[Americas]
+    O2[その他アジア]
+  end
+  subgraph After2[買収後 三井物産]
+    J2[Japan]
+    T2[Taiwan]
+  end
+  J1 -.カーブアウト.-> J2
+  T1 -.カーブアウト.-> T2
+</pre>
+<figcaption>図2 ― カーブアウトによる事業の切り離しイメージ</figcaption>
+</figure>
+
+<p>だが会社は、こんな綺麗な箱ではない。メールサーバは共有。ライセンスはグループ契約。セキュリティ監視は海外のSOC。バックアップも共有。ファイルサーバも共有。マスタデータも共有。そして何より――<b>人が共有されている。</b></p>
+<p class="dialogue">「この人、日本法人所属だけど、海外システム管理者でもあります」</p>
+<p>相馬が言った。</p>
+<p class="dialogue">「じゃあどうする？」「移籍？」「本人は？」「まだ聞けません」</p>
+<p>田辺が腕を組んだ。</p>
+<p class="dialogue">「聞けない？」</p>
+<p class="dialogue">「売却が決まるまで公表できない情報があります」</p>
+<p>沈黙。M&amp;Aには時間差がある。経営陣は先に知る。現場は後から知る。そして、</p>
+<blockquote class="pull">情報を知った瞬間、人の人生が変わってしまう。</blockquote>
+<p>相馬はそのことを初めて実感した。</p>
+</section>
+
+<!-- CH8 -->
+<section class="part" id="ch08">
+<h2 class="chapter-num">Chapter 08</h2>
+<h2 class="chapter-title">「社員は資産じゃない」</h2>
+
+<p>ある夜。相馬と人事の西村が二人だけで話していた。</p>
+<p class="dialogue">「DD資料では、社員数は単なる数字なんです」</p>
+<p class="dialogue">「うん」</p>
+<p class="dialogue">「でも本人たちにとっては人生ですよね」</p>
+<p>相馬は答えなかった。M&amp;Aでは従業員を「人的資産」と表現することがある。だが、会議室の中ではその言葉があまりに乾いて響く。</p>
+<p>西村は続けた。今回のスキームは株式譲渡――つまり日本法人の全持分取得だった。事業譲渡（アセットディール）と違い、雇用契約そのものは変わらない。従業員は「解雇されて再雇用される」のではなく、法人ごと株主が変わるだけだ。</p>
+<p class="dialogue">「雇用契約は継続します。でも、就業規則も、評価制度も、福利厚生も、いずれ見直される可能性がある」</p>
+<p class="dialogue">「不安にならないほうがおかしいですね」</p>
+<p>西村は頷く。</p>
+<p class="dialogue">「この会社を買っても、物流センターは翌朝逃げません」</p>
+<p class="dialogue">「……」</p>
+<p class="dialogue">「サーバーもトラックも逃げない」</p>
+<p class="dialogue">「……」</p>
+<p class="dialogue">「でも、人は辞められる」</p>
+<p>田辺が黙って二人を見る。</p>
+<p class="dialogue">「だからPMIで最初に見るべきは人だ」</p>
+<p><b>PMI――Post Merger Integration。</b>買収後の統合作業。会社を買うところがM&amp;Aのゴールではなく、その会社を新しいグループで機能させるための統合こそ、投資成果を左右する。</p>
+<p>田辺は言った。</p>
+<p class="dialogue">「会社を買うんじゃない」</p>
+<p class="dialogue">「？」</p>
+<p class="dialogue">「<b>会社が動く能力を買うんだ</b>」</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑦</span>
+  <h4>株式譲渡（Share Deal）と事業譲渡（Asset Deal）</h4>
+  <p>会社を買う方法には大きく二種類ある。<b>株式譲渡</b>は会社そのもの（法人格・契約・雇用関係を含む）をまるごと引き継ぐ方式で、従業員の雇用は原則そのまま継続する。<b>事業譲渡</b>は特定の事業・資産だけを個別に移す方式で、従業員との雇用契約は一度終了し、譲受先と改めて契約を結び直す必要がある場合が多い。カーブアウト案件では、対象国・地域ごとにどちらの方式を取るかが、従業員への影響や手続きの複雑さを大きく左右する。</p>
+</div>
+</section>
+
+<!-- CH9 -->
+<section class="part" id="ch09">
+<h2 class="chapter-num">Chapter 09</h2>
+<h2 class="chapter-title">独占禁止法という関門</h2>
+
+<p>秋が近づく頃、法務の黒田が別の懸念を持ち込んだ。</p>
+<p class="dialogue">「この規模の取引だと、競争法上の届出が必要になる可能性があります」</p>
+<p class="dialogue">「日本だけですか？」</p>
+<p class="dialogue">「台湾側の当局にも確認が必要です。国によって基準が違います」</p>
+<p>大型の企業結合は、当局に事前届出を行い、市場競争を実質的に制限しないかの審査を受ける必要がある場合がある。届出から一定期間、取引を実行できない「待機期間」が発生することもあり、これがクロージングの時期を左右する重要な変数になる。</p>
+<p class="dialogue">「届出から承認まで、どれくらいかかりますか？」美濃部が聞く。</p>
+<p class="dialogue">「案件次第です。問題なければ数週間。懸念があれば数カ月」</p>
+<p class="dialogue">「今回は？」</p>
+<p class="dialogue">「HAVIと三井物産の物流事業には重複が大きくありません。ただ、油断はできません」</p>
+<p>田辺はスケジュール表に「Regulatory Approval」という行を書き足した。この一行が、後にクロージング日を決める最大の不確実要素になることを、このときはまだ誰も強く意識していなかった。</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑧</span>
+  <h4>競争法（独占禁止法）クリアランス</h4>
+  <p>一定規模以上の企業結合は、関係国の競争当局（日本の公正取引委員会など）へ事前届出が必要となる場合がある。当局は、その結合が市場での競争を実質的に制限しないかを審査する。クロス・ボーダー案件では、関係する複数国すべての当局対応が必要になることもあり、これが契約書上の「先行条件（Condition Precedent）」としてクロージングの前提になる。</p>
+</div>
+</section>
+
+<!-- CH10 -->
+<section class="part" id="ch10">
+<h2 class="chapter-num">Chapter 10</h2>
+<h2 class="chapter-title">SPAの一行</h2>
+<div class="dateline">11月 ― 法務室</div>
+
+<p>契約書の修正履歴が増えていく。赤字。青字。コメント。コメントへのコメント。<b>SPA――Share Purchase Agreement（株式譲渡契約書）</b>のドラフトは、もう十数版目に入っていた。</p>
+<p class="dialogue">「Indemnification cap」「Material Adverse Change」「Representation and Warranty」「Closing Conditions」</p>
+<p>専門用語が並ぶ。</p>
+<p><b>Representation and Warranty（表明保証）</b>――売り手が、「この会社について、これが事実です」と表明・保証する条項。例えば、「重大な未開示訴訟はない」「財務諸表は適正に作成されている」「重要契約について必要な同意を取得している」など。</p>
+<p>だが買い手はそれを完全には信じない。だから、「もし事実と違ったら、誰がいくら補償するのか」を契約に入れる。</p>
+<p class="dialogue">「補償の上限は？」田辺が聞く。</p>
+<p class="dialogue">「価格の一定割合で交渉しています。加えて、一部の重要な表明保証については上限を外す方向です」</p>
+<p class="dialogue">「エスクローは？」</p>
+<p class="dialogue">「一部を第三者口座に留保し、一定期間経過後に請求がなければ売り手に払い出す形にしています」</p>
+<p>田辺は頷いた。この一行一行が、将来トラブルが起きたときに「誰がいくら払うか」を決める。</p>
+
+<blockquote class="pull">M&amp;Aは信頼だけで成立しない。信頼を契約書に変換する作業なのだ。</blockquote>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑨</span>
+  <h4>表明保証・補償上限（Indemnification Cap）・エスクロー</h4>
+  <p><b>表明保証</b>は売り手が対象会社の状態について事実を保証する条項。違反が発覚した場合、買い手は<b>補償（Indemnification）</b>を請求できるが、無制限に請求できると売り手のリスクが大きすぎるため、通常は補償額に<b>上限（Cap）</b>を設ける。さらに、対価の一部を第三者の口座に一定期間預け入れる<b>エスクロー</b>を設定し、問題が発覚した際にそこから充当する仕組みも一般的である。近年は、この表明保証違反リスクを保険会社が引き受ける「表明保証保険（W&amp;I insurance）」も広く使われている。</p>
+</div>
+</section>
+
+<!-- CH11 -->
+<section class="part" id="ch11">
+<h2 class="chapter-num">Chapter 11</h2>
+<h2 class="chapter-title">TSA</h2>
+<div class="dateline">秋</div>
+
+<p class="dialogue">「TSA draft」</p>
+<p>スクリーンの上にそう書かれている。<b>Transition Services Agreement。</b>売却された事業が、移行期間中だけ売り手側のシステムやサービスを利用し続けるための契約だ。</p>
+<p class="dialogue">「全部1月31日に切れますか？」田辺が言う。</p>
+<p>相馬が首を横に振る。</p>
+<p class="dialogue">「無理です」</p>
+<p class="dialogue">「何が？」</p>
+<p class="dialogue">「全部です」</p>
+<p>笑いが起きた。しかし誰も冗談だとは思っていない。</p>
+<p class="dialogue">「例えばメール」「はい」「明日から三井物産のメール？」「理想はそうです」「理想？」「アカウント移行、DNS、認証、端末、ライセンス、MFA……全部あります」</p>
+<p><b>MFA――Multi-Factor Authentication。</b>多要素認証。パスワードだけでなく、スマホ認証など別の要素を要求する仕組みだ。</p>
+<p>相馬は続ける。</p>
+<p class="dialogue">「ERPもあります」「物流システムは？」「もっと難しい」「なぜ？」「店舗配送が止まるからです」</p>
+<p>部屋が静かになった。物流は、ITシステムが止まると、ただの「パソコン故障」では済まない。食材が出ない。トラックが出ない。店舗に商品が届かない。朝の開店に間に合わない。つまり、</p>
+<blockquote class="pull">IT障害が、そのまま店舗営業停止になる。</blockquote>
+<p>田辺は資料を閉じた。</p>
+<p class="dialogue">「じゃあ、一気に切るのはやめよう」</p>
+<p>相馬が頷く。</p>
+<p class="dialogue">「TSAが必要です」</p>
+<p class="dialogue">「何カ月？」</p>
+<p class="dialogue">「サービスごとに違います」</p>
+<p>それが答えだった。相馬はサービスごとの移行期間を一覧にした。メールは3カ月。ERPは9カ月。物流の基幹システムは、なんと18カ月という数字が並んだ。</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑩</span>
+  <h4>TSA（Transition Services Agreement／移行サービス契約）</h4>
+  <p>カーブアウト案件では、対象事業が売り手グループの共有システム・サービスに依存していることが多く、クロージング当日にすべてを切り離すことは現実的でない。そこで、一定期間・一定料金で売り手側のサービスを利用し続けられるよう定めるのがTSA。サービスごとに移行の難易度・期間が異なるため、TSAはIT・人事・財務など複数の個別契約の束になることが多く、TSAの終了スケジュールがそのままPMIのロードマップになる。</p>
+</div>
+</section>
+
+<!-- CH12 -->
+<section class="part" id="ch12">
+<h2 class="chapter-num">Chapter 12</h2>
+<h2 class="chapter-title">最後の交渉</h2>
+<div class="dateline">11月 ― 法務室</div>
+
+<p>Material Adverse Change（重大な悪影響条項、通称MAC）を巡る攻防が続いていた。契約締結からクロージングまでの間に、対象会社に重大な悪影響が生じた場合、買い手が取引から撤退できる、あるいは価格再交渉を求められる条項だ。</p>
+<p class="dialogue">「主要顧客との契約が失注したら？」田辺が聞く。</p>
+<p class="dialogue">「規模によります。売上の一定割合を超える顧客の喪失は、MACの対象に含める方向で交渉しています」黒田が答える。</p>
+<p class="dialogue">「HAVI側は？」</p>
+<p class="dialogue">「範囲を狭めたいと言っています。当然です」</p>
+<p>交渉は一進一退だった。値段そのものよりも、こうした「もしもの時、誰がリスクを負うか」という条項の一言一句に、双方の弁護士とビジネスサイドが何日もかけて向き合っていた。</p>
+<p class="dialogue">「Closing Conditions、最終版まとめます」</p>
+<p>黒田がそう言って、修正履歴のついたPDFを共有フォルダに上げた。すでに200ページを超えていた。</p>
+</section>
+
+<!-- CH13 -->
+<section class="part" id="ch13">
+<h2 class="chapter-num">Chapter 13</h2>
+<h2 class="chapter-title">HAVIの側</h2>
+<div class="dateline">同じ頃、シカゴ</div>
+
+<p>売り手側もまた苦しんでいた。日本事業を売る。それは財務上の判断だ。しかし、「1974年から積み上げてきたネットワークの一部を手放す」という意味でもある。</p>
+<p>マークは資料を眺めていた。日本のページ。台湾のページ。彼は言った。</p>
+<p class="dialogue">「They've been with us for years.」</p>
+<p>同僚が答える。</p>
+<p class="dialogue">「I know.」</p>
+<p class="dialogue">「So why does it feel like we're losing something?」</p>
+<p>しばらく沈黙。CEOは静かに言った。</p>
+<p class="dialogue">「Because we are.」</p>
+<p>少し間を置く。</p>
+<p class="dialogue">「But selling a business doesn't always mean abandoning it.」</p>
+<p class="dialogue">「……」</p>
+<p class="dialogue">「Sometimes it means putting it in a place where it can grow differently.」</p>
+<p>HAVIは日本・台湾だけを残す必要はない。世界には他の市場がある。資本配分。成長投資。買収。既存事業強化。売却代金の使途は外からは完全には分からない。だが少なくとも、事業売却によって現金化できるという構造は明確だった。</p>
+</section>
+
+<!-- CH14 -->
+<section class="part" id="ch14">
+<h2 class="chapter-num">Chapter 14</h2>
+<h2 class="chapter-title">発表</h2>
+<div class="dateline">2024年10月25日、午前</div>
+
+<p>三井物産のリリースが公開された。タイトル。</p>
+<blockquote class="pull">「日本・台湾における外食向け物流事業会社3社の全持分取得の合意について」</blockquote>
+<p>文章は静かだった。感情を持たない。事実だけ。日本。台湾。3社。全持分取得。必要な許認可等の先行条件。2025年3月期中に実行予定。そして三井物産の意図。既存の物流・中間流通・ネットワークとの組み合わせ。</p>
+<p>外から見れば、一枚のニュースリリースだ。だがその裏では、何百、何千というタスクが動いていた。証券市場では、この発表を受けて業界アナリストが短いコメントを出した――「既存の物流網との補完性が高く、実行リスクは限定的」。当たり前のように読めるその一文の裏に、DDチームが積み上げた数千時間があった。</p>
+</section>
+
+<!-- CH15 -->
+<section class="part" id="ch15">
+<h2 class="chapter-num">Chapter 15</h2>
+<h2 class="chapter-title">発表後の朝</h2>
+
+<p>翌朝。HAVI Japanの社員がニュースを見る。</p>
+<p class="dialogue">「……売却？」</p>
+<p>同僚が振り向く。</p>
+<p class="dialogue">「本当だ」「三井物産？」「そうみたい」「うち、どうなるの？」</p>
+<p>誰も即答できない。会社が変わる。しかし明日の仕事は同じ。トラックは走る。倉庫は開く。商品は店舗へ届く。注文は止まらない。</p>
+<blockquote class="pull">巨大な企業取引のさなかでも、現場では昼食の時間が来る。</blockquote>
+<p>冷凍庫は冷え続ける。フォークリフトは走り続ける。店舗ではハンバーガーが売られる。誰かが注文する。誰かが食べる。その裏側で、会社の所有権だけが静かに動いている。</p>
+</section>
+
+<!-- CH16 -->
+<section class="part" id="ch16">
+<h2 class="chapter-num">Chapter 16</h2>
+<h2 class="chapter-title">許認可と前提条件</h2>
+<div class="dateline">12月 ― Closing Checklist</div>
+
+<p>黒田が読み上げる。</p>
+<p class="dialogue">「Regulatory approvals」「確認」「Corporate approvals」「確認」「Third-party consents」「一部確認中」「Funds」</p>
+<p>佐伯が答える。</p>
+<p class="dialogue">「準備済み」「Closing documents」「最終確認」</p>
+<p>一つずつ、チェックが入っていく。M&amp;Aでは「契約したから翌日買収完了」ではない。契約締結時点で<b>Sign</b>、その後、条件を満たして<b>Closing</b>となることが多い。この間に、許認可、第三者同意、社内承認、資金準備、株式譲渡関連書類などを片付ける。</p>
+<p>相馬はITのチェックリストを見る。</p>
+<p class="dialogue">「こっちは……」残り37件。</p>
+<p>一週間後。28件。さらに三日。17件。12件。9件。だが最後に残った9件が、一番難しかった。</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑪</span>
+  <h4>Sign と Closing の違い</h4>
+  <p><b>Sign（契約締結）</b>は、両者が契約条件に合意し、契約書に署名した時点。<b>Closing（クロージング）</b>は、代金決済と株式の移転が実際に行われ、法的に取引が完了する時点。両者の間には、許認可の取得や第三者同意といった「先行条件（Condition Precedent）」を満たすための期間があり、数週間から時には1年以上かかることもある。ニュースで報じられる「合意」はSignであり、実際の経営権移転はClosingで初めて成立する。</p>
+</div>
+</section>
+
+<!-- CH17 -->
+<section class="part" id="ch17">
+<h2 class="chapter-num">Chapter 17</h2>
+<h2 class="chapter-title">DNS、深夜二時</h2>
+
+<p>午前2時。相馬は画面を見ていた。</p>
+<p class="dialogue">「DNSが……」「どうした？」「ドメインの移行タイミングです」</p>
+<p>DNSとは、<span class="mono">www.example.com → IPアドレス</span>のように、名前とネットワーク上の宛先を結びつける仕組みだ。一見すると単純。だが企業環境では、メール、VPN、認証、クラウド、API、外部サービス、あらゆるものが依存する。</p>
+<p class="dialogue">「TTL下げました」若手が答える。</p>
+<p><b>TTL――Time To Live。</b>DNS情報をどれだけキャッシュするかを示す時間。移行直前に短くすることで、変更後の反映を早めやすくする。</p>
+<p>相馬は言った。</p>
+<p class="dialogue">「よし」</p>
+<p>誰かが言う。</p>
+<p class="dialogue">「これ、深夜にやるんですか？」</p>
+<p>相馬が笑う。</p>
+<p class="dialogue">「昼間にDNS変えたい？」</p>
+<p class="dialogue">「……夜でいいです」</p>
+<p class="dialogue">「そういうこと」</p>
+</section>
+
+<!-- CH18 -->
+<section class="part" id="ch18">
+<h2 class="chapter-num">Chapter 18</h2>
+<h2 class="chapter-title">12月31日、Day0/1/30</h2>
+
+<p>年末。誰もが休みを意識している。だがプロジェクト室だけは違う。白板には、<b>DAY 0</b>、<b>DAY 1</b>、<b>DAY 30</b>と書かれている。</p>
+
+<figure class="diagram">
+<pre class="mermaid">
+timeline
+    title クロージング前後のタイムライン
+    Day -30 : TSA最終版締結 : 移行リハーサル開始
+    Day 0 : Closing（株式譲渡実行） : 資金決済
+    Day 1 : ログイン確認 : メール疎通確認 : 業務システム稼働確認
+    Day 30 : 初回PMIレビュー : 課題の優先順位付け
+    Day 100 : 100日プラン評価 : シナジー計画の具体化
+</pre>
+<figcaption>図3 ― クロージング前後のマイルストーン</figcaption>
+</figure>
+
+<p>Day 1。買収後の最初の日。その朝、社員がPCを開く。ログインできる。メールが届く。ネットワークにつながる。業務アプリケーションが動く。それだけで、<b>Day 1は成功</b>といえる。</p>
+<p>田辺は言った。</p>
+<p class="dialogue">「M&amp;AはニュースになるのはDay 0だけ」</p>
+<p>相馬が笑う。</p>
+<p class="dialogue">「現場はDay 1からが本番」</p>
+<p class="dialogue">「そうだな」</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑫</span>
+  <h4>100日プラン（First 100 Days Plan）</h4>
+  <p>クロージング後、最初の100日間に何を優先的に実行するかをまとめた計画。ガバナンス体制の確立、重要人材のリテンション、シナジーの早期実現、ブランディングの方針決定など、統合の成否を左右する初動が集中する期間として重視される。IT領域では、まず「業務を止めないこと（Day1 Readiness）」が最優先され、恒久的な統合作業はその後段階的に進められる。</p>
+</div>
+</section>
+
+<!-- CH19 -->
+<section class="part" id="ch19">
+<h2 class="chapter-num">Chapter 19</h2>
+<h2 class="chapter-title">最後の夜</h2>
+<div class="dateline">2025年1月30日、東京、22:40</div>
+
+<p>佐伯が入ってくる。</p>
+<p class="dialogue">「最終資金確認です」</p>
+<p>黒田は契約書をめくる。相馬はIT切替表を見る。西村は人事資料を見る。それぞれが、自分の領域を見ている。だが全員が同じものを見ていた。<b>31日。</b></p>
+<p>田辺が言う。</p>
+<p class="dialogue">「この半年、何人関わった？」</p>
+<p class="dialogue">「数えきれません」美濃部が答える。「法律事務所、会計士、税務、IT、人事、財務、事業……」</p>
+<p class="dialogue">「台湾チームも」「そうですね」</p>
+<p>会話が途切れる。田辺は思う。M&amp;Aとは、契約書を作る仕事ではない。契約書が成立する前に、何百人もの人間が、それぞれ違う専門知識を持ち寄り、それを一つの意思決定へ収束させる仕事だ。</p>
+</section>
+
+<!-- CH20 -->
+<section class="part" id="ch20">
+<h2 class="chapter-num">Chapter 20</h2>
+<h2 class="chapter-title">0時</h2>
+<div class="dateline">2025年1月31日、00:00</div>
+
+<p class="dialogue">「Closing conditions confirmed」法務。</p>
+<p class="dialogue">「Confirmed」財務。</p>
+<p class="dialogue">「Confirmed」事業。</p>
+<p>田辺が最後に頷く。</p>
+<p class="dialogue">「Proceed」</p>
+<p>送金。着金。株式譲渡。手続き完了。時間はあっけないほど静かに進んだ。23:59。HAVI側の会社だった。00:00。三井物産の完全子会社になった。後日公表された有価証券報告書では、日本事業会社について2025年1月31日の全持分取得と完全子会社化が正式に記録されている。</p>
+<p>田辺は椅子から立ち上がった。</p>
+<p class="dialogue">「……終わった」</p>
+<p>相馬が言う。</p>
+<p class="dialogue">「いえ」「？」「終わったのはM&amp;Aです」</p>
+<p>相馬はノートPCを閉じた。</p>
+<p class="dialogue">「仕事は、これからです」</p>
+</section>
+
+<!-- CH21 -->
+<section class="part" id="ch21">
+<h2 class="chapter-num">Chapter 21</h2>
+<h2 class="chapter-title">朝</h2>
+<div class="dateline">午前7時、物流センター</div>
+
+<p>シャッターが開く。トラックのエンジンがかかる。冷凍庫の白い霧が流れる。作業員が荷物を積む。昨日と同じ風景。けれど、会社の株主は変わった。それを知る人は少ない。荷物を積んでいる社員は、「昨日と同じように今日も配送する」ことしか考えていない。それでいい。</p>
+<blockquote class="pull">M&amp;Aの成功とは、現場に「M&amp;Aが起きた」と感じさせないことなのかもしれない。</blockquote>
+<p>サービスが止まらず、店舗に商品が届き、顧客が何も気づかず営業できる。その裏側で、企業の所有権だけが変わっている。</p>
+</section>
+
+<!-- CH22 -->
+<section class="part" id="ch22">
+<h2 class="chapter-num">Chapter 22</h2>
+<h2 class="chapter-title">三井物産の新しい地図</h2>
+<div class="dateline">数カ月後</div>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+  Food[食品] --> Mitsui[三井物産]
+  Mitsui --> Mid[中間流通]
+  Mitsui --> Logi[物流センター事業]
+  Mitsui --> Net[海外ネットワーク]
+  Logi --> Havi[HAVI Japan/Taiwan]
+  Havi --> Store[外食店舗]
+</pre>
+<figcaption>図4 ― 買収後の事業ポジショニング</figcaption>
+</figure>
+
+<p>美濃部が説明する。</p>
+<p class="dialogue">「買って終わりじゃありません」</p>
+<p>田辺が聞く。</p>
+<p class="dialogue">「何をする？」「三井物産の中間流通機能と組み合わせる」「それだけ？」「物流センター事業も」「他には？」「海外ネットワーク」</p>
+<p>田辺が頷く。まさに買収発表時に説明されていた構想だった。HAVI側が持っていた外食サプライチェーンの運営能力に、三井物産側の流通・物流・海外ネットワークを重ねる。狙いは単純な「物流会社の所有」ではない。</p>
+<blockquote class="pull">食の流れそのものへの関与を深くすること。</blockquote>
+</section>
+
+<!-- CH23 -->
+<section class="part" id="ch23">
+<h2 class="chapter-num">Chapter 23</h2>
+<h2 class="chapter-title">一年後</h2>
+
+<p>1年が経った。相馬のチームは、TSAで契約していたサービスをひとつずつ自社基盤へ移行し終えていた。メールは3カ月で移行完了。ERPは想定より2カ月遅れたが、9カ月で完了。物流の基幹システムだけは、まだ完全な移行の途中にあった。</p>
+<p>四半期ごとのPMIレビュー会議で、美濃部がスライドを映す。</p>
+<p class="dialogue">「シナジー効果、計画比88%まで実現しています」</p>
+<p class="dialogue">「残り12%は？」田辺が聞く。</p>
+<p class="dialogue">「物流拠点の統合が来期にずれ込みます。倉庫の集約は、現場のオペレーションを止めずに進める必要があるので」</p>
+<p>田辺は頷いた。数字が計画通りに進まないことは珍しくない。むしろ、統合初年度から100%達成する案件のほうが少ない。大切なのは、遅れの理由が明確で、次の一手が見えていることだった。</p>
+<p>離職率については、西村がレポートをまとめていた。買収発表直後は一時的に問い合わせが増えたが、雇用条件が維持されたことと、早期に説明会を重ねたことで、懸念していたような離職の急増は起きなかった。</p>
+<p class="dialogue">「一番効いたのは何だったと思う？」田辺が西村に聞く。</p>
+<p class="dialogue">「情報を出す速さです。分からないことは『分からない』とちゃんと言ったこと」</p>
+<p>相馬もその場にいた。彼は思う。M&amp;Aの成果は、契約書のページ数でも、プレスリリースの見出しでも測れない。<b>1年後も現場が回っているか。</b>それだけが、静かに、しかし確実に案件の成否を語っていた。</p>
+
+<div class="term-box">
+  <span class="term-label">M&amp;A用語⑬</span>
+  <h4>シナジー実現とPMIレビュー</h4>
+  <p>買収の投資判断時に見込んだ「シナジー（相乗効果）」は、買っただけで自動的に実現するものではない。物流拠点の統合、購買の一本化、システムの共通化など、PMIの実行段階で一つずつ具体化して初めて成果になる。多くの企業は四半期・半期ごとにPMIレビューを行い、計画に対する進捗率を管理しながら、遅延要因への対応を続ける。M&amp;Aの成功は、クロージング日ではなく、その後数年の実行によって決まる。</p>
+</div>
+</section>
+
+<!-- EPILOGUE -->
+<section class="part" id="epilogue">
+<h2 class="chapter-num">Epilogue</h2>
+<h2 class="chapter-title">見えない仕事</h2>
+<div class="dateline">東京、夜</div>
+
+<p>相馬は一人でオフィスに残っていた。モニターには、旧HAVIと新体制を並べたネットワーク図。最初は複雑だった。今は少し整理されている。だがまだ統合途中。アプリケーション。認証。PC。セキュリティ。ネットワーク。契約。運用。課題は残っている。</p>
+<p>相馬は一つの言葉を書いた。</p>
+<blockquote class="pull">Integration</blockquote>
+<p>その下に、</p>
+<blockquote class="pull">Trust</blockquote>
+<p>と書いた。</p>
+<p>M&amp;Aとは、会社を買うことだ。株を買う。契約を結ぶ。金を払う。だが、それだけでは会社は動かない。人が働く。システムが動く。トラックが走る。倉庫が開く。商品が届く。顧客が注文する。そして初めて、</p>
+<blockquote class="pull">「買収した会社」が「自分たちの会社」になる。</blockquote>
+<p>相馬は時計を見る。23:47。深夜の東京。あの日の0時から、もう何カ月も経っている。彼はPCを閉じる。エレベーターへ向かう。照明が一つずつ消えていく。最後に残った窓から、東京の街を見下ろす。</p>
+<p>無数の車。無数の店舗。無数の商品。そのすべてを、誰かが運んでいる。誰かが在庫を管理している。誰かがシステムを守っている。そして誰かが、会社を買う。売る。つなぐ。変える。</p>
+<p>それは新聞には数行しか載らない。</p>
+<blockquote class="pull">三井物産、HAVIの日本・台湾事業を取得。</blockquote>
+<p>たったそれだけ。しかし、その数行の裏には、数百人の判断と、数万枚の資料と、無数の契約と、眠れない夜と、言葉にできない不安と、そして、</p>
+<blockquote class="pull">「明日の朝も、物流を止めない」</blockquote>
+<p>という現場の意志があった。ドアが閉まる。東京の夜は、何事もなかったように続いていく。</p>
+</section>
+
+<!-- AFTERWORD -->
+<section class="part" id="afterword">
+<h2 class="chapter-num">Afterword</h2>
+<h2 class="chapter-title">あとがき　このM&amp;Aを「仕事」として見ると</h2>
+
+<p>この案件を実務の観点から分解すると、物語の裏側にはおおむね次の仕事が流れています。</p>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TB
+  subgraph Sell[売却側 HAVI]
+    S1[Portfolio Strategy]-->S2[売却方針]-->S3[買い手候補選定]-->S4[交渉]-->S5[契約]
+  end
+  subgraph Buy[買い手側 三井物産]
+    B1[Investment Thesis]-->B2[投資委員会承認]-->B3[Valuation]
+    B3-->B4[DD 財務/税務/法務/人事/IT/事業]
+    B4-->B5[SPA交渉]
+    B5-->B6[Financing]
+    B6-->B7[Regulatory Approval]
+    B7-->B8[TSA]
+    B8-->B9[Closing]
+    B9-->B10[PMI]
+    B10-->NewCo[新しい会社]
+  end
+  Sell --> Buy
+</pre>
+<figcaption>図5 ― M&amp;A全体プロセスの俯瞰図</figcaption>
+</figure>
+
+<p>そして今回の実案件では、三井物産は<b>日本・台湾の3社の全持分取得を2024年10月に発表し、日本法人については2025年1月31日に完全子会社化、支払対価294.3億円</b>というところまで、公開情報で確認できます。</p>
+
+<p>特にIT担当者の視点では、この物語の「相馬」はかなり重要です。M&amp;AにおけるITは、単にPCやサーバーを移行する仕事ではありません。「この会社を売れる状態にする」「買える状態にする」「買った翌朝も業務を止めない」という、<b>企業そのものの切り離しと再接続</b>を担当する仕事です。</p>
+
+<p>そして、実際の三井物産の今回の案件を見ると、買収対象が「単なる配送会社」ではなく、需要予測・計画、保管、温度管理、配送まで含む外食サプライチェーン事業だったことが、このM&amp;Aの面白さの核心にあります。</p>
+
+<h3 style="font-family:var(--font-sans); margin-top:2.4em;">この物語から学べる5つの実務ポイント</h3>
+<div class="term-box">
+  <p><b>①</b> 「良い事業だから売る」もあり得る ―― 売却は必ずしも失敗の裏返しではなく、ポートフォリオ戦略の一部として起こる。</p>
+  <p><b>②</b> カーブアウトの本当の難しさはIT・人事にある ―― 契約・価格交渉よりも、共有システムと共有人材の切り離しが実務上の最大の壁になりやすい。</p>
+  <p><b>③</b> Sign と Closing の間に「待機期間」がある ―― 発表＝完了ではない。許認可、独禁法クリアランス、第三者同意など、複数の前提条件を満たす必要がある。</p>
+  <p><b>④</b> TSAが統合スピードを決める ―― 一気に切り替えられないシステムをどう段階的に移行するかが、Day1以降の現場の安定を左右する。</p>
+  <p><b>⑤</b> M&amp;Aの成否はクロージングでは決まらない ―― PMIでのシナジー実現、人材のリテンション、統合の実行力こそが、投資判断の答え合わせになる。</p>
+</div>
+</section>
+
+<!-- GLOSSARY -->
+<section class="part" id="glossary">
+<h2 class="chapter-num">Glossary</h2>
+<h2 class="chapter-title">用語集（保存版）</h2>
+
+<div class="glossary-index">
+  <dl>
+    <dt>EBITDA</dt>
+    <dd>営業利益に減価償却費等を足し戻した、本業のキャッシュ創出力を示す代表的指標。</dd>
+
+    <dt>企業価値（EV）／株式価値（Equity Value）</dt>
+    <dd>EVは事業自体の価値、Equity Valueはそこから負債を調整した株主取り分としての価値。</dd>
+
+    <dt>VDR（Virtual Data Room）</dt>
+    <dd>DDのために売り手が買い手へ資料を開示するオンライン環境。</dd>
+
+    <dt>DD（Due Diligence）</dt>
+    <dd>買収対象を財務・法務・税務・人事・IT・事業などの観点から精査するプロセス。</dd>
+
+    <dt>Change of Control条項</dt>
+    <dd>株主・支配権の変更時に契約相手が解除・変更できると定める条項。</dd>
+
+    <dt>Carve-out（カーブアウト）</dt>
+    <dd>企業や事業の一部だけを切り出して売却・分離すること。</dd>
+
+    <dt>株式譲渡（Share Deal）／事業譲渡（Asset Deal）</dt>
+    <dd>会社ごと買う方式と、特定資産・事業だけを個別移転する方式。雇用契約の扱いが大きく異なる。</dd>
+
+    <dt>独占禁止法（競争法）クリアランス</dt>
+    <dd>一定規模以上の企業結合について、競争当局の事前審査・承認を要する制度。</dd>
+
+    <dt>SPA（Share Purchase Agreement）</dt>
+    <dd>株式譲渡契約書。表明保証、補償、クロージング条件などを定める中心契約。</dd>
+
+    <dt>表明保証（Representation and Warranty）</dt>
+    <dd>対象会社の状態について売り手が事実を保証する条項。</dd>
+
+    <dt>補償上限（Indemnification Cap）／エスクロー</dt>
+    <dd>表明保証違反時の補償額に設ける上限、および対価の一部を第三者口座に留保する仕組み。</dd>
+
+    <dt>MAC条項（Material Adverse Change）</dt>
+    <dd>契約締結からクロージングまでの間に重大な悪影響が生じた場合の取扱いを定める条項。</dd>
+
+    <dt>Sign／Closing</dt>
+    <dd>契約締結の時点と、実際に代金決済・株式移転が完了する時点。</dd>
+
+    <dt>TSA（Transition Services Agreement）</dt>
+    <dd>売り手のシステム・サービスを一定期間・料金で利用し続けるための移行契約。</dd>
+
+    <dt>PMI（Post Merger Integration）</dt>
+    <dd>買収後、対象会社を新グループで機能させるための統合プロセス全般。</dd>
+
+    <dt>100日プラン</dt>
+    <dd>クロージング後、最初の100日間に実行する優先施策をまとめた計画。</dd>
+
+    <dt>シナジー実現</dt>
+    <dd>投資判断時に見込んだ相乗効果を、PMIの実行を通じて具体的な成果に落とし込むこと。</dd>
+  </dl>
+</div>
+
+</section>
+
+<footer class="refs">
+  参考：三井物産「日本・台湾における外食向け物流事業会社3社の全持分取得の合意について」（2024年）／HAVI公式サイト・インパクトレポート／三井物産 有価証券報告書（第107期）。数値・日付は公開情報に基づき、その他の描写はすべて創作です。
+</footer>
+
+</div>
+<a class="top-link" href="#prologue">↑ TOP</a>
+</body>
+</html>
