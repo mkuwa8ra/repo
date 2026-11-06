@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BBCの2026年米中間選挙記事を題材に、アメリカ政治と英語を学ぶインタラクティブ教材。">
+<title>US Midterms 2026 | News & English Learning</title>
+<style>
+:root{
+ --bg:#f4f6fb;--paper:#fff;--ink:#182338;--muted:#65728a;--line:#e4e9f2;
+ --blue:#2463c7;--blue2:#eaf1ff;--red:#c94b50;--red2:#fff0f0;
+ --gold:#b47a20;--gold2:#fff6e5;--green:#197a5a;--shadow:0 12px 34px rgba(28,45,78,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Noto Sans JP",Meiryo,sans-serif;line-height:1.75}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+header{background:linear-gradient(120deg,#14284c 0%,#1d4780 58%,#4776b8 100%);color:#fff;padding:56px 22px 48px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:360px;height:360px;border:1px solid #ffffff22;border-radius:50%;right:-90px;top:-150px;box-shadow:0 0 0 38px #ffffff0d,0 0 0 78px #ffffff09}
+.hero{max-width:1080px;margin:auto;position:relative;z-index:1}
+.eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#c8dcff;font-weight:750}
+h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.12;margin:14px 0}
+header p{max-width:720px;color:#e0eaff;font-size:1.05rem;margin:14px 0 0}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.pill{border:1px solid #ffffff50;border-radius:999px;padding:5px 12px;font-size:.8rem;color:#eef4ff}
+nav{position:sticky;top:0;z-index:10;background:#ffffffed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.navinner{max-width:1080px;margin:auto;padding:10px 18px;display:flex;gap:8px;overflow:auto}
+nav a{white-space:nowrap;color:#45536b;font-size:.84rem;font-weight:700;padding:7px 11px;border-radius:9px}
+nav a:hover{background:var(--blue2);text-decoration:none;color:var(--blue)}
+main{max-width:1080px;margin:34px auto;padding:0 18px 70px}
+section{margin:28px 0;scroll-margin-top:76px}
+.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 16px}
+.kicker{font-size:.73rem;letter-spacing:.13em;color:var(--blue);font-weight:800;text-transform:uppercase}
+h2{font-size:1.65rem;line-height:1.3;margin:4px 0 0}
+h3{font-size:1.08rem;margin:0 0 8px}
+p{margin:8px 0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+.lead{font-size:1.08rem;color:#34425a}
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{background:#f6f8fc;border-radius:13px;padding:14px}
+.stat b{display:block;font-size:1.45rem;line-height:1.3;color:#1d4f9a}
+.stat small{color:var(--muted)}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:14px 16px;border-radius:0 12px 12px 0;margin:14px 0}
+.callout.warn{border-color:var(--gold);background:var(--gold2)}
+.party{border-top:5px solid var(--red)}
+.party.dem{border-color:var(--blue)}
+.partytag{font-size:.78rem;font-weight:800;letter-spacing:.08em}
+.party h3{font-size:1.35rem;margin:4px 0}
+.party .sub{color:var(--muted);font-size:.9rem}
+ul.clean{padding-left:1.2rem;margin:8px 0}
+ul.clean li{padding:3px 0}
+table{width:100%;border-collapse:collapse;font-size:.91rem}
+th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f5f7fb;color:#43516a;font-size:.82rem}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.step{background:#f7f9fd;border-radius:13px;padding:15px}
+.step strong{display:block;color:var(--blue);font-size:.82rem}
+.wordgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.word{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+.word b{display:block;color:#204d91}
+.word span{color:var(--muted);font-size:.87rem}
+.example{background:#f7f9fd;border-radius:12px;padding:15px;margin:10px 0}
+.en{font-weight:700;color:#203d6b}
+.jp{color:var(--muted);font-size:.9rem}
+details{border:1px solid var(--line);border-radius:12px;padding:12px 15px;background:#fff;margin:10px 0}
+summary{font-weight:750;cursor:pointer}
+.answer{padding:10px 12px;background:#f4f7fc;border-radius:9px;margin-top:10px}
+.quizq{padding:16px 0;border-bottom:1px solid var(--line)}
+.quizq:last-child{border:0}
+.quizq p{font-weight:750;margin:0 0 8px}
+label.option{display:block;padding:7px 10px;margin:5px 0;border-radius:8px;background:#f7f9fc;cursor:pointer}
+label.option:hover{background:var(--blue2)}
+button{border:0;border-radius:10px;background:var(--blue);color:#fff;padding:11px 18px;font-weight:750;font-size:.92rem;cursor:pointer}
+button:hover{filter:brightness(.94)}
+.result{margin-top:12px;font-weight:800}
+textarea{width:100%;min-height:110px;border:1px solid #ccd5e4;border-radius:10px;padding:12px;font:inherit}
+.copyline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+footer{background:#172945;color:#d7e2f4;padding:30px 20px}
+footer .inner{max-width:1080px;margin:auto;font-size:.85rem}
+.small{font-size:.82rem;color:var(--muted)}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;background:#edf2fb;color:#405a80;font-size:.75rem;font-weight:750}
+@media(max-width:760px){
+ header{padding:42px 20px 36px}.span-8,.span-6,.span-4{grid-column:span 12}
+ .timeline{grid-template-columns:1fr}.wordgrid{grid-template-columns:1fr}
+ .statrow{grid-template-columns:1fr 1fr}main{padding-left:13px;padding-right:13px}
+ .card{padding:17px}h2{font-size:1.4rem}
+}
+@media print{
+ nav,button{display:none!important}body{background:#fff}.card{box-shadow:none;break-inside:avoid}
+ header{background:#17345e!important;print-color-adjust:exact}main{max-width:none}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="hero">
+  <div class="eyebrow">World News × English Study</div>
+  <h1>US Midterms 2026</h1>
+  <p>アメリカ中間選挙を読み解く。政治のしくみ、共和党と民主党の違い、そしてニュース英語をひとつの記事から学ぶ。</p>
+  <div class="meta">
+   <span class="pill">BBC News · 2026.10.31</span>
+   <span class="pill">Politics / Economy / English</span>
+   <span class="pill">学習目安 30–45分</span>
+  </div>
+ </div>
+</header>
+<nav><div class="navinner">
+ <a href="#overview">記事の要点</a><a href="#system">選挙のしくみ</a><a href="#parties">二大政党比較</a><a href="#vocabulary">英単語</a><a href="#grammar">英文解説</a><a href="#practice">演習</a>
+</div></nav>
+<main>
+<section id="overview">
+ <div class="sectionhead"><div><div class="kicker">01 / Article briefing</div><h2>この記事の要点</h2></div><span class="badge">日本語で理解する</span></div>
+ <div class="card">
+  <p class="lead">2026年11月3日の米中間選挙で、共和党が支配する連邦議会の上下両院を、民主党が奪還できるか。その勝敗を左右する要素を、BBCがデータと選挙区情勢から解説した記事です。</p>
+  <div class="statrow">
+   <div class="stat"><b>11/3</b><small>投票日（記事公開時点の予定）</small></div>
+   <div class="stat"><b>435</b><small>下院の全議席が改選</small></div>
+   <div class="stat"><b>35</b><small>上院で争われる議席</small></div>
+  </div>
+  <h3 style="margin-top:20px">勝敗を左右する主な要素</h3>
+  <div class="grid">
+   <div class="span-6">
+    <div class="example"><b>支持率（Approval rating）</b><p>記事ではトランプ大統領の支持率低迷が、共和党にとって逆風となる要因として説明されています。</p></div>
+    <div class="example"><b>生活費・物価（Cost of living）</b><p>インフレ、ガソリン価格、医療保険料など、家計に直結する問題が有権者の関心を集めています。</p></div>
+   </div>
+   <div class="span-6">
+    <div class="example"><b>接戦州・接戦区（Battlegrounds）</b><p>多くの選挙区では優勢政党が固まっており、少数の接戦区が議会の多数派を左右します。</p></div>
+    <div class="example"><b>選挙資金（Campaign funds）</b><p>記事掲載の10月半ば時点では、共和党側の関連組織が民主党側を上回る資金を保有していました。</p></div>
+   </div>
+  </div>
+  <div class="callout warn"><b>読み方の注意：</b>この記事は2026年10月31日公開の「投票前」の情勢分析です。ここに記載した議席予測・資金・支持率は記事公開時点の情報であり、選挙後の確定結果とは区別してください。</div>
+  <p class="small">記事の主旨：大統領選ではなく議会選挙だが、議会の多数派が変われば、大統領の残り任期2年間の政策運営に大きな影響が出る。</p>
+ </div>
+</section>
+
+<section id="system">
+ <div class="sectionhead"><div><div class="kicker">02 / How it works</div><h2>中間選挙と議会のしくみ</h2></div></div>
+ <div class="grid">
+  <div class="span-6 card">
+   <h3>House of Representatives｜下院</h3>
+   <div class="statrow"><div class="stat"><b>435</b><small>議席</small></div><div class="stat"><b>2年</b><small>任期</small></div></div>
+   <ul class="clean"><li>全議席が2年ごとに改選。</li><li>人口に応じて各州に議席が配分される。</li><li>予算・税制など、財政に関する法案で重要な役割。</li></ul>
+  </div>
+  <div class="span-6 card">
+   <h3>Senate｜上院</h3>
+   <div class="statrow"><div class="stat"><b>100</b><small>議席</small></div><div class="stat"><b>6年</b><small>任期</small></div></div>
+   <ul class="clean"><li>各州から2人ずつ選出。</li><li>原則として約3分の1ずつ、2年ごとに改選。</li><li>閣僚・連邦判事など大統領人事の承認、条約承認などを担う。</li></ul>
+  </div>
+  <div class="span-12 card">
+   <h3>なぜ中間選挙が重要なのか？</h3>
+   <div class="timeline">
+    <div class="step"><strong>STEP 1</strong>大統領選挙で大統領が選ばれる。任期は4年間。</div>
+    <div class="step"><strong>STEP 2</strong>2年後に中間選挙。議会の多数派が改めて選ばれる。</div>
+    <div class="step"><strong>STEP 3</strong>大統領と議会の多数派が異なると、法案・予算をめぐる交渉が難しくなる場合がある。</div>
+   </div>
+   <div class="callout"><b>重要語：</b><i>Divided Government</i>（分割政府）＝大統領の所属政党と、議会の多数派を占める政党が異なる状態。</div>
+  </div>
+ </div>
+</section>
+
+<section id="parties">
+ <div class="sectionhead"><div><div class="kicker">03 / Two-party system</div><h2>共和党と民主党を比較する</h2></div><span class="badge">一般的な政策傾向</span></div>
+ <div class="grid">
+  <div class="span-6 card party">
+   <div class="partytag" style="color:var(--red)">RED · ELEPHANT</div>
+   <h3>Republican Party｜共和党</h3>
+   <div class="sub">一般に保守派・右派と位置づけられることが多い</div>
+   <ul class="clean">
+    <li><b>Government：</b>政府の規模・介入を抑える方向</li>
+    <li><b>Tax：</b>減税、企業活動や投資の促進</li>
+    <li><b>Immigration：</b>国境管理の強化、移民法執行</li>
+    <li><b>Energy：</b>石油・天然ガスなど国内生産を重視</li>
+    <li><b>Social issues：</b>伝統的価値観を重視する傾向</li>
+    <li><b>Gun policy：</b>銃を所持する権利を重視</li>
+   </ul>
+  </div>
+  <div class="span-6 card party dem">
+   <div class="partytag" style="color:var(--blue)">BLUE · DONKEY</div>
+   <h3>Democratic Party｜民主党</h3>
+   <div class="sub">一般にリベラル派・中道左派と位置づけられることが多い</div>
+   <ul class="clean">
+    <li><b>Government：</b>社会・経済問題への公的な対応を重視</li>
+    <li><b>Tax：</b>富裕層・大企業への課税や再分配を重視する傾向</li>
+    <li><b>Immigration：</b>人道的対応や合法的な移民制度も重視</li>
+    <li><b>Energy：</b>再生可能エネルギー・気候変動対策を重視</li>
+    <li><b>Social issues：</b>多様性や個人の権利を重視する傾向</li>
+    <li><b>Gun policy：</b>銃規制の強化を重視</li>
+   </ul>
+  </div>
+  <div class="span-12 card">
+   <h3>政策分野ごとの比較</h3>
+   <div class="tablewrap"><table>
+    <thead><tr><th>分野</th><th>共和党（一般的傾向）</th><th>民主党（一般的傾向）</th></tr></thead>
+    <tbody>
+     <tr><td>経済・税制</td><td>減税、規制緩和、市場競争</td><td>公的投資、労働者保護、再分配</td></tr>
+     <tr><td>医療</td><td>民間保険・市場競争を重視</td><td>公的保障・医療アクセス拡大を重視</td></tr>
+     <tr><td>移民</td><td>国境管理・取り締まり強化</td><td>人道的対応・合法的な移民経路</td></tr>
+     <tr><td>環境・エネルギー</td><td>化石燃料の生産、規制負担の抑制</td><td>再エネ、気候変動対策</td></tr>
+     <tr><td>銃規制</td><td>銃所持の権利を重視</td><td>銃規制強化を重視</td></tr>
+    </tbody>
+   </table></div>
+   <p class="small">党内にも穏健派・中道派・強硬派などの幅があり、すべての議員が同じ立場ではありません。表は党の一般的な傾向を示すもので、個別政策の完全な一覧ではありません。</p>
+  </div>
+  <div class="span-12 card">
+   <h3>なぜ二大政党が優位なのか？</h3>
+   <p>連邦議会選挙の多くは、選挙区で最多得票の候補者が当選する小選挙区制です。得票率が2位以下の政党は、相当数の支持を得ても議席につながらないことがあります。</p>
+   <div class="tablewrap"><table><thead><tr><th>候補</th><th>得票率（仮例）</th><th>結果</th></tr></thead><tbody>
+    <tr><td>共和党</td><td>40%</td><td><b>当選</b></td></tr><tr><td>民主党</td><td>38%</td><td>落選</td></tr><tr><td>第三政党</td><td>22%</td><td>落選</td></tr>
+   </tbody></table></div>
+   <p class="small">これは制度を説明するための仮例です。実際の選挙結果ではありません。州・地方選挙や大統領選挙人制度などには別のルールもあります。</p>
+  </div>
+ </div>
+</section>
+
+<section id="vocabulary">
+ <div class="sectionhead"><div><div class="kicker">04 / Vocabulary</div><h2>ニュース英語・重要単語</h2></div><span class="badge">まずは20語</span></div>
+ <div class="card">
+  <div class="wordgrid">
+   <div class="word"><b>midterm elections</b><span>中間選挙</span></div>
+   <div class="word"><b>approval rating</b><span>支持率</span></div>
+   <div class="word"><b>incumbent</b><span>現職者</span></div>
+   <div class="word"><b>opposition party</b><span>野党</span></div>
+   <div class="word"><b>ruling party</b><span>与党</span></div>
+   <div class="word"><b>majority / minority</b><span>多数派 / 少数派</span></div>
+   <div class="word"><b>regain control</b><span>主導権を取り戻す</span></div>
+   <div class="word"><b>swing district</b><span>接戦選挙区</span></div>
+   <div class="word"><b>battleground state</b><span>激戦州</span></div>
+   <div class="word"><b>voter turnout</b><span>投票率</span></div>
+   <div class="word"><b>campaign spending</b><span>選挙運動費用</span></div>
+   <div class="word"><b>cost of living</b><span>生活費</span></div>
+   <div class="word"><b>inflation</b><span>インフレ・物価上昇</span></div>
+   <div class="word"><b>immigration</b><span>移民</span></div>
+   <div class="word"><b>healthcare</b><span>医療・医療制度</span></div>
+   <div class="word"><b>legislation</b><span>法律・立法</span></div>
+   <div class="word"><b>legislative agenda</b><span>立法計画・政策課題</span></div>
+   <div class="word"><b>bipartisan</b><span>超党派の</span></div>
+   <div class="word"><b>divided government</b><span>分割政府</span></div>
+   <div class="word"><b>voter</b><span>有権者</span></div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:16px">
+  <h3>ニュースで使えるコロケーション</h3>
+  <div class="example"><div class="en">The president's approval rating has fallen.</div><div class="jp">大統領の支持率が低下した。</div></div>
+  <div class="example"><div class="en">The opposition party hopes to regain control of Congress.</div><div class="jp">野党は議会の主導権を取り戻すことを望んでいる。</div></div>
+  <div class="example"><div class="en">The rising cost of living is a major concern.</div><div class="jp">生活費の上昇は大きな懸念事項だ。</div></div>
+  <div class="example"><div class="en">The party currently holds a majority in the Senate.</div><div class="jp">その政党は現在、上院で多数派を占めている。</div></div>
+  <div class="example"><div class="en">A divided Congress could limit the president's ability to pass legislation.</div><div class="jp">議会が分割されると、大統領が法案を成立させる能力が制約される可能性がある。</div></div>
+ </div>
+</section>
+
+<section id="grammar">
+ <div class="sectionhead"><div><div class="kicker">05 / Reading & Grammar</div><h2>英文の構造をつかむ</h2></div></div>
+ <div class="card">
+  <h3>Example 1｜現在完了形</h3>
+  <div class="example"><div class="en">The president's approval rating has fallen significantly in recent months.</div><div class="jp">大統領の支持率はここ数カ月で大幅に低下した。</div></div>
+  <p><b>構造：</b>主語（The president's approval rating）＋ has fallen（現在完了）＋ significantly（大幅に）＋ in recent months（ここ数カ月で）。</p>
+  <p>現在完了形は、過去の変化と現在とのつながりを表すときに使われます。</p>
+  <h3 style="margin-top:22px">Example 2｜hope to + 動詞</h3>
+  <div class="example"><div class="en">Democrats are hoping to regain control of Congress.</div><div class="jp">民主党は議会の主導権を取り戻すことを望んでいる。</div></div>
+  <p><b>ポイント：</b><i>hope to do</i> ＝「～することを望む」。</p>
+  <p>例：I hope to improve my English.（英語力を伸ばしたい。）</p>
+  <h3 style="margin-top:22px">Example 3｜動名詞・現在分詞による修飾</h3>
+  <div class="example"><div class="en">Rising prices have become a major concern for American voters.</div><div class="jp">物価上昇はアメリカの有権者にとって大きな懸念事項になった。</div></div>
+  <p><b>ポイント：</b><i>Rising</i> が <i>prices</i> を前から説明しています。<i>have become</i> は現在完了形です。</p>
+  <h3 style="margin-top:22px">Example 4｜条件を表す if</h3>
+  <div class="example"><div class="en">If Democrats control Congress, it may become harder for the president to pass legislation.</div><div class="jp">民主党が議会を支配すれば、大統領が法案を成立させることは難しくなるかもしれない。</div></div>
+  <p><b>ポイント：</b><i>If + 現在形</i> の後に、<i>may + 動詞</i> を置いて未来の可能性を表せます。</p>
+  <div class="callout"><b>仕事にも応用：</b><i>It becomes harder to manage a large network.</i><br>大規模なネットワークを管理することは、より難しくなる。</div>
+ </div>
+</section>
+
+<section id="practice">
+ <div class="sectionhead"><div><div class="kicker">06 / Practice</div><h2>理解度チェック</h2></div><span class="badge">回答すると採点</span></div>
+ <div class="card">
+  <h3>Exercise A｜単語クイズ</h3>
+  <form id="quiz">
+   <div class="quizq"><p>Q1. approval rating の意味は？</p>
+    <label class="option"><input type="radio" name="q1" value="0"> 投票率</label><label class="option"><input type="radio" name="q1" value="1"> 支持率</label><label class="option"><input type="radio" name="q1" value="2"> 当選確率</label></div>
+   <div class="quizq"><p>Q2. regain control の意味は？</p>
+    <label class="option"><input type="radio" name="q2" value="0"> 主導権を失う</label><label class="option"><input type="radio" name="q2" value="1"> 主導権を取り戻す</label><label class="option"><input type="radio" name="q2" value="2"> 権力を分割する</label></div>
+   <div class="quizq"><p>Q3. cost of living の意味は？</p>
+    <label class="option"><input type="radio" name="q3" value="0"> 生活費</label><label class="option"><input type="radio" name="q3" value="1"> 選挙費用</label><label class="option"><input type="radio" name="q3" value="2"> 人件費</label></div>
+   <div class="quizq"><p>Q4. incumbent の意味は？</p>
+    <label class="option"><input type="radio" name="q4" value="0"> 新人候補</label><label class="option"><input type="radio" name="q4" value="1"> 現職者</label><label class="option"><input type="radio" name="q4" value="2"> 有権者</label></div>
+   <div class="quizq"><p>Q5. bipartisan の意味は？</p>
+    <label class="option"><input type="radio" name="q5" value="0"> 超党派の</label><label class="option"><input type="radio" name="q5" value="1"> 保守的な</label><label class="option"><input type="radio" name="q5" value="2"> 二大政党制の</label></div>
+   <button type="button" onclick="gradeQuiz()">採点する</button>
+   <div id="quizResult" class="result" aria-live="polite"></div>
+  </form>
+ </div>
+ <div class="card" style="margin-top:16px">
+  <h3>Exercise B｜英文読解</h3>
+  <p class="small">次の英文を読み、内容を理解してから回答を確認してください。</p>
+  <div class="example">
+   <div class="en">The midterm elections do not decide who becomes president. Instead, voters choose members of Congress. The outcome can affect how easily the president passes laws during the second half of the term.</div>
+   <div class="jp">中間選挙では誰が大統領になるかは決まらない。代わりに、有権者は連邦議会の議員を選ぶ。その結果は、大統領が任期後半にどれほど容易に法律を成立させられるかに影響する可能性がある。</div>
+  </div>
+  <details><summary>Q1. 中間選挙で大統領そのものを選び直す？</summary><div class="answer">いいえ。議会議員などを選びます。</div></details>
+  <details><summary>Q2. 選挙結果は何に影響する？</summary><div class="answer">大統領が任期後半に法案を成立させやすいかどうかに影響します。</div></details>
+ </div>
+ <div class="card" style="margin-top:16px">
+  <h3>Exercise C｜英作文</h3>
+  <p class="small">まず自分で英文を作り、下の「模範解答」を開いて確認してください。</p>
+  <details><summary>Q1. 生活費の上昇は多くのアメリカ人にとって大きな問題だ。</summary><div class="answer">The rising cost of living is a major problem for many Americans.</div></details>
+  <details><summary>Q2. 民主党は議会の主導権を取り戻したいと考えている。</summary><div class="answer">Democrats want to regain control of Congress.</div></details>
+  <details><summary>Q3. 議会の多数派が変われば、大統領は法案を通しにくくなる可能性がある。</summary><div class="answer">If the majority in Congress changes, it may become harder for the president to pass legislation.</div></details>
+ </div>
+ <div class="card" style="margin-top:16px">
+  <h3>Exercise D｜タイピング写経</h3>
+  <p class="small">英文を見ながら入力し、スペル・語順・冠詞・前置詞を確認。慣れたら英文を隠して再入力します。</p>
+  <details open><summary>Level 1｜Short</summary><div class="answer en">The president's approval rating has declined.</div></details>
+  <details><summary>Level 2｜Intermediate</summary><div class="answer en">The rising cost of living is a major concern for American voters.</div></details>
+  <details><summary>Level 3｜News style</summary><div class="answer en">The election results could significantly change the balance of power in Congress.</div></details>
+  <details><summary>Level 4｜Challenge</summary><div class="answer en">Although the president remains in office, a divided Congress may make it more difficult for him to pass new legislation.</div></details>
+ </div>
+</section>
+
+<section>
+ <div class="sectionhead"><div><div class="kicker">07 / Study routine</div><h2>1記事30分の学習サイクル</h2></div></div>
+ <div class="card">
+  <div class="timeline">
+   <div class="step"><strong>5 MIN</strong><b>背景を理解</b><br>日本語で記事の要点と背景を把握。</div>
+   <div class="step"><strong>10 MIN</strong><b>英文を読む</b><br>主語・動詞・修飾語を意識して読む。</div>
+   <div class="step"><strong>5 MIN</strong><b>単語を覚える</b><br>5〜10表現を例文ごと覚える。</div>
+   <div class="step"><strong>5 MIN</strong><b>写経・音読</b><br>重要文を入力し、声に出して読む。</div>
+   <div class="step"><strong>5 MIN</strong><b>自分の意見</b><br>記事について英語で2〜3文書く。</div>
+   <div class="step"><strong>REVIEW</strong><b>翌日復習</b><br>単語と英文を見ずに再現する。</div>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="card">
+  <div class="kicker">Source & notes</div>
+  <h3>参考記事</h3>
+  <p><a href="https://www.bbc.com/news/articles/cqg7xxg4jdv5o" target="_blank" rel="noopener">BBC News｜Who will win the midterms? How the US elections will be won and lost</a></p>
+  <p class="small">BBC記事（2026年10月31日公開）を学習用に要約・再構成しています。BBCの記事本文・画像を転載したものではありません。政策比較は共和党・民主党の一般的な傾向を整理したもので、党内の多様性や個々の候補者の違いがあります。英文例の一部は学習用に作成したオリジナル例文です。</p>
+  <div class="copyline"><span class="small">個人サイトへの掲載を想定した、単一HTMLファイルです。</span><button onclick="window.print()">印刷 / PDF保存</button></div>
+ </div>
+</section>
+</main>
+<footer><div class="inner">US MIDTERMS 2026 · NEWS & ENGLISH LEARNING<br>学習用コンテンツ。政治的な立場を推奨するものではなく、制度・政策・英語表現を中立的に学ぶことを目的としています。</div></footer>
+<script>
+function gradeQuiz(){
+ const key={q1:"1",q2:"1",q3:"0",q4:"1",q5:"0"};
+ let score=0,answered=0;
+ for(const [q,a] of Object.entries(key)){
+  const selected=document.querySelector('input[name="'+q+'"]:checked');
+  if(selected){answered++;if(selected.value===a)score++;}
+ }
+ const out=document.getElementById("quizResult");
+ if(answered<5){out.textContent="全5問に回答してください（回答済み "+answered+" / 5）。";out.style.color="#b47a20";return;}
+ out.textContent="結果："+score+" / 5 問正解";
+ out.style.color=score>=4?"#197a5a":"#c94b50";
+}
+</script>
+</body>
+</html>
