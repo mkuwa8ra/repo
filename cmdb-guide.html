@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CMDB実践教材 ― ネットワーク保守で学ぶ構成管理データベース</title>
+<style>
+:root{
+  --bg:#0f1720;--panel:#16212d;--panel2:#1c2a38;--line:#2b3b4d;--text:#d9e2ec;--muted:#93a4b6;
+  --accent:#4fb3bf;--accent2:#7aa2f7;--warn:#e0af68;--bad:#f7768e;--good:#9ece6a;--code:#0b1219;
+  --mark:#e0af6855;--side:280px;
+}
+[data-theme="light"]{
+  --bg:#f5f7fa;--panel:#ffffff;--panel2:#eef2f6;--line:#d4dce5;--text:#1f2a36;--muted:#5c6b7a;
+  --accent:#16808d;--accent2:#3d5fc4;--warn:#a86b00;--bad:#c4334f;--good:#3f7d14;--code:#f0f3f7;--mark:#ffd56a88;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;line-height:1.8;font-size:15.5px}
+a{color:var(--accent2)}
+header.top{position:fixed;top:0;left:0;right:0;height:58px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 16px;z-index:50}
+header.top .brand{font-weight:700;white-space:nowrap;color:var(--accent)}
+header.top .brand small{color:var(--muted);font-weight:400;margin-left:6px}
+.search-wrap{position:relative;flex:1;max-width:520px;margin-left:auto}
+#q{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:14px}
+#results{position:absolute;top:42px;left:0;right:0;max-height:60vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px #0007;display:none;z-index:60}
+#results .r{padding:8px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13.5px}
+#results .r:hover,#results .r.sel{background:var(--panel2)}
+#results .r b{color:var(--accent);font-size:12px;display:block}
+#results mark,.flash mark{background:var(--mark);color:inherit}
+.btn{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13.5px;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#06222a;border-color:var(--accent);font-weight:700}
+#menuBtn{display:none}
+.progress{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.pbar{width:110px;height:8px;background:var(--panel2);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.pbar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+nav.side{position:fixed;top:58px;left:0;bottom:0;width:var(--side);overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:14px 10px 40px;z-index:40}
+nav.side h4{margin:4px 8px 10px;color:var(--muted);font-size:12px;letter-spacing:.1em}
+nav.side ol{list-style:none;margin:0;padding:0}
+nav.side li a{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:6px;color:var(--text);text-decoration:none;font-size:13.5px;line-height:1.5;border-left:3px solid transparent}
+nav.side li a:hover{background:var(--panel2)}
+nav.side li a.active{background:var(--panel2);border-left-color:var(--accent);color:var(--accent)}
+nav.side li a .ck{margin-left:auto;color:var(--good);font-weight:700;min-width:1em}
+main{margin-left:var(--side);padding:80px 40px 80px;max-width:calc(1120px + var(--side))}
+section.chapter{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px 34px;margin-bottom:28px}
+section.chapter>h2{margin:0 0 6px;font-size:26px;color:var(--accent);border-bottom:2px solid var(--line);padding-bottom:10px}
+.lead{color:var(--muted);margin-top:8px}
+h3{font-size:20px;margin:34px 0 10px;padding-left:10px;border-left:4px solid var(--accent2)}
+h4{font-size:16.5px;margin:22px 0 8px;color:var(--accent2)}
+table{border-collapse:collapse;width:100%;margin:12px 0 18px;font-size:14px;display:block;overflow-x:auto}
+table thead,table tbody{display:table;width:100%;table-layout:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left}
+th{background:var(--panel2);white-space:nowrap}
+tr:nth-child(even) td{background:color-mix(in srgb,var(--panel2) 35%,transparent)}
+code{font-family:"SFMono-Regular",Consolas,"Menlo",monospace;background:var(--panel2);padding:1px 5px;border-radius:4px;font-size:.9em}
+pre.code{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.6;position:relative}
+pre.code code{background:none;padding:0}
+pre.code .k{color:#7dcfff}pre.code .s{color:#9ece6a}pre.code .n{color:#ff9e64}pre.code .b{color:#bb9af7}pre.code .c{color:#7f8fa4}
+[data-theme="light"] pre.code .k{color:#0b6aa2}[data-theme="light"] pre.code .s{color:#3f7d14}[data-theme="light"] pre.code .n{color:#b35900}[data-theme="light"] pre.code .b{color:#7a3fb8}
+.copy{position:absolute;top:8px;right:8px;font-size:12px;padding:2px 8px}
+.note,.tip,.warn,.caution{border-radius:10px;padding:12px 16px;margin:14px 0;border:1px solid var(--line);border-left-width:5px}
+.note{border-left-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 8%,transparent)}
+.tip{border-left-color:var(--good);background:color-mix(in srgb,var(--good) 8%,transparent)}
+.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 9%,transparent)}
+.caution{border-left-color:var(--bad);background:color-mix(in srgb,var(--bad) 8%,transparent)}
+.note>b:first-child,.tip>b:first-child,.warn>b:first-child,.caution>b:first-child{display:block;margin-bottom:2px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 18px}
+.steps4 div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;text-align:center}
+.steps4 div b{display:block;color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h4{margin-top:0}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:12px 0 16px}
+.flow .st{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13.5px;max-width:220px;position:relative}
+.flow .st b{display:block;color:var(--accent);font-size:12px}
+.flow .ar{display:flex;align-items:center;padding:0 6px;color:var(--muted);font-size:18px}
+details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:0 14px}
+details>summary{cursor:pointer;padding:10px 0;font-weight:700;color:var(--accent2);list-style:none}
+details>summary::before{content:"▶ ";font-size:.8em}
+details[open]>summary::before{content:"▼ "}
+details[open]{padding-bottom:12px}
+.quiz{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:18px 0}
+.quiz .qh{font-weight:700;color:var(--accent)}
+.quiz label{display:block;padding:5px 8px;border-radius:6px;cursor:pointer}
+.quiz label:hover{background:var(--panel)}
+.quiz textarea{width:100%;min-height:110px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font-family:inherit;font-size:14px}
+.feedback{margin-top:8px;font-weight:700}
+.feedback.ok{color:var(--good)}.feedback.ng{color:var(--bad)}
+.complete-bar{margin-top:26px;padding-top:14px;border-top:1px dashed var(--line);display:flex;justify-content:flex-end}
+.complete-btn.done{background:var(--good);color:#132300;border-color:var(--good);font-weight:700}
+.tag{display:inline-block;font-size:12px;padding:0 8px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);margin-right:4px}
+.tag.must{border-color:var(--bad);color:var(--bad)}.tag.rec{border-color:var(--warn);color:var(--warn)}.tag.opt{border-color:var(--muted);color:var(--muted)}
+.entity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:12px 0}
+.entity{border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px;background:var(--panel2)}
+.entity .eh{background:var(--accent);color:#06222a;font-weight:700;padding:5px 10px}
+.entity ul{list-style:none;margin:0;padding:6px 10px}
+.entity li{border-bottom:1px dotted var(--line);padding:2px 0;font-family:Consolas,monospace}
+.entity li em{color:var(--warn);font-style:normal;font-size:11px;margin-left:4px}
+svg text{font-family:inherit}
+.diagram{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:10px;margin:14px 0;overflow-x:auto}
+.diagram svg{width:100%;min-width:760px;height:auto;display:block}
+.dg-box{fill:var(--panel2);stroke:var(--line);stroke-width:1.5}
+.dg-t{fill:var(--text);font-size:13px}
+.dg-s{fill:var(--muted);font-size:11px}
+.dg-e{stroke:var(--muted);stroke-width:1.5;fill:none}
+.dg-l{fill:var(--warn);font-size:11px}
+.n-bs{stroke:#bb9af7}.n-ns{stroke:#7aa2f7}.n-dev{stroke:#4fb3bf}.n-inf{stroke:#e0af68}.n-site{stroke:#9ece6a}.n-doc{stroke:#f7768e}
+#demo .node{cursor:pointer}
+#demo .node rect{fill:var(--panel2);stroke-width:2}
+#demo .node.down rect{fill:#5a1d2a;stroke:var(--bad)}
+#demo .node.degraded rect{fill:#4d3b12;stroke:var(--warn)}
+[data-theme="light"] #demo .node.down rect{fill:#ffd9df}
+[data-theme="light"] #demo .node.degraded rect{fill:#fff0cc}
+#demo .node.failed rect{stroke-dasharray:5 3;stroke-width:3}
+#demo line.edge{stroke:var(--line);stroke-width:1.6}
+#demo line.edge.red{stroke-dasharray:5 4}
+#demo line.edge.hot{stroke:var(--bad)}
+.legend span{display:inline-block;margin-right:14px;font-size:13px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:middle;border:2px solid}
+.flash{outline:3px solid var(--warn);outline-offset:3px;border-radius:4px;transition:outline-color 1.5s}
+.phase{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0;background:var(--panel2);border-top:5px solid var(--accent)}
+.phase:nth-of-type(2){border-top-color:var(--accent2)}
+.phase h4{margin-top:0}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0}
+.hero div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.hero b{color:var(--accent)}
+footer{color:var(--muted);font-size:12.5px;text-align:center;margin:30px 0}
+@media (max-width:1000px){
+  #menuBtn{display:inline-block}
+  nav.side{transform:translateX(-100%);transition:transform .25s;box-shadow:4px 0 20px #0006}
+  nav.side.open{transform:none}
+  main{margin-left:0;padding:76px 14px 60px}
+  section.chapter{padding:18px 16px}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .steps4{grid-template-columns:1fr 1fr}
+  header.top .brand small,.progress .pbar{display:none}
+}
+@media (max-width:600px){
+  header.top .brand{display:none}
+  .flow{flex-direction:column}.flow .ar{transform:rotate(90deg);justify-content:center;padding:2px}
+  .flow .st{max-width:none}
+  body{font-size:14.5px}
+}
+@media print{
+  :root,[data-theme="dark"]{--bg:#fff;--panel:#fff;--panel2:#f4f6f8;--line:#bbb;--text:#000;--muted:#444;--accent:#0b5f69;--accent2:#1f3f9a;--code:#f7f7f7;--warn:#8a5600;--bad:#a11;--good:#2c5e0c}
+  header.top,nav.side,.no-print,.complete-bar,.copy,#results{display:none!important}
+  main{margin:0;padding:0;max-width:none}
+  section.chapter{border:none;padding:0;page-break-before:always;break-before:page}
+  section.chapter:first-of-type{page-break-before:auto;break-before:auto}
+  body{font-size:11pt;background:#fff}
+  pre.code{white-space:pre-wrap;word-break:break-all}
+  table{display:table}
+  .diagram svg{min-width:0}
+  details{border:1px solid #ccc}
+  h3,h4{page-break-after:avoid}
+  tr,.card,.quiz,.phase{page-break-inside:avoid}
+}
+</style>
+
+
+<header class="top">
+  <button class="btn no-print" id="menuBtn" aria-label="目次を開く">☰ 目次</button>
+  <div class="brand">CMDB実践教材<small>ネットワーク保守で学ぶ構成管理</small></div>
+  <div class="search-wrap">
+    <input id="q" type="search" placeholder="教材内を検索（例：粒度、EOL、VLAN）  ショートカット: /" autocomplete="off">
+    <div id="results" role="listbox"></div>
+  </div>
+  <div class="progress" title="章の完了状況"><span id="ptext">完了 0/13</span><div class="pbar"><i id="pbar"></i></div></div>
+  <button class="btn" id="themeBtn" title="表示テーマ切替">◐ テーマ</button>
+  <button class="btn" id="printBtn" title="印刷">🖨 印刷</button>
+  <button class="btn" id="dlBtn" title="このHTMLを保存">⬇ 保存</button>
+</header>
+
+<nav class="side" id="side">
+  <h4>目次</h4>
+  <ol id="toc"></ol>
+  <div style="padding:14px 10px;font-size:12px;color:var(--muted)">
+    <button class="btn" id="resetProg" style="font-size:12px">進捗をリセット</button>
+    <p>完了状況はこのブラウザ内（localStorage）に保存されます。保存できない環境ではページを閉じるまで保持されます。</p>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ================= 1 ================= -->
+<section class="chapter" id="s1" data-title="1. CMDBとは何か">
+<h2>1. CMDBとは何か</h2>
+<p class="lead">この章のゴール：CMDBとCIの意味を自分の言葉で説明でき、「機器台帳」との違いを具体例で語れるようになる。</p>
+<div class="steps4"><div><b>概念</b>定義・目的・役割</div><div><b>具体例</b>台帳との違い</div><div><b>実務での活用</b>改善される業務</div><div><b>設計時の注意</b>限界とデメリット</div></div>
+
+<h3>1-1. CMDBの定義・目的・役割</h3>
+<p><b>CMDB（Configuration Management Database：構成管理データベース）</b>は、ITサービスを提供するために管理が必要な構成要素（<b>CI</b>）の情報と、<b>CI同士の関係</b>を、ライフサイクル全体（導入〜廃棄）を通して記録・維持するためのデータベースです。</p>
+<p>ITILでは、構成管理の目的を「サービスと、それを支えるCIの構成について、正確で信頼できる情報を、必要なときに必要な場所で利用できるようにすること」と説明しています（原文の要約です。正確な定義文は公式出版物で確認してください）。CMDBはこの目的を実現するための<b>情報基盤</b>です。</p>
+<div class="grid3">
+  <div class="card"><h4>目的</h4>障害対応・変更・脆弱性対応・契約管理などの判断を、<b>正確な構成情報</b>に基づいて素早く行えるようにする。</div>
+  <div class="card"><h4>役割</h4>「何が・どこに・どんな状態で・何とつながり・誰が責任者で・どのサービスに使われているか」に答える<b>唯一の参照先</b>（Single Source of Truth）になる。</div>
+  <div class="card"><h4>位置付け</h4>CMDBそのものは目的ではない。インシデント管理・変更管理・問題管理などの<b>プロセスから使われて初めて</b>価値が出る。</div>
+</div>
+
+<h3>1-2. CI（Configuration Item：構成アイテム）とは</h3>
+<p><b>CI</b>とは、ITサービスを提供するために<b>管理（コントロール）する必要がある構成要素</b>のことです。ハードウェアだけではなく、ソフトウェア、回線、クラウド上のリソース、サービスそのもの、場合によっては契約や文書もCIとして扱います。</p>
+<table><thead><tr><th>種類</th><th>ネットワーク保守での例</th></tr></thead><tbody>
+<tr><td>物理機器</td><td>ルータ RT-S0123-01、スイッチ SW-S0123-01、無線AP、ファイアウォール</td></tr>
+<tr><td>論理構成</td><td>VLAN 10（業務LAN）、サブネット 10.20.123.0/24、VPN、冗長化グループ（HSRP/VRRPなど）</td></tr>
+<tr><td>回線</td><td>閉域網回線 CIR-0123-01、LTEバックアップ回線 CIR-0123-02</td></tr>
+<tr><td>ソフトウェア</td><td>ルータのOS/ファームウェアのバージョン（属性として扱うか独立CIにするかは設計次第：3章参照）</td></tr>
+<tr><td>サービス</td><td>拠点WAN接続サービス、無線LANサービス、インターネット接続サービス</td></tr>
+<tr><td>場所</td><td>拠点（横浜港北店）、データセンター、ラック</td></tr>
+</tbody></table>
+<div class="note"><b>ポイント</b>CIは「管理すべきもの」であって「存在するものすべて」ではありません。LANケーブル1本ごとや、刻々と変わるARPテーブルのエントリをCIにすると、管理コストが価値を上回ります（3章で判断基準を扱います）。</div>
+
+<h3>1-3. なぜ機器台帳だけでは不十分なのか</h3>
+<p>多くの組織には、Excelの「機器台帳」がすでにあります。台帳はCMDBの出発点として有用ですが、台帳は<b>「モノの一覧」</b>にとどまりがちです。</p>
+<table><thead><tr><th>観点</th><th>一般的な機器台帳</th><th>CMDB</th></tr></thead><tbody>
+<tr><td>管理単位</td><td>機器（1行＝1台）</td><td>CI（機器・回線・サービス・論理構成など）</td></tr>
+<tr><td>関係性</td><td>ほぼ無い（「備考」欄に書く程度）</td><td>「接続」「設置場所」「依存」「保守契約」などを<b>構造化して</b>保持</td></tr>
+<tr><td>サービスとの紐付け</td><td>無い</td><td>CIがどのサービスを支えているかが分かる</td></tr>
+<tr><td>状態・ライフサイクル</td><td>「稼働/撤去」程度、更新されにくい</td><td>計画〜廃棄までのステータスを定義し、変更と連動して更新</td></tr>
+<tr><td>履歴</td><td>上書きされて消える</td><td>変更・交換・障害の記録と紐付く</td></tr>
+<tr><td>情報の信頼性</td><td>いつ誰が何を根拠に書いたか不明</td><td>更新日・更新者・情報源・最終確認日を保持</td></tr>
+<tr><td>プロセス連携</td><td>無い（人が都度参照）</td><td>インシデント・変更チケットからCIを参照する</td></tr>
+</tbody></table>
+<h4>具体例：台帳で分かること・分からないこと</h4>
+<p>台帳では「RT-S0123-01／機種RX-1000（架空）／横浜港北店／シリアルFTX1234」までは分かります。しかし、障害が起きたときに本当に必要な次の問いには答えられません。</p>
+<ul>
+<li>このルータが止まると<b>どのサービス</b>が止まるのか？（POS決済？ 無線LAN？）</li>
+<li>どの<b>回線</b>につながっていて、回線の問い合わせ先と回線IDは何か？</li>
+<li>どの<b>保守契約</b>でカバーされ、オンサイト保守は何時間以内に来るか？</li>
+<li><b>先週の変更作業</b>で何か設定を変えていないか？</li>
+<li>バックアップ回線があるので<b>縮退運転</b>で済むのか、完全停止なのか？</li>
+</ul>
+
+<h3>1-4. CMDB導入で改善されること</h3>
+<table><thead><tr><th>業務</th><th>導入前</th><th>導入後（期待される姿）</th></tr></thead><tbody>
+<tr><td>障害の影響範囲調査</td><td>担当者の記憶とExcelの横断検索で30分以上</td><td>CIを起点に依存関係をたどり、数分で影響サービスと連絡先を特定</td></tr>
+<tr><td>変更作業の影響確認</td><td>作業者の経験に依存、見落としが発生</td><td>変更対象CIの上位サービスと関連CIを機械的に洗い出し</td></tr>
+<tr><td>脆弱性対応</td><td>「該当機種はどこにある？」を全拠点に確認</td><td>機種×OSバージョンで対象CIを抽出し、拠点別に計画</td></tr>
+<tr><td>保守期限・EOL管理</td><td>契約切れに気付かず、故障時に保守対象外と判明</td><td>期限が近いCIを定期的に抽出し、更新・リプレースを計画</td></tr>
+<tr><td>引継ぎ・監査</td><td>属人化。資料が散在</td><td>CMDBを見れば構成と責任者が分かる</td></tr>
+</tbody></table>
+
+<h3>1-5. CMDBがない組織で起きがちな問題</h3>
+<ul>
+<li><b>「この機器、誰のもの？」問題</b>：撤去してよいか判断できず、使われていない機器に保守費を払い続ける。</li>
+<li><b>影響範囲の見落とし</b>：スイッチの再起動で、別部門の監視カメラ用VLANまで止めてしまう。</li>
+<li><b>情報の分散</b>：IPはIPAM、回線は契約書PDF、機器はExcel、設定はファイルサーバ…で、障害時に5か所を見に行く。</li>
+<li><b>台帳の陳腐化</b>：機器交換後にシリアル番号が更新されず、保守ベンダーへの申告が誤る。</li>
+<li><b>属人化</b>：「あの拠点はAさんしか分からない」。異動・退職で知識が失われる。</li>
+</ul>
+<div class="caution"><b>限界・デメリットも理解する</b>
+CMDBは導入するだけでは何も解決しません。<b>維持するための人手と仕組み</b>が継続的に必要です。不正確なCMDBは「信じて間違った判断をする」原因となり、<b>無いより悪い</b>場合さえあります。目的と範囲を絞り、更新が回る仕組みとセットで導入することが前提です（10章参照）。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s1">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 2 ================= -->
+<section class="chapter" id="s2" data-title="2. CMDBと関連概念の違い">
+<h2>2. CMDBと関連概念の違い</h2>
+<p class="lead">この章のゴール：構成管理・資産管理・ITSM・ITILなど、混同しやすい用語の違いと関係を説明できるようになる。</p>
+
+<h3>2-1. 比較表</h3>
+<table><thead><tr><th>概念</th><th>種類</th><th>主な目的</th><th>主に扱う情報</th><th>CMDBとの関係</th></tr></thead><tbody>
+<tr><td><b>ITIL</b></td><td>フレームワーク（ベストプラクティス集）</td><td>ITサービス管理の考え方・実践方法を示す</td><td>プラクティス、用語、価値の考え方</td><td>構成管理・CMDBの概念を説明している「教科書」の一つ。ITILに従うこと自体は義務ではない</td></tr>
+<tr><td><b>ITSM</b>（ITサービス管理）</td><td>マネジメントの活動領域</td><td>ITを「サービス」として価値提供・管理する</td><td>サービス、インシデント、変更、要求など</td><td>CMDBはITSMを支える情報基盤の一つ</td></tr>
+<tr><td><b>構成管理</b></td><td>プロセス／プラクティス（活動）</td><td>構成情報を正確に保ち、提供する</td><td>CI、属性、関係、ベースライン</td><td>CMDBは構成管理の<b>道具・記録場所</b>。構成管理＝活動、CMDB＝データ</td></tr>
+<tr><td><b>CMDB</b></td><td>データベース（情報の入れ物）</td><td>CIと関係を記録・参照可能にする</td><td>CIレコード、関係、履歴</td><td>―</td></tr>
+<tr><td><b>資産管理</b>（IT Asset Management）</td><td>プロセス／プラクティス</td><td>IT資産の<b>財務的・契約的</b>価値とライフサイクルを管理</td><td>購入価格、減価償却、ライセンス、リース、保守契約</td><td>対象が重なるが観点が違う。CMDBと資産台帳を連携させることが多い</td></tr>
+<tr><td><b>インベントリ管理</b></td><td>活動／データ</td><td>「何が存在するか」を把握する</td><td>機器一覧、ソフト一覧、シリアル番号（自動収集が多い）</td><td>CMDBへのデータ入力源の一つ。関係やサービス観点は通常含まない</td></tr>
+<tr><td><b>ナレッジ管理</b></td><td>プロセス／プラクティス</td><td>知識・ノウハウを共有・再利用</td><td>手順書、FAQ、既知のエラー、設計思想</td><td>CMDBは「事実（構成）」、ナレッジは「知恵（どう扱うか）」。CIから手順書へリンクすると効果的</td></tr>
+<tr><td><b>変更管理</b>（Change Management / Change Enablement）</td><td>プロセス／プラクティス</td><td>変更のリスクを評価し、承認・計画・実施を管理</td><td>変更要求（RFC）、リスク評価、承認、作業計画</td><td>変更管理はCMDBを<b>参照</b>して影響を評価し、完了時にCMDBを<b>更新</b>する。最も密接に連携する</td></tr>
+<tr><td><b>台帳・Excel管理</b></td><td>手段（ツール・形式）</td><td>情報を一覧で記録</td><td>任意</td><td>Excelでも、CI・関係・更新ルールがあればCMDBとして機能しうる。逆に専用ツールでも運用が無ければただの台帳</td></tr>
+</tbody></table>
+
+<h3>2-2. 混同しやすい組み合わせと具体例</h3>
+
+
+
+
+
+
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s2">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 3 ================= -->
+<section class="chapter" id="s3" data-title="3. CI（構成アイテム）の考え方">
+<h2>3. CI（構成アイテム）の考え方</h2>
+<p class="lead">この章のゴール：「何をCIにするか」「どの粒度で管理するか」を、自分の組織の目的から判断できるようになる。</p>
+
+<h3>3-1. 何をCIとして管理するのか（判断基準）</h3>
+<p>次の問いに<b>1つ以上「はい」</b>なら、CI候補です。<b>2つ以上</b>なら優先的にCI化を検討します。</p>
+<ol>
+<li><b>サービス影響</b>：それが止まる・変わると、サービスに影響するか？</li>
+<li><b>変更統制</b>：それを変更するとき、承認や記録が必要か？</li>
+<li><b>障害対応</b>：障害時に、それを特定・交換・問い合わせする必要があるか？</li>
+<li><b>契約・費用</b>：保守契約、ライセンス、回線契約など、契約や費用の対象か？</li>
+<li><b>監査・セキュリティ</b>：監査や脆弱性対応で、対象として列挙を求められるか？</li>
+</ol>
+<p>逆に、次のものは<b>CIにしない（または属性・他システム参照にとどめる）</b>のが一般的です。</p>
+<ul>
+<li><b>消耗品・低価値品</b>：パッチケーブル1本、マウス（ただし幹線の光ケーブルは管理する組織もある）</li>
+<li><b>高頻度で変わる動的情報</b>：MACアドレステーブル、ARP、セッション、トラフィック量 → 監視・ログ系ツールで扱う</li>
+<li><b>他のシステムが「正」の情報</b>：IPアドレス1個ずつの割当（IPAMが正）、ユーザーアカウント（ディレクトリが正） → CMDBは参照・連携</li>
+<li><b>誰も使わない情報</b>：目的に紐付かない項目は、収集・更新コストだけがかかる</li>
+</ul>
+
+<h3>3-2. CI候補の具体例と推奨度</h3>
+<table><thead><tr><th>分類</th><th>具体例</th><th>推奨</th><th>理由・補足</th></tr></thead><tbody>
+<tr><td>拠点</td><td>横浜港北店、東日本DC</td><td><span class="tag must">必須</span></td><td>700拠点の管理の軸。住所・入館方法・現地連絡先が障害対応で必須</td></tr>
+<tr><td>WAN回線</td><td>閉域網 CIR-0123-01、LTE</td><td><span class="tag must">必須</span></td><td>キャリアへの故障申告に回線IDが必須。契約・費用対象</td></tr>
+<tr><td>ネットワーク機器</td><td>ルータ、スイッチ、FW、無線AP、WLC</td><td><span class="tag must">必須</span></td><td>障害・変更・脆弱性・保守のすべての中心</td></tr>
+<tr><td>サーバ</td><td>RADIUSサーバ、DHCPサーバ、監視サーバ</td><td><span class="tag must">必須</span></td><td>ネットワークサービスの依存先として重要</td></tr>
+<tr><td>OS・ファームウェア</td><td>ルータOS 17.x</td><td><span class="tag rec">推奨</span></td><td>多くの場合は機器CIの<b>属性</b>で十分。ソフトウェア製品として脆弱性情報と紐付けたいなら独立CI化も</td></tr>
+<tr><td>ミドルウェア</td><td>RADIUSソフト、DNSソフト</td><td><span class="tag rec">推奨</span></td><td>サーバ上で稼働する重要コンポーネントは独立CIにすると依存関係を表現しやすい</td></tr>
+<tr><td>クラウド</td><td>VPC/VNet、仮想ゲートウェイ、VPN接続</td><td><span class="tag rec">推奨</span></td><td>拠点⇔クラウドの経路に関わる単位はCI化。インスタンス単位は変動が激しいため自動連携前提</td></tr>
+<tr><td>論理構成</td><td>VLAN、サブネット、VRF</td><td><span class="tag rec">推奨</span></td><td>影響範囲調査に有効。IP個別割当はIPAMを正とする</td></tr>
+<tr><td>システム／サービス</td><td>拠点WAN接続、無線LAN、POS決済</td><td><span class="tag must">必須</span></td><td>「何が止まるか」を答えるには、サービスCIが不可欠</td></tr>
+<tr><td>契約</td><td>保守契約、回線契約</td><td><span class="tag rec">推奨</span></td><td>CIにする方式と、別テーブル（資産管理側）で持ちCIから参照する方式がある</td></tr>
+<tr><td>モジュール・SFP</td><td>光トランシーバ</td><td><span class="tag opt">任意</span></td><td>交換頻度・在庫管理が必要なら管理。通常は機器の属性/備考で十分</td></tr>
+<tr><td>パッチケーブル</td><td>1m LANケーブル</td><td><span class="tag opt">対象外</span></td><td>管理コストが価値を上回る</td></tr>
+</tbody></table>
+
+<h3>3-3. CIの粒度をどう決めるか</h3>
+<p><b>粒度</b>とは「どの単位を1件のCIとして扱うか」です。粗すぎると影響範囲や交換対象を特定できず、細かすぎると更新が回らなくなります。</p>
+<div class="grid3">
+<div class="card"><h4>粗すぎる例</h4>「横浜港北店ネットワーク一式」を1CIにする → 障害時に<b>どの機器</b>か分からず、シリアル番号も持てない。</div>
+<div class="card"><h4>適切な例</h4>ルータ1台、スイッチ1台（スタックは論理1台＋メンバ）、回線1本、VLAN 1つを各1CIにする。</div>
+<div class="card"><h4>細かすぎる例</h4>スイッチの<b>全ポート</b>（48ポート×数千台）を個別CI化 → 更新不能。ポート情報は自動収集の結果として参照する。</div>
+</div>
+<h4>粒度を決める5つの問い</h4>
+<ol>
+<li>その単位で<b>交換・発注</b>するか？（交換単位）</li>
+<li>その単位で<b>変更作業</b>を行うか？（変更単位）</li>
+<li>その単位で<b>障害を切り分け</b>るか？（障害単位）</li>
+<li>その単位で<b>責任者や契約</b>が異なるか？（責任単位）</li>
+<li>その単位の情報を<b>継続して更新できる</b>か？（維持可能性）← 最も重要</li>
+</ol>
+<h4>判断が分かれやすいケース</h4>
+<table><thead><tr><th>対象</th><th>選択肢</th><th>推奨の考え方</th></tr></thead><tbody>
+<tr><td>スタック構成スイッチ</td><td>A: 論理1台のみ／B: 物理メンバのみ／C: 論理1台＋物理メンバ</td><td>運用は論理単位（1つのホスト名・管理IP）で、交換・保守はシリアル単位なので <b>C</b> が実務的。メンバは「member_of」関係で論理CIに紐付ける</td></tr>
+<tr><td>冗長構成FW（2台）</td><td>クラスタ1件／物理2台</td><td>物理2台＋クラスタ（論理CI）。片系障害を「縮退」として表現できる</td></tr>
+<tr><td>OS・ファームウェア</td><td>機器の属性／独立したソフトウェアCI</td><td>まずは<b>属性</b>（バージョン文字列）。脆弱性管理を高度化する段階で、ソフトウェア製品マスタと紐付ける</td></tr>
+<tr><td>無線AP（各拠点数台〜数十台）</td><td>1台ずつ／拠点ごとにまとめる</td><td>交換・保守はシリアル単位なので1台ずつ。ただし手動管理はつらいので、WLCやクラウド管理ツールからの自動連携を前提にする</td></tr>
+</tbody></table>
+
+<h3>3-4. CIの属性（Attribute）とは</h3>
+<p><b>属性</b>は、CIの特徴を表すデータ項目です（ホスト名、機種、シリアル番号、ステータスなど）。属性は次のグループで考えると漏れと過剰を防げます。</p>
+<table><thead><tr><th>グループ</th><th>例</th><th>使われる場面</th></tr></thead><tbody>
+<tr><td>識別</td><td>CI ID、ホスト名、シリアル番号、資産番号</td><td>重複防止、ベンダー問合せ</td></tr>
+<tr><td>分類</td><td>CIクラス、メーカー、機種、役割（コア/エッジ）</td><td>脆弱性対象抽出、標準構成確認</td></tr>
+<tr><td>状態</td><td>ステータス、重要度、環境（本番/検証）</td><td>影響判断、棚卸し</td></tr>
+<tr><td>構成</td><td>OSバージョン、管理IP、設置ラック</td><td>更新計画、リモート接続</td></tr>
+<tr><td>責任</td><td>オーナー、管理担当、利用部門</td><td>エスカレーション、引継ぎ</td></tr>
+<tr><td>契約・期限</td><td>保守契約、保守期限、EOS/EOL日</td><td>契約更新、リプレース計画</td></tr>
+<tr><td>管理メタ情報</td><td>更新日時、更新者、情報源、最終確認日</td><td>データの信頼性判断</td></tr>
+</tbody></table>
+
+<h3>3-5. CI同士の関係性（Relationship）とは</h3>
+<p><b>関係</b>は、CI同士がどうつながっているかを表すデータです。CMDBが台帳と決定的に違うのはここです。関係には<b>向き</b>と<b>種類</b>があります。</p>
+<table><thead><tr><th>関係タイプ（例）</th><th>意味</th><th>例（A → B）</th><th>影響の伝わり方</th></tr></thead><tbody>
+<tr><td><code>located_in</code>（設置場所）</td><td>AはBに設置されている</td><td>RT-S0123-01 → 拠点S0123</td><td>拠点の停電・閉鎖 → 機器に影響</td></tr>
+<tr><td><code>connected_to</code>（接続）</td><td>AとBが物理/論理的に接続</td><td>RT-S0123-01 ↔ SW-S0123-01</td><td>双方向に影響しうる（設計時に向きを決める）</td></tr>
+<tr><td><code>depends_on</code>（依存）</td><td>AはBが無いと機能しない</td><td>拠点WAN接続サービス → RT-S0123-01</td><td>Bの障害 → Aに影響</td></tr>
+<tr><td><code>runs_on</code>（稼働）</td><td>AはB上で動作する</td><td>RADIUSソフト → 認証サーバ</td><td>Bの障害 → Aに影響</td></tr>
+<tr><td><code>member_of</code>（構成員）</td><td>AはBの構成メンバ</td><td>スタックメンバ1 → 論理SW、FW-01 → FWクラスタ</td><td>冗長性がある場合は「縮退」</td></tr>
+<tr><td><code>uses</code>（利用）</td><td>AはBを利用する</td><td>POS決済サービス → 拠点WAN接続サービス</td><td>Bの障害 → Aに影響</td></tr>
+<tr><td><code>covered_by</code>（契約対象）</td><td>AはB契約で保守される</td><td>RT-S0123-01 → 保守契約MC-2024-017</td><td>影響ではなく「連絡先・手配先」を導く</td></tr>
+</tbody></table>
+<div class="warn"><b>設計時の注意点</b>関係タイプは最初は<b>5〜8種類程度</b>に絞ってください。種類を増やしすぎると、登録者ごとに使い方がぶれます。また「向き」を必ず定義し、「A depends_on B」と「B depends_on A」が混在しないようにします。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s3">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 4 ================= -->
+<section class="chapter" id="s4" data-title="4. CMDBのデータ構造と設計">
+<h2>4. CMDBのデータ構造と設計</h2>
+<p class="lead">この章のゴール：CMDBを「テーブル」と「JSON」で表現でき、識別子・ステータス・信頼性・重複対策まで設計できるようになる。</p>
+
+<h3>4-1. 全体データモデル</h3>
+<p>汎用的なCMDBは、<b>共通属性を持つCIテーブル</b>＋<b>クラス別の拡張属性</b>＋<b>関係テーブル</b>の組み合わせで作るのが基本形です。</p>
+<div class="entity-grid">
+<div class="entity"><div class="eh">ci_class（CI分類）</div><ul><li>class_id <em>PK</em></li><li>class_name</li><li>parent_class_id <em>FK</em></li><li>description</li></ul></div>
+<div class="entity"><div class="eh">ci（CI共通属性）</div><ul><li>ci_id <em>PK</em></li><li>class_id <em>FK</em></li><li>name</li><li>status</li><li>criticality</li><li>location_ci_id <em>FK</em></li><li>owner_group / support_group</li><li>source / verified_at</li><li>updated_at / updated_by</li></ul></div>
+<div class="entity"><div class="eh">ci_network_device（拡張）</div><ul><li>ci_id <em>PK/FK</em></li><li>hostname</li><li>vendor / model</li><li>serial_no</li><li>os_version</li><li>mgmt_ip</li><li>eos_date / eol_date</li></ul></div>
+<div class="entity"><div class="eh">ci_relationship（関係）</div><ul><li>rel_id <em>PK</em></li><li>source_ci_id <em>FK</em></li><li>rel_type <em>FK</em></li><li>target_ci_id <em>FK</em></li><li>redundancy_group</li><li>source / verified_at</li></ul></div>
+<div class="entity"><div class="eh">rel_type（関係タイプ）</div><ul><li>rel_type <em>PK</em></li><li>forward_label（依存する）</li><li>reverse_label（依存される）</li><li>propagates_impact</li></ul></div>
+<div class="entity"><div class="eh">contract（契約）</div><ul><li>contract_id <em>PK</em></li><li>vendor_id <em>FK</em></li><li>type（保守/回線）</li><li>sla / start / end</li></ul></div>
+<div class="entity"><div class="eh">ci_history（変更履歴）</div><ul><li>hist_id <em>PK</em></li><li>ci_id <em>FK</em></li><li>field / old / new</li><li>change_ref（RFC番号）</li><li>changed_at / by</li></ul></div>
+<div class="entity"><div class="eh">ticket_link（チケット連携）</div><ul><li>ci_id <em>FK</em></li><li>ticket_type（INC/CHG/PRB）</li><li>ticket_id</li></ul></div>
+</div>
+
+<h3>4-2. CI分類（CI Class）の階層例</h3>
+<pre class="code"><code>CI（共通）
+├─ 場所（Location）
+│   ├─ 拠点（Site）          … 本社 / DC / 支店 / 店舗
+│   └─ ラック（Rack）
+├─ ハードウェア（Hardware）
+│   ├─ ネットワーク機器（Network Device）
+│   │   ├─ ルータ / L3スイッチ / L2スイッチ / ファイアウォール
+│   │   └─ 無線AP / 無線LANコントローラ
+│   └─ サーバ（Server）
+├─ 回線（Circuit）             … 閉域網 / インターネット / LTE
+├─ 論理ネットワーク（Logical Network）
+│   ├─ VLAN / サブネット / VRF
+│   └─ 冗長グループ（Cluster / Stack）
+├─ ソフトウェア（Software）    … OS / ミドルウェア
+├─ クラウドリソース（Cloud）   … VPC/VNet / VPN Gateway
+└─ サービス（Service）
+    ├─ 技術サービス（Network Service）… 拠点WAN接続 / 無線LAN / インターネット接続
+    └─ 業務サービス（Business Service）… POS決済 / 社内ポータル</code></pre>
+<p>上位クラスで共通属性（名前・ステータス・オーナー等）を定義し、下位クラスで固有属性（回線IDや帯域など）を追加する「<b>継承</b>」の考え方です。</p>
+
+<h3>4-3. テーブル定義の例（SQL）</h3>
+<pre class="code" data-lang="sql"><code>-- CI共通テーブル
+CREATE TABLE ci (
+  ci_id          VARCHAR(20) PRIMARY KEY,   -- 例: CI-000123（不変の内部ID）
+  class_id       VARCHAR(30) NOT NULL,      -- 例: router
+  name           VARCHAR(100) NOT NULL,     -- 表示名（通常はホスト名）
+  status         VARCHAR(20) NOT NULL,      -- planned / in_stock / building / active / maintenance / retiring / retired / disposed
+  criticality    CHAR(1),                   -- S / A / B / C
+  environment    VARCHAR(10) DEFAULT 'prod',
+  location_ci_id VARCHAR(20),               -- 設置拠点のCI ID
+  owner_group    VARCHAR(50),               -- 責任を持つ組織
+  support_group  VARCHAR(50),               -- 運用・更新担当
+  user_dept      VARCHAR(50),               -- 利用部門
+  source         VARCHAR(20),               -- manual / discovery / contract / import
+  verified_at    DATE,                      -- 実機・現地で最後に確認した日
+  updated_at     TIMESTAMP,
+  updated_by     VARCHAR(50),
+  UNIQUE (class_id, name)
+);
+
+-- ネットワーク機器の拡張属性
+CREATE TABLE ci_network_device (
+  ci_id       VARCHAR(20) PRIMARY KEY REFERENCES ci(ci_id),
+  hostname    VARCHAR(63) NOT NULL,
+  vendor      VARCHAR(50),
+  model       VARCHAR(50),
+  serial_no   VARCHAR(50) UNIQUE,          -- 物理的な同一性の主キー候補
+  asset_tag   VARCHAR(30),
+  os_version  VARCHAR(50),
+  mgmt_ip     VARCHAR(45),
+  eos_date    DATE,
+  eol_date    DATE
+);
+
+-- 関係テーブル（向き: source → target）
+CREATE TABLE ci_relationship (
+  rel_id            SERIAL PRIMARY KEY,
+  source_ci_id      VARCHAR(20) NOT NULL REFERENCES ci(ci_id),
+  rel_type          VARCHAR(20) NOT NULL,  -- depends_on / located_in / connected_to ...
+  target_ci_id      VARCHAR(20) NOT NULL REFERENCES ci(ci_id),
+  redundancy_group  VARCHAR(30),           -- 同じ値の依存先は「どれか1つ生きていればOK」
+  source            VARCHAR(20),
+  verified_at       DATE,
+  UNIQUE (source_ci_id, rel_type, target_ci_id)
+);</code></pre>
+
+<h3>4-4. JSONで見るCIレコード例</h3>
+<pre class="code" data-lang="json"><code>{
+  "ci_id": "CI-000123",
+  "class": "router",
+  "name": "RT-S0123-01",
+  "status": "active",
+  "criticality": "A",
+  "location": { "ci_id": "CI-S0123", "name": "横浜港北店" },
+  "attributes": {
+    "hostname": "RT-S0123-01",
+    "vendor": "VendorA",
+    "model": "RX-1000",
+    "serial_no": "FTX2231A0BC",
+    "asset_tag": "NW-2022-04512",
+    "os_version": "17.6.4",
+    "mgmt_ip": "10.250.1.123",
+    "eos_date": "2027-03-31",
+    "eol_date": "2030-03-31"
+  },
+  "ownership": {
+    "owner_group": "ネットワーク企画グループ",
+    "support_group": "NW運用チーム",
+    "user_dept": "店舗運営本部"
+  },
+  "relationships": [
+    { "type": "located_in",   "target": "CI-S0123" },
+    { "type": "connected_to", "target": "CI-CIR-0123-01" },
+    { "type": "connected_to", "target": "CI-CIR-0123-02" },
+    { "type": "connected_to", "target": "CI-000124" },
+    { "type": "covered_by",   "target": "MC-2024-017" }
+  ],
+  "metadata": {
+    "source": "discovery",
+    "verified_at": "2025-01-15",
+    "updated_at": "2025-01-15T10:22:00+09:00",
+    "updated_by": "discovery-job",
+    "confidence": "high",
+    "last_change_ref": "CHG-2024-1187"
+  }
+}</code></pre>
+
+<h3>4-5. 識別子の扱い：何を「主キー」にするか</h3>
+<table><thead><tr><th>識別子</th><th>特徴</th><th>主キーにしてよいか</th><th>扱い方</th></tr></thead><tbody>
+<tr><td>CI ID（内部ID）</td><td>CMDBが採番。意味を持たない</td><td><b>○ 推奨</b></td><td>一度振ったら変えない。他システム連携のキー</td></tr>
+<tr><td>資産番号（管理番号）</td><td>資産ラベル。資産管理が採番</td><td>△</td><td>物理機器の識別補助。論理CI（VLAN等）には存在しない</td></tr>
+<tr><td>シリアル番号</td><td>メーカーが付与。物理的に一意</td><td>△（物理機器のみ）</td><td>重複判定（突合）の最有力キー。<b>交換（RMA）で変わる</b>点に注意</td></tr>
+<tr><td>ホスト名</td><td>命名規則で付与。人が読みやすい</td><td>✕</td><td>拠点移転・役割変更で変わる。表示名・検索キーとして使う</td></tr>
+<tr><td>IPアドレス</td><td>設定で変わる。複数持つ</td><td>✕</td><td>属性（管理IP）として保持。IP全体の管理はIPAMを正とする</td></tr>
+</tbody></table>
+<div class="warn"><b>機器交換時の識別問題（重要）</b>故障でルータを同型機に交換すると、ホスト名・IP・設定は同じでもシリアル番号が変わります。「<b>論理的な役割（ルータRT-S0123-01というポジション）</b>」と「<b>物理的な個体（シリアルFTX...）</b>」のどちらをCIとするかは、組織で決めておく必要があります。
+<ul><li><b>方式A（個体＝CI）</b>：新しい個体を新CIとして登録し、旧CIは「撤去」。資産管理と整合しやすいが、関係を付け替える手間がある。</li>
+<li><b>方式B（役割＝CI）</b>：CIはそのまま、シリアル属性を更新し、交換履歴に旧シリアルを残す。運用は楽だが、個体の追跡は履歴頼み。</li></ul>
+ネットワーク保守の現場では方式Bが選ばれることも多いですが、どちらが正解というものではありません。<b>交換履歴を必ず残すこと</b>が両方式に共通する条件です。</div>
+
+<h3>4-6. ステータスとライフサイクル</h3>
+<div class="flow">
+<div class="st"><b>planned</b>計画</div><div class="ar">→</div>
+<div class="st"><b>in_stock</b>入荷・在庫</div><div class="ar">→</div>
+<div class="st"><b>building</b>構築中</div><div class="ar">→</div>
+<div class="st"><b>active</b>稼働中</div><div class="ar">⇄</div>
+<div class="st"><b>maintenance</b>保守・障害対応中</div><div class="ar">→</div>
+<div class="st"><b>retiring</b>撤去予定</div><div class="ar">→</div>
+<div class="st"><b>retired</b>撤去済</div><div class="ar">→</div>
+<div class="st"><b>disposed</b>廃棄済</div>
+</div>
+<ul>
+<li>ステータスの<b>遷移ルール</b>（どこからどこへ移れるか）と、<b>誰が変えてよいか</b>を定義する。</li>
+<li>「撤去済」をすぐ削除しない。障害履歴・監査で過去を追えるよう、一定期間（例：5年）保持する。</li>
+<li>予備機は <code>in_stock</code>、故障返却待ちは <code>maintenance</code> のように、現場の実態に合うよう定義する。</li>
+</ul>
+
+<h3>4-7. 所有者・管理担当・利用部門</h3>
+<table><thead><tr><th>役割</th><th>定義</th><th>例</th></tr></thead><tbody>
+<tr><td>CIオーナー（Owner）</td><td>CIのデータと存在に<b>説明責任</b>を持つ組織・役職。正確性の最終責任者</td><td>ネットワーク企画グループ</td></tr>
+<tr><td>管理担当（Support Group）</td><td>日々の運用・更新を行う</td><td>NW運用チーム、保守委託先</td></tr>
+<tr><td>利用部門（User Dept）</td><td>そのCIやサービスを使う側。障害時の連絡先</td><td>店舗運営本部</td></tr>
+</tbody></table>
+<p>個人名ではなく<b>グループ・役職</b>で登録すると、異動のたびに全CIを更新する必要がなくなります。</p>
+
+<h3>4-8. 更新日・情報源・信頼性</h3>
+<p>CMDBの情報は「いつ」「何を根拠に」書かれたかが分からないと、信頼して使えません。</p>
+<table><thead><tr><th>項目</th><th>例</th><th>意味</th></tr></thead><tbody>
+<tr><td>updated_at / updated_by</td><td>2025-01-15 / suzuki</td><td>最終更新日時と更新者（自動ジョブ名も可）</td></tr>
+<tr><td>source</td><td>discovery / manual / contract / import</td><td>情報源。属性ごとに持つとより厳密</td></tr>
+<tr><td>verified_at</td><td>2024-11-02</td><td>実機・現地・契約書で<b>事実確認</b>した日（更新日とは別）</td></tr>
+<tr><td>confidence</td><td>high / medium / low</td><td>例：自動収集で直近7日以内に確認＝high、手動で1年以上未確認＝low</td></tr>
+</tbody></table>
+
+<h3>4-9. 重複登録・データ不整合への対処</h3>
+<h4>識別ルール（Identification Rule）を決める</h4>
+<p>新しいデータが来たとき「既存CIと同じものか」を判定するルールです。</p>
+<pre class="code"><code>ネットワーク機器の識別ルール（優先順）
+ 1. serial_no が一致 → 同一CI
+ 2. asset_tag が一致 → 同一CI
+ 3. hostname 一致 かつ location 一致 → 同一CI候補（人が確認）
+ 4. いずれも不一致 → 新規CI候補（自動登録せず「未確認」キューへ）</code></pre>
+<h4>不整合チェックの例（定期実行）</h4>
+<pre class="code" data-lang="sql"><code>-- ① シリアル番号の重複
+SELECT serial_no, COUNT(*) FROM ci_network_device
+GROUP BY serial_no HAVING COUNT(*) &gt; 1;
+
+-- ② 稼働中なのに設置拠点が無いCI
+SELECT ci_id, name FROM ci
+WHERE status = 'active' AND location_ci_id IS NULL;
+
+-- ③ 撤去済なのに、稼働中サービスから依存されているCI
+SELECT r.source_ci_id, r.target_ci_id
+FROM ci_relationship r JOIN ci t ON r.target_ci_id = t.ci_id
+JOIN ci s ON r.source_ci_id = s.ci_id
+WHERE r.rel_type = 'depends_on' AND t.status = 'retired' AND s.status = 'active';
+
+-- ④ 1年以上、事実確認されていない稼働中CI
+SELECT ci_id, name, verified_at FROM ci
+WHERE status = 'active' AND verified_at &lt; CURRENT_DATE - INTERVAL '365 days';</code></pre>
+<div class="tip"><b>実務のコツ</b>重複を見つけたら「どちらかを削除」ではなく、<b>統合（マージ）</b>します。残すCI IDを決め、関係・履歴・チケットリンクを付け替えてから、もう一方を「merged（統合済）」ステータスにして参照先を記録します。いきなり削除すると、過去チケットからの参照が切れてしまいます。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s4">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 5 ================= -->
+<section class="chapter" id="s5" data-title="5. ネットワーク保守の具体例（700拠点）">
+<h2>5. ネットワーク保守業務を題材にした具体例（約700拠点）</h2>
+<p class="lead">この章のゴール：架空の700拠点企業を使って、拠点 → 回線 → 機器 → サービスのつながりをCMDBとして設計できるようになる。</p>
+
+<h3>5-1. 前提（架空の企業「サンプル流通株式会社」）</h3>
+<div class="hero">
+<div><b>拠点数</b><br>約700（本社1、DC2、物流センター10、支店・店舗 約687）</div>
+<div><b>WAN</b><br>閉域網（主回線）＋ LTE（バックアップ）。DC経由でインターネットへ接続</div>
+<div><b>機器数（概算）</b><br>ルータ約720、スイッチ約1,600、AP約2,800、FW数十</div>
+<div><b>体制</b><br>NW企画G（設計・オーナー）、NW運用チーム（運用）、保守ベンダーB社（オンサイト保守）</div>
+</div>
+<h4>拠点タイプ別の標準構成</h4>
+<table><thead><tr><th>拠点タイプ</th><th>拠点数</th><th>標準構成</th></tr></thead><tbody>
+<tr><td>タイプA（大型店・物流）</td><td>約60</td><td>ルータ×2（冗長）、L3コアSW×1（スタック2台）、L2SW×2〜4、AP×6〜20、主回線＋LTE</td></tr>
+<tr><td>タイプB（標準店舗）</td><td>約560</td><td>ルータ×1、L3SW×1、L2SW×1、AP×2〜4、主回線＋LTE</td></tr>
+<tr><td>タイプC（小型拠点）</td><td>約70</td><td>ルータ（SW内蔵）×1、AP×1〜2、主回線のみ</td></tr>
+<tr><td>DC／本社</td><td>3</td><td>センタールータ冗長、センターFWクラスタ、コアSW、各種サーバ</td></tr>
+</tbody></table>
+<p>標準構成をCMDBに持たせておくと、「タイプBなのにLTE回線が登録されていない拠点」のような<b>逸脱</b>を検出できます（6章「標準構成の確認」）。</p>
+
+<h3>5-2. 関係図（横浜港北店 S0123 の例）</h3>
+<div class="diagram">
+<svg viewBox="0 0 1000 500" role="img" aria-label="横浜港北店のCI関係図">
+<defs><marker id="arw" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#93a4b6"></path></marker></defs>
+<!-- edges -->
+<line class="dg-e" x1="415" y1="170" x2="480" y2="68" marker-end="url(#arw)"></line><text class="dg-l" x="400" y="115">located_in</text>
+<line class="dg-e" x1="645" y1="170" x2="540" y2="68" marker-end="url(#arw)"></line><text class="dg-l" x="600" y="115">located_in</text>
+<line class="dg-e" x1="135" y1="130" x2="398" y2="45" marker-end="url(#arw)"></line><text class="dg-l" x="200" y="78">terminates_at</text>
+<line class="dg-e" x1="230" y1="153" x2="328" y2="184"></line><text class="dg-l" x="240" y="160">connected_to</text>
+<line class="dg-e" x1="230" y1="233" x2="328" y2="206"></line><text class="dg-l" x="240" y="240">connected_to</text>
+<line class="dg-e" x1="500" y1="193" x2="560" y2="193"></line><text class="dg-l" x="502" y="185">conn.</text>
+<line class="dg-e" x1="645" y1="216" x2="645" y2="280"></line><text class="dg-l" x="652" y="252">connected_to</text>
+<line class="dg-e" x1="645" y1="326" x2="645" y2="390"></line><text class="dg-l" x="652" y="362">connected_to（PoE）</text>
+<line class="dg-e" x1="788" y1="193" x2="732" y2="193" marker-end="url(#arw)"></line><text class="dg-l" x="740" y="185">hosted_on</text>
+<line class="dg-e" x1="790" y1="303" x2="732" y2="200" marker-end="url(#arw)"></line><text class="dg-l" x="735" y="262">covers</text>
+<line class="dg-e" x1="880" y1="326" x2="880" y2="388" marker-end="url(#arw)"></line><text class="dg-l" x="888" y="362">provided_by</text>
+<line class="dg-e" x1="415" y1="300" x2="415" y2="218" marker-end="url(#arw)"></line><text class="dg-l" x="422" y="262">depends_on</text>
+<line class="dg-e" x1="330" y1="320" x2="140" y2="258" marker-end="url(#arw)"></line><text class="dg-l" x="190" y="300">depends_on</text>
+<line class="dg-e" x1="415" y1="420" x2="415" y2="348" marker-end="url(#arw)"></line><text class="dg-l" x="422" y="390">uses</text>
+<line class="dg-e" x1="500" y1="440" x2="558" y2="315" marker-end="url(#arw)"></line><text class="dg-l" x="505" y="372">depends_on</text>
+<!-- nodes -->
+<rect class="dg-box n-site" x="400" y="20" width="200" height="46" rx="8"></rect><text class="dg-t" x="500" y="40" text-anchor="middle">拠点 S0123 横浜港北店</text><text class="dg-s" x="500" y="57" text-anchor="middle">Site / タイプB</text>
+<rect class="dg-box n-inf" x="40" y="130" width="190" height="46" rx="8"></rect><text class="dg-t" x="135" y="150" text-anchor="middle">主回線 CIR-0123-01</text><text class="dg-s" x="135" y="167" text-anchor="middle">閉域網 100Mbps / キャリアA</text>
+<rect class="dg-box n-inf" x="40" y="210" width="190" height="46" rx="8"></rect><text class="dg-t" x="135" y="230" text-anchor="middle">LTE回線 CIR-0123-02</text><text class="dg-s" x="135" y="247" text-anchor="middle">バックアップ / キャリアC</text>
+<rect class="dg-box n-dev" x="330" y="170" width="170" height="46" rx="8"></rect><text class="dg-t" x="415" y="190" text-anchor="middle">RT-S0123-01</text><text class="dg-s" x="415" y="207" text-anchor="middle">ルータ RX-1000</text>
+<rect class="dg-box n-dev" x="560" y="170" width="170" height="46" rx="8"></rect><text class="dg-t" x="645" y="190" text-anchor="middle">SW-S0123-01</text><text class="dg-s" x="645" y="207" text-anchor="middle">L3スイッチ</text>
+<rect class="dg-box n-dev" x="560" y="280" width="170" height="46" rx="8"></rect><text class="dg-t" x="645" y="300" text-anchor="middle">SW-S0123-02</text><text class="dg-s" x="645" y="317" text-anchor="middle">L2スイッチ（PoE）</text>
+<rect class="dg-box n-dev" x="560" y="390" width="170" height="46" rx="8"></rect><text class="dg-t" x="645" y="410" text-anchor="middle">AP-S0123-01 / 02</text><text class="dg-s" x="645" y="427" text-anchor="middle">無線AP ×2</text>
+<rect class="dg-box n-ns" x="790" y="170" width="180" height="46" rx="8"></rect><text class="dg-t" x="880" y="190" text-anchor="middle">VLAN10/20/30</text><text class="dg-s" x="880" y="207" text-anchor="middle">10.20.123.0/24 ほか</text>
+<rect class="dg-box n-doc" x="790" y="280" width="180" height="46" rx="8"></rect><text class="dg-t" x="880" y="300" text-anchor="middle">保守契約 MC-2024-017</text><text class="dg-s" x="880" y="317" text-anchor="middle">オンサイト 4時間 / 〜2026-03</text>
+<rect class="dg-box n-doc" x="790" y="390" width="180" height="46" rx="8"></rect><text class="dg-t" x="880" y="410" text-anchor="middle">ベンダー B社</text><text class="dg-s" x="880" y="427" text-anchor="middle">保守窓口 0120-XXX-XXX</text>
+<rect class="dg-box n-ns" x="330" y="300" width="170" height="46" rx="8"></rect><text class="dg-t" x="415" y="320" text-anchor="middle">NS-WAN-S0123</text><text class="dg-s" x="415" y="337" text-anchor="middle">拠点WAN接続サービス</text>
+<rect class="dg-box n-bs" x="330" y="420" width="170" height="46" rx="8"></rect><text class="dg-t" x="415" y="440" text-anchor="middle">店舗POS決済</text><text class="dg-s" x="415" y="457" text-anchor="middle">業務サービス</text>
+</svg>
+<div class="legend" style="padding:4px 10px"><span><i style="border-color:#9ece6a"></i>場所</span><span><i style="border-color:#e0af68"></i>回線</span><span><i style="border-color:#4fb3bf"></i>機器</span><span><i style="border-color:#7aa2f7"></i>論理NW・NWサービス</span><span><i style="border-color:#bb9af7"></i>業務サービス</span><span><i style="border-color:#f7768e"></i>契約・ベンダー</span></div>
+</div>
+<p>この図を言葉にすると：「<b>店舗POS決済</b>は<b>拠点WAN接続サービス</b>を使い、WAN接続サービスは<b>ルータRT-S0123-01</b>と<b>主回線/LTE回線（どちらか一方）</b>に依存する。ルータとスイッチは<b>横浜港北店</b>に設置され、<b>保守契約MC-2024-017（B社）</b>でカバーされている」となります。</p>
+
+<h3>5-3. 架空データ例</h3>
+<h4>拠点（Site）</h4>
+<table><thead><tr><th>CI ID</th><th>拠点コード</th><th>拠点名</th><th>タイプ</th><th>住所</th><th>営業時間</th><th>現地連絡先</th><th>ステータス</th></tr></thead><tbody>
+<tr><td>CI-S0001</td><td>S0001</td><td>本社</td><td>本社</td><td>東京都千代田区…</td><td>9-18</td><td>総務G 内線1000</td><td>active</td></tr>
+<tr><td>CI-S0123</td><td>S0123</td><td>横浜港北店</td><td>B</td><td>神奈川県横浜市港北区…</td><td>10-21</td><td>店長 045-XXX-XXXX</td><td>active</td></tr>
+<tr><td>CI-S0456</td><td>S0456</td><td>大阪梅田店</td><td>A</td><td>大阪府大阪市北区…</td><td>10-22</td><td>店長 06-XXXX-XXXX</td><td>active</td></tr>
+<tr><td>CI-S0702</td><td>S0702</td><td>仙台泉店</td><td>B</td><td>宮城県仙台市泉区…</td><td>-</td><td>-</td><td>planned（2025-06開店）</td></tr>
+</tbody></table>
+<h4>WAN回線（Circuit）</h4>
+<table><thead><tr><th>CI ID</th><th>回線名</th><th>種別</th><th>キャリア</th><th>キャリア回線ID</th><th>帯域</th><th>拠点</th><th>故障窓口</th><th>契約期限</th></tr></thead><tbody>
+<tr><td>CI-CIR-0123-01</td><td>S0123主回線</td><td>閉域網</td><td>キャリアA</td><td>AX-7788-0123</td><td>100Mbps</td><td>S0123</td><td>A社NOC 24h</td><td>2026-09-30</td></tr>
+<tr><td>CI-CIR-0123-02</td><td>S0123 LTE</td><td>LTE</td><td>キャリアC</td><td>SIM: 8981XXXXXXXX</td><td>ベストエフォート</td><td>S0123</td><td>C社法人窓口</td><td>2026-09-30</td></tr>
+</tbody></table>
+<h4>ネットワーク機器（ルータ／スイッチ／FW／無線）</h4>
+<table><thead><tr><th>CI ID</th><th>ホスト名</th><th>クラス</th><th>機種</th><th>シリアル</th><th>OS</th><th>管理IP</th><th>拠点/ラック</th><th>保守契約</th><th>EOS</th></tr></thead><tbody>
+<tr><td>CI-000123</td><td>RT-S0123-01</td><td>router</td><td>RX-1000</td><td>FTX2231A0BC</td><td>17.6.4</td><td>10.250.1.123</td><td>S0123/事務所ラック U10</td><td>MC-2024-017</td><td>2027-03</td></tr>
+<tr><td>CI-000124</td><td>SW-S0123-01</td><td>l3switch</td><td>LS-3400</td><td>JAE1122X9YZ</td><td>16.12.8</td><td>10.250.2.123</td><td>S0123/事務所ラック U8</td><td>MC-2024-017</td><td>2026-10</td></tr>
+<tr><td>CI-000125</td><td>SW-S0123-02</td><td>l2switch</td><td>LS-2200P</td><td>JAE3344Q1WE</td><td>15.2.7</td><td>10.250.3.123</td><td>S0123/バックヤード</td><td>MC-2024-017</td><td>2025-10</td></tr>
+<tr><td>CI-000126</td><td>AP-S0123-01</td><td>wireless_ap</td><td>AP-500</td><td>Q2XX-AAAA-0001</td><td>cloud管理</td><td>DHCP</td><td>S0123/売場天井 東</td><td>MC-2023-009</td><td>2028-01</td></tr>
+<tr><td>CI-000901</td><td>FW-DC1-01</td><td>firewall</td><td>FG-X（架空）</td><td>FGX00012345</td><td>7.2.8</td><td>10.250.0.11</td><td>DC-E1/ラックA-03</td><td>MC-2024-001</td><td>2028-12</td></tr>
+</tbody></table>
+<h4>VLAN・サブネット</h4>
+<table><thead><tr><th>CI ID</th><th>VLAN</th><th>用途</th><th>サブネット</th><th>GW</th><th>提供機器</th><th>正とする情報源</th></tr></thead><tbody>
+<tr><td>CI-V-0123-10</td><td>10</td><td>業務LAN（POS・事務PC）</td><td>10.20.123.0/25</td><td>10.20.123.1</td><td>SW-S0123-01</td><td>IPAM</td></tr>
+<tr><td>CI-V-0123-20</td><td>20</td><td>店舗無線（社員）</td><td>10.20.123.128/26</td><td>10.20.123.129</td><td>SW-S0123-01</td><td>IPAM</td></tr>
+<tr><td>CI-V-0123-30</td><td>30</td><td>監視カメラ</td><td>10.20.123.192/27</td><td>10.20.123.193</td><td>SW-S0123-01</td><td>IPAM</td></tr>
+</tbody></table>
+<div class="note"><b>IPアドレスの設計判断</b>拠点ごとの<b>サブネット・VLAN</b>はCIとして持ち、個々のIPアドレス割当は<b>IPAM（IPアドレス管理ツール）や管理表を正</b>とするのが一般的です。CMDBに両方を持つと二重管理になります。IPAMが無い場合でも、「サブネット単位までCMDB、個別IPは別シート」と境界を決めます。</div>
+<h4>ネットワークサービス</h4>
+<table><thead><tr><th>CI ID</th><th>サービス名</th><th>種別</th><th>依存先（概要）</th><th>サービスオーナー</th><th>提供時間</th></tr></thead><tbody>
+<tr><td>CI-NS-WAN-S0123</td><td>拠点WAN接続（S0123）</td><td>技術サービス</td><td>RT-S0123-01、SW-S0123-01、主回線 or LTE、センタールータ（冗長）</td><td>NW企画G</td><td>24h</td></tr>
+<tr><td>CI-NS-WLAN</td><td>店舗無線LAN</td><td>技術サービス</td><td>各拠点AP、クラウド管理基盤、RADIUS</td><td>NW企画G</td><td>24h</td></tr>
+<tr><td>CI-NS-INET</td><td>インターネット接続</td><td>技術サービス</td><td>拠点WAN、センターFWクラスタ、DCインターネット回線</td><td>NW企画G</td><td>24h</td></tr>
+<tr><td>CI-BS-POS</td><td>店舗POS決済</td><td>業務サービス</td><td>拠点WAN、VLAN10、決済センター</td><td>店舗システム部</td><td>店舗営業時間</td></tr>
+</tbody></table>
+<h4>保守契約・ベンダー</h4>
+<table><thead><tr><th>契約ID</th><th>ベンダー</th><th>対象</th><th>SLA</th><th>期間</th><th>窓口</th><th>対象CI数</th></tr></thead><tbody>
+<tr><td>MC-2024-017</td><td>B社</td><td>東日本拠点ルータ・スイッチ</td><td>オンサイト4時間（24h365d）</td><td>2024-04〜2026-03</td><td>B社保守センター</td><td>1,120</td></tr>
+<tr><td>MC-2023-009</td><td>D社</td><td>全国無線AP（先出しセンドバック）</td><td>翌営業日発送</td><td>2023-10〜2026-09</td><td>D社サポート</td><td>2,810</td></tr>
+</tbody></table>
+
+<h3>5-4. 履歴の管理（交換・障害・変更）</h3>
+<p>履歴は、<b>ITSMツールのチケット（インシデント・変更）に本体を持ち、CMDBはチケット番号で紐付ける</b>のが基本です。CMDB内に詳細を二重に書くと不整合の元になります。ITSMツールがない場合は、CMDB側に簡易な履歴シートを設けます。</p>
+<h4>機器交換履歴</h4>
+<table><thead><tr><th>日付</th><th>CI</th><th>旧シリアル</th><th>新シリアル</th><th>理由</th><th>関連チケット</th><th>作業者</th></tr></thead><tbody>
+<tr><td>2024-08-12</td><td>SW-S0123-02</td><td>JAE1111A2BC</td><td>JAE3344Q1WE</td><td>電源故障（RMA）</td><td>INC-2024-0815 / CHG-2024-0822</td><td>B社 田中</td></tr>
+</tbody></table>
+<h4>障害履歴</h4>
+<table><thead><tr><th>インシデント</th><th>発生日時</th><th>影響CI</th><th>原因CI</th><th>影響</th><th>復旧</th><th>問題管理</th></tr></thead><tbody>
+<tr><td>INC-2024-0815</td><td>2024-08-10 14:05</td><td>NS-WAN-S0123の一部 / 無線LAN</td><td>SW-S0123-02</td><td>AP2台・POS3台停止（2時間40分）</td><td>機器交換</td><td>PRB-2024-031（同型機電源故障の多発）</td></tr>
+<tr><td>INC-2024-1102</td><td>2024-11-02 09:12</td><td>NS-WAN-S0123</td><td>CIR-0123-01</td><td>LTEに切替、縮退運転（35分）</td><td>キャリア復旧</td><td>-</td></tr>
+</tbody></table>
+<h4>変更履歴</h4>
+<table><thead><tr><th>変更番号</th><th>実施日</th><th>対象CI</th><th>内容</th><th>CMDB更新項目</th><th>更新確認者</th></tr></thead><tbody>
+<tr><td>CHG-2024-1187</td><td>2024-12-10</td><td>RT-S0123-01ほか タイプB 120台</td><td>OS 17.3.x → 17.6.4（脆弱性対応）</td><td>os_version、updated_at</td><td>NW運用 佐藤</td></tr>
+<tr><td>CHG-2025-0040</td><td>2025-01-20</td><td>CI-V-0123-30</td><td>監視カメラVLAN新設</td><td>VLAN CI新規、関係（hosted_on）追加</td><td>NW運用 鈴木</td></tr>
+</tbody></table>
+<h4>関係データのJSON表現（抜粋）</h4>
+<pre class="code" data-lang="json"><code>[
+  { "source": "CI-NS-WAN-S0123", "type": "depends_on", "target": "CI-000123", "redundancy_group": null },
+  { "source": "CI-NS-WAN-S0123", "type": "depends_on", "target": "CI-CIR-0123-01", "redundancy_group": "WAN-S0123" },
+  { "source": "CI-NS-WAN-S0123", "type": "depends_on", "target": "CI-CIR-0123-02", "redundancy_group": "WAN-S0123" },
+  { "source": "CI-BS-POS",       "type": "uses",       "target": "CI-NS-WAN-S0123", "redundancy_group": null },
+  { "source": "CI-000123",       "type": "located_in", "target": "CI-S0123" },
+  { "source": "CI-000123",       "type": "covered_by", "target": "MC-2024-017" }
+]</code></pre>
+<p><code>redundancy_group</code> が同じ依存先は「どれか一つが生きていればよい」という意味です。これを持たせると、主回線の障害を「停止」ではなく「<b>縮退（冗長性喪失）</b>」と判断できます。次章のデモで実際に試せます。</p>
+<div class="warn"><b>設計時の注意</b>700拠点分の関係を手動で作るのは現実的ではありません。<b>標準構成テンプレート</b>（タイプBなら「NS-WAN → RT、SW-01、主回線/LTE」）から関係を一括生成し、例外拠点だけを手で直す方式を推奨します。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s5">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 6 ================= -->
+<section class="chapter" id="s6" data-title="6. CMDBの活用シーン">
+<h2>6. CMDBの活用シーン</h2>
+<p class="lead">この章のゴール：10の業務シーンで、CMDBのどの情報をどう使うかを業務フローとして説明できるようになる。</p>
+
+<h3>6-1. 障害発生時の影響範囲調査（インタラクティブデモ）</h3>
+<p>下の図は横浜港北店とDCの依存関係です。<b>CIをクリックすると「故障」として扱われ</b>、依存関係をたどって影響（停止／縮退）を計算します。複数選択できます。</p>
+<div class="no-print" style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn" data-scn="CIR-P">シナリオ1：主回線障害</button>
+<button class="btn" data-scn="SW-01">シナリオ2：L3スイッチ故障</button>
+<button class="btn" data-scn="FW-DC-01">シナリオ3：センターFW片系故障</button>
+<button class="btn" data-scn="CIR-P,CIR-B">シナリオ4：主回線＋LTE同時障害</button>
+<button class="btn" data-scn="SW-02">シナリオ5：PoEスイッチ故障</button>
+<button class="btn primary" data-scn="">リセット</button>
+</div>
+<div class="diagram" id="demoWrap"><svg id="demo" viewBox="0 0 1000 430" role="img" aria-label="影響範囲デモ"></svg>
+<div class="legend" style="padding:4px 10px"><span><i style="border-color:var(--bad);background:#5a1d2a"></i>停止</span><span><i style="border-color:var(--warn);background:#4d3b12"></i>縮退・冗長性喪失</span><span><i style="border-color:var(--line)"></i>正常</span><span>点線の枠＝故障として選択したCI ／ 点線の線＝冗長グループ（どれか1つ生きていればよい）</span></div></div>
+<div id="demoResult" class="card">CIをクリックするか、シナリオボタンを押してください。</div>
+<div class="warn"><b>デモの限界（実務でも同じ）</b>このモデルは「関係が正しく登録されている」ことが前提です。関係の登録漏れがあれば影響は過小評価されます。また、冗長切替が実際に成功するか（設定ミスでLTEに切り替わらない等）はCMDBからは分かりません。CMDBは<b>調査の起点</b>であり、監視・実機確認と組み合わせて判断します。</div>
+<h4>業務フロー</h4>
+<div class="flow">
+<div class="st"><b>1. 検知</b>監視ツールがRT-S0123-01のダウンを検知</div><div class="ar">→</div>
+<div class="st"><b>2. CI特定</b>ホスト名/管理IPからCMDBのCIを特定</div><div class="ar">→</div>
+<div class="st"><b>3. 影響調査</b>上位サービス・同拠点CI・利用部門を抽出</div><div class="ar">→</div>
+<div class="st"><b>4. 直近変更確認</b>関連する変更チケットを確認</div><div class="ar">→</div>
+<div class="st"><b>5. 連絡・手配</b>拠点連絡先、回線キャリア、保守ベンダーへ</div><div class="ar">→</div>
+<div class="st"><b>6. 記録</b>インシデントにCIを紐付け</div>
+</div>
+
+<h3>6-2. 機器交換・故障対応</h3>
+<div class="flow"><div class="st"><b>故障判定</b>SW-S0123-02 電源故障</div><div class="ar">→</div><div class="st"><b>CMDB参照</b>機種・シリアル・保守契約・設置場所・入館方法</div><div class="ar">→</div><div class="st"><b>手配</b>B社へシリアル付きで依頼（4時間オンサイト）</div><div class="ar">→</div><div class="st"><b>交換</b>設定は構成バックアップから復元</div><div class="ar">→</div><div class="st"><b>CMDB更新</b>新シリアル、交換履歴、verified_at</div></div>
+<p><b>具体例：</b>B社に「横浜港北店のスイッチが壊れた」ではなく「契約MC-2024-017、機種LS-2200P、シリアルJAE1111A2BC、設置場所はバックヤード、店舗は10時開店で裏口から入館」と伝えられるため、手配のやり取りが減ります。<br><b>注意点：</b>交換後のシリアル更新漏れが最も多い不整合です。交換チケットのクローズ条件に「CMDB更新済」を入れます。</p>
+
+<h3>6-3. 変更作業前の影響確認</h3>
+<div class="flow"><div class="st"><b>RFC起票</b>対象CIを選択</div><div class="ar">→</div><div class="st"><b>影響抽出</b>依存しているサービス・利用部門・重要度</div><div class="ar">→</div><div class="st"><b>時間帯判断</b>サービス提供時間（店舗10-21時）を避ける</div><div class="ar">→</div><div class="st"><b>周知</b>利用部門へ事前連絡</div><div class="ar">→</div><div class="st"><b>承認</b>CABなどで判断</div></div>
+<p><b>具体例：</b>SW-S0123-01の再起動では、VLAN30（監視カメラ）も止まることがCMDBから分かり、警備担当への連絡が漏れずに済む。</p>
+
+<h3>6-4. 脆弱性対応時の対象機器抽出</h3>
+<p>ベンダーから「機種LS-3400、OS 16.12.0〜16.12.9に深刻度の高い脆弱性」と公表された場合：</p>
+<pre class="code" data-lang="sql"><code>SELECT c.name, d.model, d.os_version, s.name AS site, c.criticality
+FROM ci c
+JOIN ci_network_device d ON c.ci_id = d.ci_id
+JOIN ci s ON c.location_ci_id = s.ci_id
+WHERE d.model = 'LS-3400'
+  AND d.os_version LIKE '16.12.%'     -- 実務ではバージョン比較関数で範囲判定
+  AND c.status IN ('active','maintenance','in_stock')   -- 予備機も対象！
+ORDER BY c.criticality, s.name;</code></pre>
+<p><b>注意点：</b>OSバージョンは手動管理だとすぐ古くなります。<b>自動収集で上書き</b>する対象の筆頭です。また、予備機（in_stock）を対象から外すと、交換時に脆弱なOSの機器が投入されます。</p>
+
+<h3>6-5. OS・ファームウェア更新計画</h3>
+<div class="flow"><div class="st"><b>現状把握</b>機種×OSバージョンの分布を集計</div><div class="ar">→</div><div class="st"><b>標準決定</b>推奨バージョンを決める</div><div class="ar">→</div><div class="st"><b>グルーピング</b>拠点タイプ・地域・営業時間で分割</div><div class="ar">→</div><div class="st"><b>段階実施</b>パイロット10拠点→100拠点ずつ</div><div class="ar">→</div><div class="st"><b>進捗管理</b>CMDBで標準準拠率を可視化</div></div>
+<p><b>具体例：</b>「ルータ720台中、推奨バージョン17.6.4は412台（57%）」とCMDBで集計し、残り308台を月80台ペースで更新する計画を立てる。</p>
+
+<h3>6-6. 保守期限・EOS/EOL管理</h3>
+<p><b>EOS（End of Sale：販売終了）</b>、<b>EOL（End of Life：サポート終了）</b>の定義や名称はメーカーによって異なるため（End of Support、End of Software Maintenanceなど）、CMDBには「メーカーの何という日付か」を定義して持たせます。</p>
+<table><thead><tr><th>抽出条件</th><th>アクション</th></tr></thead><tbody>
+<tr><td>保守契約の期限まで180日以内</td><td>契約更新の稟議開始</td></tr>
+<tr><td>EOLまで2年以内</td><td>リプレース計画・予算化</td></tr>
+<tr><td>稼働中なのに保守契約が紐付いていない</td><td>契約漏れの確認（重大リスク）</td></tr>
+<tr><td>撤去済なのに保守契約の対象のまま</td><td>契約から除外し、保守費を削減</td></tr>
+</tbody></table>
+
+<h3>6-7. 拠点追加・廃止</h3>
+<div class="grid2">
+<div class="card"><h4>拠点追加（例：S0702 仙台泉店）</h4><ol><li>拠点CIを <code>planned</code> で登録</li><li>標準構成テンプレート（タイプB）から機器・回線・VLAN CIを <code>planned</code> で一括生成</li><li>回線開通・機器設置のたびに属性（シリアル、回線ID）を更新</li><li>開店時に一斉に <code>active</code> へ</li></ol></div>
+<div class="card"><h4>拠点廃止</h4><ol><li>拠点に <code>located_in</code> する全CIを抽出</li><li>回線解約・保守契約除外・IP返却の漏れを確認</li><li>機器は <code>retired</code>（他拠点へ転用なら <code>in_stock</code>）</li><li>サービスとの関係を解除。拠点CIは <code>retired</code> で保持</li></ol></div>
+</div>
+<p><b>注意点：</b>拠点廃止時の<b>回線解約漏れ</b>は、毎月費用が発生し続ける典型的な損失です。</p>
+
+<h3>6-8. 監査・棚卸し</h3>
+<p>CMDBの「稼働中CI一覧」と、<b>ディスカバリ結果・監視対象一覧・保守契約の対象リスト・現地確認</b>を突合し、差分を是正します。監査ではCMDBそのものの正確性（サンプリングで実機と照合）と、変更管理との連動（変更記録とCMDB更新の一致）が確認されることが多いです。</p>
+
+<h3>6-9. 担当者変更・引継ぎ</h3>
+<p>担当する地域を引き継ぐとき、CMDBから「担当拠点の一覧、標準構成からの逸脱、未完了の変更、期限が近い契約、直近半年の障害」を抽出して引継ぎ資料にします。CMDBに載っていない<b>暗黙知</b>（特殊な入館ルールなど）は、この機会にCIの属性かナレッジに移します。</p>
+
+<h3>6-10. 標準構成の確認</h3>
+<pre class="code"><code>チェック例（タイプB拠点の標準：ルータ1、L3SW1、L2SW≥1、AP≥2、主回線1、LTE1）
+  ・LTE回線が登録されていない タイプB拠点 → 12拠点（契約漏れ？未登録？）
+  ・OSが標準外のルータ → 37台
+  ・ホスト名が命名規則（RT-Sxxxx-nn）に従わないCI → 5件</code></pre>
+<p>逸脱が「本当に逸脱なのか」「CMDBの登録漏れなのか」を切り分けることで、<b>構成の標準化</b>と<b>データ品質の改善</b>が同時に進みます。</p>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s6">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 7 ================= -->
+<section class="chapter" id="s7" data-title="7. CMDBの構築方法">
+<h2>7. CMDBの構築方法</h2>
+<p class="lead">この章のゴール：ゼロからCMDBを作る10ステップと、スモールスタートの具体的な進め方を理解する。</p>
+<div class="flow">
+<div class="st"><b>1</b>目的・課題</div><div class="ar">→</div><div class="st"><b>2</b>管理対象</div><div class="ar">→</div><div class="st"><b>3</b>分類・粒度</div><div class="ar">→</div><div class="st"><b>4</b>属性</div><div class="ar">→</div><div class="st"><b>5</b>関係</div><div class="ar">→</div><div class="st"><b>6</b>収集方法</div><div class="ar">→</div><div class="st"><b>7</b>初期整備</div><div class="ar">→</div><div class="st"><b>8</b>品質確認</div><div class="ar">→</div><div class="st"><b>9</b>運用ルール</div><div class="ar">→</div><div class="st"><b>10</b>継続改善 ↺</div>
+</div>
+<table><thead><tr><th>#</th><th>ステップ</th><th>実施内容</th><th>成果物</th><th>注意点</th></tr></thead><tbody>
+<tr><td>1</td><td>目的・課題の明確化</td><td>現状の困りごとを洗い出し、CMDBで解決する課題を<b>2〜3個</b>に絞る（例：障害時の影響調査、保守契約漏れ防止）</td><td>目的定義書（1枚）、KPI案</td><td>「全部管理したい」は目的ではない</td></tr>
+<tr><td>2</td><td>管理対象の決定</td><td>目的から逆算して対象範囲（本番NWのみ、等）を決める</td><td>対象範囲定義、対象外リスト</td><td>「対象外」を明記すると議論が収束する</td></tr>
+<tr><td>3</td><td>CI分類・粒度の決定</td><td>CIクラスを定義し、スタック・冗長の扱いを決める</td><td>CIクラス一覧、粒度ルール</td><td>最初は10クラス以内が目安</td></tr>
+<tr><td>4</td><td>属性項目の設計</td><td>クラスごとに必須/任意を決め、各項目の「使う場面」と「情報源」を書く</td><td>属性定義書（項目名・型・必須・情報源・更新タイミング）</td><td>使い道を説明できない項目は入れない</td></tr>
+<tr><td>5</td><td>CI間の関係設計</td><td>関係タイプと向き、影響の伝わり方を定義</td><td>関係タイプ定義、関係図</td><td>5〜8種類で開始</td></tr>
+<tr><td>6</td><td>データ収集方法の決定</td><td>属性ごとに手動/自動/他システム連携を割り当て</td><td>データソース一覧（正とするシステム）</td><td>1属性につき「正」は1つ</td></tr>
+<tr><td>7</td><td>初期データ整備</td><td>既存台帳・ディスカバリ・契約書から投入し、名寄せする</td><td>初期データ、差分リスト</td><td>不明なものは「不明」と明記し推測で埋めない</td></tr>
+<tr><td>8</td><td>データ品質確認</td><td>サンプリングで実機と照合、不整合チェックを実行</td><td>品質レポート（正確性・完全性）</td><td>品質の基準値を先に決める</td></tr>
+<tr><td>9</td><td>運用ルール作成</td><td>登録・更新・棚卸し・責任者のルール化、変更管理との連動</td><td>運用ルール（8章のサンプル参照）</td><td>ルールは1〜2ページで</td></tr>
+<tr><td>10</td><td>継続的な改善</td><td>KPIを定期レビューし、範囲・項目を見直す</td><td>四半期レビュー記録</td><td>使われない項目は削除も検討</td></tr>
+</tbody></table>
+
+<h3>7-1. スモールスタートの提案</h3>
+<div class="tip"><b>最初の3か月でやること（ネットワーク保守チームの例）</b>
+<ul>
+<li><b>対象</b>：拠点、WAN回線、ルータ、スイッチ、FW、保守契約 の<b>6クラスだけ</b>（APは数が多いので後回し、または台数のみ）</li>
+<li><b>属性</b>：1クラスあたり<b>必須10項目前後</b></li>
+<li><b>関係</b>：<code>located_in</code>（設置場所）、<code>connected_to</code>（回線接続）、<code>covered_by</code>（保守契約）の<b>3種類だけ</b></li>
+<li><b>ツール</b>：既存Excel台帳を統合したスプレッドシート（9章）</li>
+<li><b>ルール</b>：「機器交換と回線変更のチケットは、CMDB更新を確認してからクローズ」の1つだけを徹底</li>
+<li><b>効果測定</b>：障害時の「回線ID・保守窓口の特定時間」を導入前後で比較</li>
+</ul></div>
+<p>完璧なデータモデルを作り込むより、<b>小さく作り、使われ、更新される状態</b>を先に作る方が成功しやすいです。使われることで「この項目も欲しい」という本当の要件が出てきます。</p>
+<div class="caution"><b>スモールスタートのリスク</b>範囲を絞りすぎると「使えない」と評価され、利用されなくなることがあります。最初の目的（例：障害時の連絡先特定）には<b>確実に答えられる範囲</b>を選んでください。また、将来の拡張を考えて <b>CI IDの採番ルールと命名規則だけは最初に固めておく</b>と、後の移行が楽になります。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s7">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 8 ================= -->
+<section class="chapter" id="s8" data-title="8. CMDBの運用ルール">
+<h2>8. CMDBの運用ルール</h2>
+<p class="lead">この章のゴール：CMDBを「正しいまま維持する」ための役割分担・更新フロー・品質管理を設計できるようになる。</p>
+
+<h3>8-1. 役割分担（RACI例）</h3>
+<p>R＝実行、A＝説明責任、C＝相談、I＝報告</p>
+<table><thead><tr><th>作業</th><th>NW企画G（オーナー）</th><th>NW運用チーム</th><th>保守ベンダー</th><th>構成管理担当</th><th>変更管理者</th></tr></thead><tbody>
+<tr><td>CIクラス・属性の定義変更</td><td>A</td><td>C</td><td>-</td><td>R</td><td>I</td></tr>
+<tr><td>新規CI登録（拠点・機器）</td><td>A</td><td>R</td><td>C</td><td>C</td><td>I</td></tr>
+<tr><td>変更作業後の属性更新</td><td>I</td><td>A</td><td>R（作業報告で情報提供）</td><td>C</td><td>C</td></tr>
+<tr><td>自動収集データの差分確認</td><td>I</td><td>R</td><td>-</td><td>A</td><td>-</td></tr>
+<tr><td>定期棚卸し</td><td>A</td><td>R</td><td>C</td><td>R</td><td>I</td></tr>
+<tr><td>データ品質レポート</td><td>I</td><td>C</td><td>-</td><td>A/R</td><td>I</td></tr>
+</tbody></table>
+<p>「構成管理担当」は専任でなくてもかまいません（運用チーム内の兼務でも可）。大切なのは<b>品質を見る人が決まっていること</b>です。</p>
+
+<h3>8-2. 変更作業時の更新フロー</h3>
+<div class="flow">
+<div class="st"><b>RFC起票</b>対象CIをCMDBから選択（自由記述にしない）</div><div class="ar">→</div>
+<div class="st"><b>影響評価</b>CMDBの関係から影響範囲を確認</div><div class="ar">→</div>
+<div class="st"><b>承認・実施</b></div><div class="ar">→</div>
+<div class="st"><b>CMDB更新</b>作業者が更新（変更番号を記録）</div><div class="ar">→</div>
+<div class="st"><b>確認</b>レビュー担当が更新内容を確認</div><div class="ar">→</div>
+<div class="st"><b>クローズ</b>「CMDB更新済」が条件</div>
+</div>
+<div class="note"><b>ポイント</b>変更チケットに「CMDB更新要否」と「更新したCI」の欄を設けます。更新不要な変更（例：パスワード変更）もあるため、<b>「要否を判断した」記録</b>を残すことが重要です。</div>
+
+<h3>8-3. 自動収集と手動管理の使い分け</h3>
+<table><thead><tr><th>情報</th><th>推奨方式</th><th>理由</th></tr></thead><tbody>
+<tr><td>ホスト名、機種、シリアル、OSバージョン、インターフェース状態</td><td>自動（SNMP、API、構成管理ツール等）</td><td>機器自身が正確に知っている。手動だと陳腐化が速い</td></tr>
+<tr><td>隣接機器（LLDP/CDP）、ARP、MAC</td><td>自動（参考情報・関係候補）</td><td>関係の候補として有用。ただし登録前に人が確認</td></tr>
+<tr><td>設置場所の詳細（ラック・フロア）、入館方法</td><td>手動</td><td>機器からは取得できない</td></tr>
+<tr><td>オーナー、利用部門、重要度</td><td>手動</td><td>組織上の判断が必要</td></tr>
+<tr><td>サービスとの依存関係</td><td>手動（テンプレート＋例外修正）</td><td>業務上の意味付けは自動化しにくい</td></tr>
+<tr><td>保守契約・回線契約・期限</td><td>他システム連携 or 手動（契約書が正）</td><td>契約管理・資産管理側が正</td></tr>
+<tr><td>IPアドレス割当</td><td>IPAM連携</td><td>IPAMが正。CMDBは参照</td></tr>
+</tbody></table>
+
+<h3>8-4. 正確性の担保と更新漏れの検知</h3>
+<div class="grid2">
+<div class="card"><h4>正確性を担保する仕組み</h4><ul>
+<li>入力規則（プルダウン、命名規則チェック、必須項目）</li>
+<li>属性ごとの「正とする情報源」を一つに決める</li>
+<li>自動収集値で手動値を上書きする／差分をアラートする</li>
+<li>月次のサンプリング監査（例：ランダム20CIを実機と照合）</li>
+<li>品質KPI：正確性（照合一致率）、完全性（必須項目充足率）、鮮度（90日以内確認率）</li></ul></div>
+<div class="card"><h4>更新漏れを検知する仕組み</h4><ul>
+<li><b>ディスカバリ差分</b>：ネットワーク上にあるがCMDBに無い／CMDBにあるが応答しない</li>
+<li><b>監視ツール差分</b>：監視対象一覧とCMDBの稼働中CIを突合</li>
+<li><b>チケット突合</b>：完了した変更チケットの対象CIの updated_at が変更日より古い</li>
+<li><b>鮮度アラート</b>：verified_at が一定期間を超えたCI</li>
+<li><b>契約突合</b>：保守ベンダーの対象シリアル一覧とCMDBを年1〜2回突合</li></ul></div>
+</div>
+
+<h3>8-5. 定期棚卸しの進め方</h3>
+<table><thead><tr><th>頻度</th><th>対象</th><th>方法</th></tr></thead><tbody>
+<tr><td>週次</td><td>自動収集の差分</td><td>差分キューを担当者が処理（登録・撤去・無視の判断）</td></tr>
+<tr><td>月次</td><td>サンプリング</td><td>ランダム抽出したCIを実機・現地写真等で照合、品質KPIを報告</td></tr>
+<tr><td>四半期</td><td>契約・期限</td><td>保守期限・EOLの近いCI、契約未紐付けCIを確認</td></tr>
+<tr><td>年次</td><td>全体棚卸し</td><td>拠点ごとに現地/リモートで確認（700拠点は地域ごとに年間でローテーション）</td></tr>
+</tbody></table>
+
+<h3>8-6. データ責任者（Owner）の設定</h3>
+<ul>
+<li>CIクラスごとにオーナーを設定する（例：回線＝NW企画G、AP＝無線担当チーム）。</li>
+<li>オーナーは「自分で全部入力する人」ではなく「<b>正しさに責任を持ち、品質KPIをレビューする人</b>」。</li>
+<li>オーナー不在のCIを定期的に抽出し、「オーナーが決まらないCIは管理対象から外す」ことも検討する。</li>
+</ul>
+
+<h3>8-7. 運用ルールのサンプル</h3>
+<pre class="code"><code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ネットワークCMDB 運用ルール（第1.0版）   制定：NW企画G
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. 目的
+  障害時の影響範囲・連絡先の特定、保守契約漏れ防止、
+  脆弱性対象抽出を迅速かつ正確に行うため、本ルールを定める。
+
+2. 対象
+  本番環境の拠点、WAN回線、ルータ、スイッチ、FW、無線AP、
+  VLAN、ネットワークサービス、保守契約。検証環境は対象外。
+
+3. 登録
+  3.1 新規CIは導入変更（RFC）に紐付けて status=planned で登録する。
+  3.2 CI ID はCMDBが自動採番し、変更しない。
+  3.3 ホスト名は命名規則「種別-拠点コード-連番」（例 RT-S0123-01）に従う。
+  3.4 不明な項目は推測で入力せず「不明」とし、確認期限を設定する。
+
+4. 更新
+  4.1 構成に影響する変更は、作業完了後 2営業日以内にCMDBを更新する。
+  4.2 変更チケットは「CMDB更新済」または「更新不要（理由）」を記録しないと
+      クローズできない。
+  4.3 機器交換時は旧/新シリアルを交換履歴に記録する。
+  4.4 自動収集対象の属性（OSバージョン等）は手動で編集しない。
+
+5. 品質管理
+  5.1 構成管理担当は、毎月ランダムに20CIを抽出し実機と照合する。
+  5.2 品質目標：正確性 95%以上、必須項目充足率 98%以上。
+  5.3 ディスカバリ差分は週次で処理し、未処理を2週間以上残さない。
+
+6. 棚卸し
+  6.1 全拠点を年1回、地域別ローテーションで棚卸しする。
+  6.2 保守ベンダーの契約対象リストとの突合を年2回行う。
+
+7. 責任
+  7.1 CIクラスごとのオーナーは別表に定める。
+  7.2 本ルールの見直しは四半期ごとにNW企画Gが行う。</code></pre>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s8">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 9 ================= -->
+<section class="chapter" id="s9" data-title="9. ツール・実装方式の比較">
+<h2>9. ツール・実装方式の比較</h2>
+<p class="lead">この章のゴール：組織規模・運用負荷・費用・拡張性・連携性の観点で、実装方式を選び、段階的に発展させる道筋を描けるようになる。</p>
+<p>特定の製品を推奨するものではありません。製品の機能や価格は頻繁に変わるため、評価時には最新情報を確認してください。</p>
+<table><thead><tr><th>方式</th><th>特徴</th><th>メリット</th><th>デメリット</th><th>適用場面</th><th>費用</th><th>拡張性</th><th>連携性</th></tr></thead><tbody>
+<tr><td><b>Excel</b></td><td>ファイルベースの表計算</td><td>誰でも使える。すぐ始められる。入力規則やピボットが使える</td><td>同時編集・履歴に弱い。ファイルの版が乱立する。関係の多段検索が困難</td><td>〜数百CI、少人数、PoC</td><td>低</td><td>低</td><td>低</td></tr>
+<tr><td><b>Googleスプレッドシート</b></td><td>クラウドの共同編集表計算</td><td>同時編集・変更履歴あり。関数やスクリプトで簡易な自動化が可能</td><td>大量データで重くなる。権限が細かく分けにくい。社外クラウド利用の可否確認が必要</td><td>〜数千行、分散チーム</td><td>低</td><td>低〜中</td><td>中（API・スクリプト）</td></tr>
+<tr><td><b>SharePoint / Microsoft Lists</b></td><td>リスト形式＋権限・履歴</td><td>参照列で簡易な関係が作れる。バージョン履歴、承認フロー、M365との連携</td><td>複雑な関係・多段の影響分析は苦手。大量アイテム時の表示制限など製品固有の制約に注意</td><td>M365を使う中規模組織</td><td>低〜中（既存ライセンス次第）</td><td>中</td><td>中</td></tr>
+<tr><td><b>Wiki・ナレッジツール</b></td><td>ページ・文書中心</td><td>説明・図・手順を豊富に書ける</td><td>構造化データに向かない。抽出・集計が困難</td><td>CMDBの<b>補助</b>（設計書・手順書）</td><td>低</td><td>低</td><td>低〜中</td></tr>
+<tr><td><b>データベース（SQL等）</b></td><td>リレーショナルDB＋画面</td><td>関係・履歴・整合性制約・大量データに強い。SQLで自在に抽出</td><td>画面・権限・バックアップを自前で用意。開発・保守スキルが必要</td><td>数千〜数万CI、技術者がいるチーム</td><td>中（人件費）</td><td>高</td><td>高（自作次第）</td></tr>
+<tr><td><b>ITSM製品のCMDB機能</b></td><td>インシデント・変更と統合</td><td>チケットとCIが自然に紐付く。ディスカバリ、影響分析、ワークフローが揃う製品が多い</td><td>費用が高い場合がある。製品のデータモデルに合わせる必要。導入・設定の工数が大きい</td><td>全社ITSMを統合する中〜大規模組織</td><td>中〜高</td><td>高</td><td>高</td></tr>
+<tr><td><b>OSS・自作ツール</b></td><td>OSSのCMDB/DCIM/IPAM、自作Webアプリ</td><td>ライセンス費を抑えられる。カスタマイズ自由。ネットワーク向けOSS（DCIM/IPAM系）もある</td><td>運用・アップデート・セキュリティ対応は自己責任。担当者依存のリスク</td><td>技術力のあるNWチーム、特定領域に特化</td><td>低〜中（人件費）</td><td>高</td><td>高（API次第）</td></tr>
+</tbody></table>
+
+<h3>9-1. 段階的な発展の考え方</h3>
+<div class="flow">
+<div class="st"><b>Step 1：スプレッドシート</b>CIシート＋関係シート＋マスタシート。ルールを固める</div><div class="ar">→</div>
+<div class="st"><b>Step 2：共有リスト／DB</b>同時編集・履歴・参照整合性が必要になったら移行</div><div class="ar">→</div>
+<div class="st"><b>Step 3：専用ツール</b>チケット連携、ディスカバリ、影響分析を本格化</div>
+</div>
+<h4>スプレッドシートで始めるときのシート構成例</h4>
+<table><thead><tr><th>シート</th><th>内容</th><th>工夫</th></tr></thead><tbody>
+<tr><td>CI_一覧</td><td>全CIの共通属性（1行1CI）</td><td>CI IDは連番で固定、クラス・ステータスはプルダウン</td></tr>
+<tr><td>CI_NW機器</td><td>NW機器の拡張属性</td><td>CI IDで一覧と紐付け</td></tr>
+<tr><td>関係</td><td>source_ci_id / rel_type / target_ci_id</td><td>「備考に書く」をやめ、1行1関係にする</td></tr>
+<tr><td>マスタ</td><td>CIクラス、ステータス、関係タイプ、拠点コード</td><td>入力規則の参照元</td></tr>
+<tr><td>変更ログ</td><td>日付・CI・変更内容・チケット番号</td><td>上書きした内容をここに残す</td></tr>
+</tbody></table>
+<h4>次のステップへ移行する判断基準（目安）</h4>
+<ul>
+<li>CIが数千件を超え、ファイルが重い・壊れる</li>
+<li>複数人の同時更新で上書き事故が起きる</li>
+<li>「AのサービスはどのCIに依存するか」を多段でたどる要求が頻繁にある</li>
+<li>自動収集結果を定期的に取り込みたい</li>
+<li>変更・インシデントのチケットと自動で紐付けたい</li>
+</ul>
+<div class="note"><b>移行を楽にするために</b>Excelの段階から「CI ID」「関係を別シートで1行1件」「マスタ値の固定」を守っておくと、DBや製品へのインポートがほぼそのまま可能です。逆に、セル結合・色による意味付け・備考欄への自由記述は、移行時の最大の障害になります。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s9">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 10 ================= -->
+<section class="chapter" id="s10" data-title="10. 失敗しやすいポイント">
+<h2>10. CMDB導入で失敗しやすいポイント</h2>
+<p class="lead">この章のゴール：典型的な失敗を事前に知り、自分の計画に対策を組み込めるようになる。</p>
+<table><thead><tr><th>失敗パターン</th><th>失敗例</th><th>原因</th><th>対策</th></tr></thead><tbody>
+<tr><td><b>項目を増やしすぎる</b></td><td>機器1台に80項目。半分以上が空欄で、誰も入力しなくなった</td><td>「あれば便利」で項目を追加。使い道と情報源を確認していない</td><td>項目ごとに「使う業務」「情報源」「更新者」を定義。説明できない項目は入れない。充足率が低い項目は四半期ごとに見直す</td></tr>
+<tr><td><b>登録しただけで更新されない</b></td><td>初期構築から1年後、交換済み機器のシリアルが3割違っていた</td><td>更新を変更管理に組み込んでいない。更新が「善意」に依存</td><td>変更チケットのクローズ条件にCMDB更新を入れる。自動収集との差分検知</td></tr>
+<tr><td><b>CIの粒度が不適切</b></td><td>スイッチのポートまでCI化して更新が破綻／逆に「拠点NW一式」で交換対象が分からない</td><td>交換・変更・障害の単位を考えずに決めた</td><td>3章の「粒度を決める5つの問い」で判断。細かい情報は自動収集の参照データにする</td></tr>
+<tr><td><b>関係性が管理されていない</b></td><td>機器一覧はあるが、障害時に影響サービスが分からず、結局ベテランに聞く</td><td>関係の登録は手間がかかるため後回しにされた</td><td>最初から最低3種類の関係を必須にする。標準構成テンプレートで一括生成</td></tr>
+<tr><td><b>目的が曖昧</b></td><td>「ITILに沿ってCMDBを作る」がゴールになり、何に使うか誰も説明できない</td><td>手段と目的の取り違え</td><td>解決する業務課題とKPI（例：影響調査時間を30分→5分）を最初に定義</td></tr>
+<tr><td><b>責任者が決まっていない</b></td><td>不整合を見つけても「誰が直すのか」で止まる</td><td>オーナー・更新担当の未定義</td><td>CIクラスごとにオーナーを設定。RACIを明文化</td></tr>
+<tr><td><b>自動収集に依存しすぎる</b></td><td>ディスカバリで1万件取り込んだが、未知の機器や検証機が混在し、重複も多数</td><td>「自動なら正しい」という思い込み。識別ルール不在</td><td>自動収集は「候補」として取り込み、識別ルールと人の確認を経て登録。自動化できない属性（オーナー、サービス関係）を明確化</td></tr>
+<tr><td><b>データの正確性を確認しない</b></td><td>監査で実機照合したら一致率70%。CMDBへの信頼が失われ使われなくなった</td><td>品質の測定・報告の仕組みがない</td><td>月次サンプリング、品質KPIの定期報告。不正確な情報には信頼度フラグを付ける</td></tr>
+<tr><td><b>導入自体が目的になる</b></td><td>高額なツールを導入し、構築プロジェクトが完了した時点で活動が終わった</td><td>運用設計・定着化の計画と予算がない</td><td>導入後の運用体制・工数を先に確保。「導入完了」ではなく「業務KPIの改善」を成功基準にする</td></tr>
+</tbody></table>
+<div class="tip"><b>共通する教訓</b>CMDBの成否は、ツールの機能よりも「<b>目的の明確さ</b>」「<b>更新が業務に組み込まれているか</b>」「<b>責任者がいるか</b>」でほぼ決まります。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s10">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 11 ================= -->
+<section class="chapter" id="s11" data-title="11. 実務演習">
+<h2>11. 実務演習</h2>
+<p class="lead">この章のゴール：学んだ内容を自分で使ってみて、理解を定着させる。選択式は「回答する」で正誤が表示されます。記述式は自分で考えてから模範解答を開いてください。</p>
+
+<div class="quiz" data-answer="a,b,d,f">
+<div class="qh">演習1【CIの判断・複数選択】約700拠点のネットワーク保守で、CIとして登録すべきものをすべて選んでください。</div>
+<label><input type="checkbox" value="a"> a. 各拠点のWAN主回線</label>
+<label><input type="checkbox" value="b"> b. 各拠点のL3スイッチ</label>
+<label><input type="checkbox" value="c"> c. 各スイッチのMACアドレステーブルのエントリ</label>
+<label><input type="checkbox" value="d"> d. 「店舗無線LAN」サービス</label>
+<label><input type="checkbox" value="e"> e. ラック内のパッチケーブル1本ずつ</label>
+<label><input type="checkbox" value="f"> f. 拠点（横浜港北店）</label>
+<button class="btn check-btn no-print">回答する</button><div class="feedback"></div>
+
+</div>
+
+<div class="quiz" data-answer="c">
+<div class="qh">演習2【粒度】大型店（タイプA）のコアスイッチは物理2台をスタック接続し、ホスト名・管理IPは1つです。最も実務的なCIの持ち方はどれですか。</div>
+<label><input type="radio" name="q2" value="a"> a. 論理1台のみをCIにし、シリアルは備考に2つ書く</label>
+<label><input type="radio" name="q2" value="b"> b. 物理2台のみをCIにし、同じホスト名で2件登録する</label>
+<label><input type="radio" name="q2" value="c"> c. 論理スイッチ1件＋物理メンバ2件をCIにし、member_of関係で結ぶ</label>
+<label><input type="radio" name="q2" value="d"> d. 拠点のネットワーク一式として1件にまとめる</label>
+<button class="btn check-btn no-print">回答する</button><div class="feedback"></div>
+
+</div>
+
+<div class="quiz" data-answer="b">
+<div class="qh">演習3【識別子】機器のCIを一意に識別する「主キー」として最も適切なものはどれですか。</div>
+<label><input type="radio" name="q3" value="a"> a. 管理IPアドレス</label>
+<label><input type="radio" name="q3" value="b"> b. CMDBが採番する意味を持たない不変のCI ID</label>
+<label><input type="radio" name="q3" value="c"> c. ホスト名</label>
+<label><input type="radio" name="q3" value="d"> d. 設置場所＋ラック番号</label>
+<button class="btn check-btn no-print">回答する</button><div class="feedback"></div>
+
+</div>
+
+<div class="quiz">
+<div class="qh">演習4【属性設計・記述】「WAN回線」CIの属性を、必須項目を中心に10項目前後で設計してください。各項目の「使う場面」も考えましょう。</div>
+<textarea placeholder="例）回線ID：キャリアへの故障申告に使う …"></textarea>
+
+</div>
+
+<div class="quiz">
+<div class="qh">演習5【関係設計・記述】横浜港北店の「店舗POS決済」が止まる原因になりうるCIを、関係タイプ（depends_on / uses / connected_to など）と向きを含めて列挙してください。冗長構成も考慮しましょう。</div>
+<textarea placeholder="例）店舗POS決済 —uses→ 拠点WAN接続サービス …"></textarea>
+
+</div>
+
+<div class="quiz" data-answer="b">
+<div class="qh">演習6【影響範囲調査】6章のデモ構成で、センターFWの1号機（FW-DC-01）だけが故障しました。正しい判断はどれですか。</div>
+<label><input type="radio" name="q6" value="a"> a. インターネット接続サービスが停止し、クラウドSaaS利用も停止する</label>
+<label><input type="radio" name="q6" value="b"> b. FWは冗長構成のため、インターネット接続サービスは「縮退（冗長性喪失）」。2号機の健全性確認と早期復旧が必要</label>
+<label><input type="radio" name="q6" value="c"> c. 拠点内の問題ではないため、店舗への影響は一切なく対応不要</label>
+<label><input type="radio" name="q6" value="d"> d. POS決済が停止する</label>
+<button class="btn check-btn no-print">回答する</button><div class="feedback"></div>
+
+</div>
+
+<div class="quiz">
+<div class="qh">演習7【影響範囲調査・記述】監視ツールで「SW-S0123-01 ダウン」のアラートが上がりました。CMDBを使ってどの順に何を調べ、誰に連絡しますか。手順を書いてください。</div>
+<textarea placeholder="1. ホスト名からCIを特定 …"></textarea>
+
+</div>
+
+<div class="quiz">
+<div class="qh">演習8【小規模CMDB設計・記述】あなたは20拠点・機器約100台の企業のネットワーク担当です。今は機器台帳Excelが1つだけあります。3か月でCMDBの最初の版を作る計画（目的、対象CIクラス、関係タイプ、ツール、運用ルール1つ、成功基準）を考えてください。</div>
+<textarea placeholder="目的： / 対象： / 関係： / ツール： / ルール： / 成功基準："></textarea>
+
+</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s11">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 12 ================= -->
+<section class="chapter" id="s12" data-title="12. 実務導入ロードマップ">
+<h2>12. 実務導入ロードマップ</h2>
+<p class="lead">この章のゴール：ネットワーク保守チームが現実的に進められる3段階の導入計画を描く。期間は700拠点規模・兼務体制を想定した<b>目安</b>であり、組織の状況によって大きく変わります。</p>
+
+<div class="phase"><h4>Phase 1：最低限の機器・拠点情報の整理（目安：0〜4か月）</h4>
+<table><tbody>
+<tr><th>対象範囲</th><td>拠点、WAN回線、ルータ、スイッチ、FW、保守契約（APは台数とモデルのみ）</td></tr>
+<tr><th>実施内容</th><td>目的定義／散在する台帳（機器台帳・回線一覧・契約一覧）の統合／CI ID採番と命名規則の確定／必須属性の定義／ディスカバリ（またはSNMPでの一括取得）結果との突合／located_in・covered_by 関係の登録／簡易な更新ルールの制定</td></tr>
+<tr><th>成果物</th><td>目的定義書、CIクラス・属性定義書、統合CMDB（スプレッドシート等）、命名規則、運用ルール第1版</td></tr>
+<tr><th>成功判断基準</th><td>・全拠点・対象機器の登録率100%、必須項目充足率95%以上<br>・サンプリング照合での一致率90%以上<br>・障害時に回線ID・保守窓口・現地連絡先をCMDBだけで特定できる<br>・導入後1か月以上、更新が継続している</td></tr>
+</tbody></table></div>
+
+<div class="phase"><h4>Phase 2：関係性・履歴・変更管理との連携（目安：4〜10か月）</h4>
+<table><tbody>
+<tr><th>対象範囲</th><td>Phase 1＋VLAN・サブネット、NWサービス・主要業務サービス、AP（個別CI化）、冗長グループ</td></tr>
+<tr><th>実施内容</th><td>関係タイプ（depends_on、connected_to、member_of、uses）の追加／標準構成テンプレートで関係を一括生成／変更チケット・インシデントへのCI紐付け／交換履歴・変更ログの運用／変更クローズ条件へのCMDB更新の組込み／必要に応じてDBや共有リストへ移行／オーナー・RACIの正式化</td></tr>
+<tr><th>成果物</th><td>関係タイプ定義、サービスCI一覧、標準構成テンプレート、変更管理手順の改訂版、品質KPIの月次レポート</td></tr>
+<tr><th>成功判断基準</th><td>・構成変更チケットのCMDB更新率95%以上<br>・主要サービスについて依存CIが登録済み（模擬障害訓練で影響範囲を正しく回答）<br>・変更の事前影響確認にCMDBが使われている（RFCの対象CIが選択式になっている）<br>・照合一致率95%以上</td></tr>
+</tbody></table></div>
+
+<div class="phase"><h4>Phase 3：自動収集・障害影響分析・脆弱性対応への活用（目安：10〜24か月）</h4>
+<table><tbody>
+<tr><th>対象範囲</th><td>Phase 2＋自動収集の常時化、監視ツール・IPAM・契約管理との連携、ソフトウェア（OS）情報の高度化</td></tr>
+<tr><th>実施内容</th><td>ディスカバリの定期実行と差分キュー運用／OSバージョン等の自動上書き／監視アラートからCIを自動特定し影響サービスを表示／脆弱性情報と機種・OSの突合による対象抽出の定型化／EOS/EOL・保守期限の自動アラート／必要に応じてITSM製品やDBベースのツールへ移行</td></tr>
+<tr><th>成果物</th><td>連携構成図、データソース一覧（正とするシステム）、自動差分レポート、脆弱性対応・EOL管理の定型手順、ダッシュボード</td></tr>
+<tr><th>成功判断基準</th><td>・脆弱性公表から対象機器リスト作成まで1営業日以内<br>・障害時の影響範囲特定時間を導入前比で大幅に短縮（例：30分→5分）<br>・自動収集対象属性の鮮度（7日以内に確認済み）95%以上<br>・保守契約切れ・回線解約漏れがゼロ</td></tr>
+</tbody></table></div>
+<div class="warn"><b>現実的な注意点</b>各フェーズの終わりに「次へ進むか、今のフェーズを定着させるか」を判断します。Phase 1の品質が低いままPhase 3の自動化に進むと、誤ったデータを自動で拡散させることになります。Phase 2で止めても十分に価値がある組織も多いです。</div>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s12">✓ この章を完了にする</button></div>
+</section>
+
+<!-- ================= 13 ================= -->
+<section class="chapter" id="s13" data-title="13. 用語集・参考知識">
+<h2>13. 用語集・参考知識</h2>
+<p class="lead">この章のゴール：重要用語を正確に理解し、ITILにおけるCMDBの位置付けを誤解なく説明できるようになる。</p>
+<table><thead><tr><th>用語</th><th>説明</th></tr></thead><tbody>
+<tr><td><b>CI</b>（Configuration Item）</td><td>構成アイテム。ITサービスを提供するために管理が必要な構成要素。機器、ソフトウェア、回線、サービス、文書など</td></tr>
+<tr><td><b>CI Class</b></td><td>CIの分類（ルータ、回線、サービスなど）。クラスごとに持つ属性が決まる。上位クラスから属性を継承する設計が多い</td></tr>
+<tr><td><b>Attribute</b>（属性）</td><td>CIの特徴を表すデータ項目（ホスト名、シリアル、ステータス等）</td></tr>
+<tr><td><b>Relationship</b>（関係）</td><td>CI同士のつながり。種類（依存・接続・設置など）と向きを持つ。影響分析の基盤</td></tr>
+<tr><td><b>Baseline</b>（ベースライン）</td><td>ある時点で合意・承認された構成の状態。変更前後の比較、復旧の基準、標準構成として使う（例：タイプB拠点標準構成 v3）</td></tr>
+<tr><td><b>Configuration Management</b>（構成管理）</td><td>構成情報を正確に保ち、必要なときに提供する活動。CMDBはその道具</td></tr>
+<tr><td><b>CMDB</b></td><td>CIと関係の情報をライフサイクルを通じて記録するデータベース</td></tr>
+<tr><td><b>CMS</b>（Configuration Management System）</td><td>構成管理を支えるツール・データ・情報の集合。ITIL v3/2011では、1つ以上のCMDBを含みうる上位の仕組みとして説明されていた</td></tr>
+<tr><td><b>Discovery</b>（ディスカバリ）</td><td>ネットワークをスキャンし、機器・ソフトウェア・接続関係を自動検出すること。CMDBへの入力源</td></tr>
+<tr><td><b>Reconciliation</b>（突合・調整）</td><td>複数の情報源のデータを識別ルールで照合し、同一CIとしてまとめる処理</td></tr>
+<tr><td><b>ITSM</b></td><td>ITサービスマネジメント。ITを顧客価値のある「サービス」として設計・提供・改善する管理活動</td></tr>
+<tr><td><b>Service</b>（サービス）</td><td>顧客が望む成果の達成を支援し、価値を共創する手段。CMDBでは技術サービス・業務サービスとしてCI化する</td></tr>
+<tr><td><b>Incident</b>（インシデント）</td><td>サービスの計画外の中断、または品質の低下。例：横浜港北店のWAN断</td></tr>
+<tr><td><b>Problem</b>（問題）</td><td>1つ以上のインシデントの原因、または潜在的な原因。例：同型スイッチの電源故障多発</td></tr>
+<tr><td><b>Known Error</b>（既知のエラー）</td><td>原因が分析済みで、まだ解決されていない問題。回避策とともにナレッジに記録する</td></tr>
+<tr><td><b>Change</b>（変更）</td><td>サービスに直接・間接に影響しうるものの追加・変更・削除。例：OS更新、VLAN新設</td></tr>
+<tr><td><b>RFC</b></td><td>変更要求（Request for Change）。変更を申請する記録</td></tr>
+<tr><td><b>CAB</b></td><td>変更諮問委員会（Change Advisory Board）。変更の評価・承認に助言する場。ITIL 4では、より柔軟な変更承認の形が推奨されている</td></tr>
+<tr><td><b>Asset</b>（資産）</td><td>組織にとって価値のあるもの。IT資産は財務的価値を持ち、ITサービス提供に寄与する構成要素。資産管理は財務・契約の観点で管理する</td></tr>
+<tr><td><b>SPOF</b></td><td>単一障害点（Single Point of Failure）。そこが壊れると全体が止まる箇所</td></tr>
+<tr><td><b>EOS / EOL</b></td><td>販売終了／サポート終了など。定義と名称はメーカーにより異なるため、どの日付かを明確にして管理する</td></tr>
+<tr><td><b>IPAM</b></td><td>IPアドレス管理（IP Address Management）。IPアドレス・サブネットの割当を管理する仕組み</td></tr>
+<tr><td><b>Single Source of Truth</b></td><td>ある情報について「正」とする唯一の情報源</td></tr>
+</tbody></table>
+<p style="font-size:13px;color:var(--muted)">※ Service、Incident、Problem、Change、Assetなどの説明はITILの定義を要約したものです。正確な定義文は公式出版物を確認してください。</p>
+
+<h3>13-1. ITILにおけるCMDB・構成管理の位置付け</h3>
+<table><thead><tr><th>版</th><th>構成管理の扱い（概要）</th></tr></thead><tbody>
+<tr><td>ITIL v3 / ITIL 2011</td><td>サービストランジション（Service Transition）の中の「サービス資産管理および構成管理（SACM：Service Asset and Configuration Management）」プロセスとして説明されていた。CMS・CMDB・DML（決定版メディアライブラリ）などの概念が示されていた</td></tr>
+<tr><td>ITIL 4（2019〜）</td><td>「プロセス」ではなく「<b>プラクティス</b>」という考え方を採用。構成管理は「<b>サービス構成管理（Service Configuration Management）</b>」、資産管理は「<b>IT資産管理（IT Asset Management）</b>」という別々のプラクティスとして整理されている。変更については、Foundation書籍（2019）では「Change Control」、その後のプラクティスガイドなどでは「<b>Change Enablement</b>」の名称が使われている</td></tr>
+</tbody></table>
+<div class="note"><b>正確に理解するための注意点</b>
+<ul>
+<li>ITILは<b>フレームワーク（ガイダンス）</b>であり、「この項目を必ず管理せよ」と規定する規格ではありません。CMDBの項目・粒度・ツールは、組織の目的に合わせて決めるものです。</li>
+<li>認証可能な国際規格としては <b>ISO/IEC 20000-1</b>（ITサービスマネジメントシステム）があり、構成情報の管理に関する要求事項を含みます。IT資産管理については <b>ISO/IEC 19770</b> シリーズがあります。具体的な要求事項の文言は規格本文で確認してください。</li>
+<li>ITIL 4では、構成情報を<b>単一の巨大なデータベース</b>に集約することを必須とはしておらず、複数のツールやデータソースを組み合わせて必要な情報を提供するという考え方も示されています（解釈には幅があるため、原典の確認を推奨します）。</li>
+<li>ITILの版・名称・定義は改訂されることがあります。本教材の記述は作成時点の一般的な理解に基づくもので、最新の公式情報（PeopleCert/AXELOS の公式出版物）で確認してください。ITIL®はPeopleCert（AXELOS）グループの登録商標です。</li>
+</ul></div>
+
+<h3>13-2. 次に学ぶとよいこと</h3>
+<ul>
+<li>変更管理（Change Enablement）とインシデント管理の実務フロー</li>
+<li>ネットワークの自動化（構成バックアップ、設定差分管理、API連携）</li>
+<li>IPAM・DCIM（データセンター設備管理）の考え方と、CMDBとの役割分担</li>
+<li>データ品質管理（正確性・完全性・鮮度の測定方法）</li>
+</ul>
+<div class="complete-bar"><button class="btn complete-btn" data-sec="s13">✓ この章を完了にする</button></div>
+</section>
+
+<footer>CMDB実践教材 ― 掲載している企業・拠点・機種・番号はすべて架空です。オフラインで動作します。</footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var ORIGINAL = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  var mem = {};
+  var store = {
+    get: function(k){ try{ return localStorage.getItem(k); }catch(e){ return mem[k] || null; } },
+    set: function(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } }
+  };
+  var $ = function(s,r){ return (r||document).querySelector(s); };
+  var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+  /* ---------- テーマ ---------- */
+  var theme = store.get("cmdb_theme") || "dark";
+  document.documentElement.setAttribute("data-theme", theme);
+  $("#themeBtn").addEventListener("click", function(){
+    theme = theme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    store.set("cmdb_theme", theme);
+  });
+
+  /* ---------- 目次 ---------- */
+  var sections = $$("section.chapter");
+  var toc = $("#toc"); toc.innerHTML = "";
+  sections.forEach(function(s){
+    var li = document.createElement("li");
+    li.innerHTML = '<a href="#'+s.id+'" data-id="'+s.id+'"><span>'+esc(s.getAttribute("data-title"))+'</span><span class="ck"></span></a>';
+    toc.appendChild(li);
+  });
+  var side = $("#side");
+  $("#menuBtn").addEventListener("click", function(){ side.classList.toggle("open"); });
+  $$("#toc a").forEach(function(a){ a.addEventListener("click", function(){ side.classList.remove("open"); }); });
+
+  /* ---------- スクロール追従 ---------- */
+  function setActive(id){
+    $$("#toc a").forEach(function(a){ a.classList.toggle("active", a.getAttribute("data-id")===id); });
+  }
+  function onScroll(){
+    var cur = sections[0].id, y = window.innerHeight * 0.25;
+    sections.forEach(function(s){ if(s.getBoundingClientRect().top <= y) cur = s.id; });
+    setActive(cur);
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- 進捗 ---------- */
+  var done = {};
+  try{ done = JSON.parse(store.get("cmdb_done") || "{}"); }catch(e){ done = {}; }
+  function renderProgress(){
+    var n = 0;
+    sections.forEach(function(s){
+      var d = !!done[s.id]; if(d) n++;
+      var a = $('#toc a[data-id="'+s.id+'"] .ck'); if(a) a.textContent = d ? "✓" : "";
+      var b = $('.complete-btn[data-sec="'+s.id+'"]');
+      if(b){ b.classList.toggle("done", d); b.textContent = d ? "✓ 完了済み（クリックで取消）" : "✓ この章を完了にする"; }
+    });
+    $("#ptext").textContent = "完了 " + n + "/" + sections.length;
+    $("#pbar").style.width = (n / sections.length * 100) + "%";
+  }
+  $$(".complete-btn").forEach(function(b){
+    b.addEventListener("click", function(){
+      var id = b.getAttribute("data-sec");
+      if(done[id]) delete done[id]; else done[id] = true;
+      store.set("cmdb_done", JSON.stringify(done)); renderProgress();
+    });
+  });
+  $("#resetProg").addEventListener("click", function(){
+    if(confirm("すべての章の完了状況をリセットしますか？")){ done = {}; store.set("cmdb_done","{}"); renderProgress(); }
+  });
+  renderProgress();
+
+  /* ---------- 検索 ---------- */
+  var q = $("#q"), res = $("#results"), index = [], selIdx = -1, timer = null;
+  $$("main p, main li, main td, main th, main h3, main h4, main summary, main pre, main .card, main .st").forEach(function(el){
+    if(el.closest(".no-print") || el.closest("#demoWrap") || el.closest("#demoResult")) return;
+    var sec = el.closest("section.chapter"); if(!sec) return;
+    var t = (el.textContent || "").replace(/\s+/g," ").trim();
+    if(t.length > 1) index.push({el:el, text:t, low:t.toLowerCase(), sec:sec.getAttribute("data-title")});
+  });
+  function snippet(t, kw){
+    var i = t.toLowerCase().indexOf(kw), st = Math.max(0, i-30), en = Math.min(t.length, i+kw.length+50);
+    var s = (st>0?"…":"") + t.slice(st,en) + (en<t.length?"…":"");
+    var low = s.toLowerCase(), out = "", p = 0, j;
+    while((j = low.indexOf(kw, p)) !== -1){ out += esc(s.slice(p,j)) + "<mark>" + esc(s.slice(j,j+kw.length)) + "</mark>"; p = j + kw.length; }
+    return out + esc(s.slice(p));
+  }
+  function search(){
+    var kw = q.value.trim().toLowerCase(); selIdx = -1;
+    if(!kw){ res.style.display = "none"; res.innerHTML = ""; return; }
+    var hits = [], seen = [];
+    for(var i=0;i<index.length && hits.length<40;i++){
+      var it = index[i];
+      if(it.low.indexOf(kw) === -1) continue;
+      // 親要素が既にヒットしている場合は子を重複表示しない
+      var dup = seen.some(function(e){ return e.contains(it.el) || it.el.contains(e); });
+      if(dup) continue;
+      seen.push(it.el); hits.push(it);
+    }
+    var total = index.filter(function(it){ return it.low.indexOf(kw)!==-1; }).length;
+    if(!hits.length){ res.innerHTML = '<div class="r">「'+esc(q.value)+'」に一致する箇所はありません</div>'; res.style.display="block"; return; }
+    res.innerHTML = '<div class="r" style="cursor:default;color:var(--muted)">'+hits.length+'件を表示（一致した要素 '+total+'）  ↑↓で選択、Enterで移動</div>' +
+      hits.map(function(h,k){ return '<div class="r" data-k="'+k+'"><b>'+esc(h.sec)+'</b>'+snippet(h.text,kw)+'</div>'; }).join("");
+    res.style.display = "block";
+    $$(".r[data-k]", res).forEach(function(r){
+      r.addEventListener("click", function(){ go(hits[+r.getAttribute("data-k")]); });
+    });
+    res._hits = hits;
+  }
+  function go(h){
+    var p = h.el.parentElement;
+    while(p){ if(p.tagName === "DETAILS") p.open = true; p = p.parentElement; }
+    if(h.el.tagName === "SUMMARY" && h.el.parentElement) h.el.parentElement.open = true;
+    res.style.display = "none";
+    h.el.scrollIntoView({behavior:"smooth", block:"center"});
+    h.el.classList.add("flash");
+    setTimeout(function(){ h.el.classList.remove("flash"); }, 2200);
+    side.classList.remove("open");
+  }
+  q.addEventListener("input", function(){ clearTimeout(timer); timer = setTimeout(search, 150); });
+  q.addEventListener("keydown", function(e){
+    var items = $$(".r[data-k]", res);
+    if(e.key === "ArrowDown" || e.key === "ArrowUp"){
+      if(!items.length) return; e.preventDefault();
+      selIdx = e.key === "ArrowDown" ? Math.min(items.length-1, selIdx+1) : Math.max(0, selIdx-1);
+      items.forEach(function(it,i){ it.classList.toggle("sel", i===selIdx); });
+      items[selIdx].scrollIntoView({block:"nearest"});
+    } else if(e.key === "Enter"){
+      if(res._hits && res._hits.length) go(res._hits[selIdx >= 0 ? selIdx : 0]);
+    } else if(e.key === "Escape"){ q.value = ""; search(); q.blur(); }
+  });
+  q.addEventListener("focus", function(){ if(q.value.trim()) search(); });
+  document.addEventListener("click", function(e){ if(!e.target.closest(".search-wrap")) res.style.display = "none"; });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA"){ e.preventDefault(); q.focus(); }
+  });
+
+  /* ---------- 演習 ---------- */
+  $$(".quiz[data-answer]").forEach(function(qz){
+    var btn = $(".check-btn", qz), fb = $(".feedback", qz);
+    btn.addEventListener("click", function(){
+      var vals = $$("input:checked", qz).map(function(i){ return i.value; }).sort().join(",");
+      var ans = qz.getAttribute("data-answer").split(",").sort().join(",");
+      if(!vals){ fb.className = "feedback ng"; fb.textContent = "選択肢を選んでから回答してください。"; return; }
+      if(vals === ans){ fb.className = "feedback ok"; fb.textContent = "◎ 正解です！ 解説も確認しましょう。"; }
+      else { fb.className = "feedback ng"; fb.textContent = "✕ 不正解です。もう一度考えるか、解説を開いて確認しましょう。"; }
+    });
+  });
+
+  /* ---------- コードの色付けとコピー ---------- */
+  $$('pre.code[data-lang="json"] code').forEach(function(c){
+    var t = esc(c.textContent);
+    t = t.replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)?|\b(true|false|null)\b|(-?\b\d+(?:\.\d+)?\b)/g, function(m,str,colon,bool,num){
+      if(str) return colon ? '<span class="k">'+str+'</span>'+colon : '<span class="s">'+str+'</span>';
+      if(bool) return '<span class="b">'+bool+'</span>';
+      return '<span class="n">'+num+'</span>';
+    });
+    c.innerHTML = t;
+  });
+  $$('pre.code[data-lang="sql"] code').forEach(function(c){
+    var lines = c.textContent.split("\n").map(function(line){
+      var i = line.indexOf("--"), code = i>=0 ? line.slice(0,i) : line, cm = i>=0 ? line.slice(i) : "";
+      var h = esc(code).replace(/'[^']*'/g, function(m){ return '<span class="s">'+m+'</span>'; })
+        .replace(/\b(CREATE|TABLE|PRIMARY|KEY|NOT|NULL|UNIQUE|REFERENCES|DEFAULT|SELECT|FROM|WHERE|JOIN|ON|AND|OR|IN|AS|GROUP|BY|HAVING|ORDER|LIKE|IS|COUNT|INTERVAL|CURRENT_DATE|VARCHAR|CHAR|DATE|TIMESTAMP|SERIAL)\b/g, '<span class="k">$1</span>');
+      return h + (cm ? '<span class="c">'+esc(cm)+'</span>' : "");
+    });
+    c.innerHTML = lines.join("\n");
+  });
+  $$("pre.code").forEach(function(p){
+    var b = document.createElement("button"); b.className = "btn copy"; b.textContent = "コピー";
+    b.addEventListener("click", function(){
+      var txt = p.querySelector("code").textContent;
+      function ok(){ b.textContent = "コピーしました"; setTimeout(function(){ b.textContent = "コピー"; }, 1500); }
+      if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(txt).then(ok, fallback); } else fallback();
+      function fallback(){ var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); ok(); }catch(e){} document.body.removeChild(ta); }
+    });
+    p.appendChild(b);
+  });
+
+  /* ---------- 影響範囲デモ ---------- */
+  var nodes = [
+    {id:"BS-POS",   label:"店舗POS決済",        sub:"業務サービス",     cls:"n-bs",  x:200, y:20,  owner:"店舗システム部", deps:[["NS-WAN"],["SW-02"]]},
+    {id:"BS-PORTAL",label:"社内ポータル(無線)", sub:"業務サービス",     cls:"n-bs",  x:500, y:20,  owner:"情報システム部", deps:[["NS-WAN"],["NS-WLAN"]]},
+    {id:"BS-SAAS",  label:"クラウドSaaS利用",   sub:"業務サービス",     cls:"n-bs",  x:800, y:20,  owner:"情報システム部", deps:[["NS-INET"]]},
+    {id:"NS-WAN",   label:"NS-WAN-S0123",       sub:"拠点WAN接続",      cls:"n-ns",  x:300, y:125, owner:"NW企画G", deps:[["RT"],["SW-01"],["CIR-P","CIR-B"],["DCRT-01","DCRT-02"]]},
+    {id:"NS-WLAN",  label:"NS-WLAN-S0123",      sub:"店舗無線LAN",      cls:"n-ns",  x:600, y:125, owner:"NW企画G", deps:[["AP-01","AP-02"]]},
+    {id:"NS-INET",  label:"NS-INET",            sub:"インターネット接続",cls:"n-ns", x:850, y:125, owner:"NW企画G", deps:[["NS-WAN"],["FW-DC-01","FW-DC-02"]]},
+    {id:"RT",       label:"RT-S0123-01",        sub:"ルータ",           cls:"n-dev", x:100, y:240, owner:"NW運用 / B社保守", deps:[]},
+    {id:"SW-01",    label:"SW-S0123-01",        sub:"L3スイッチ",       cls:"n-dev", x:280, y:240, owner:"NW運用 / B社保守", deps:[]},
+    {id:"SW-02",    label:"SW-S0123-02",        sub:"L2スイッチ(PoE)",  cls:"n-dev", x:460, y:240, owner:"NW運用 / B社保守", deps:[["SW-01"]]},
+    {id:"AP-01",    label:"AP-S0123-01",        sub:"無線AP",           cls:"n-dev", x:640, y:240, owner:"NW運用 / D社保守", deps:[["SW-02"]]},
+    {id:"AP-02",    label:"AP-S0123-02",        sub:"無線AP",           cls:"n-dev", x:820, y:240, owner:"NW運用 / D社保守", deps:[["SW-02"]]},
+    {id:"CIR-P",    label:"CIR-0123-01",        sub:"主回線(閉域)",     cls:"n-inf", x:90,  y:360, owner:"キャリアA NOC", deps:[]},
+    {id:"CIR-B",    label:"CIR-0123-02",        sub:"LTE回線",          cls:"n-inf", x:250, y:360, owner:"キャリアC", deps:[]},
+    {id:"DCRT-01",  label:"DCRT-E1-01",         sub:"センタールータ",   cls:"n-inf", x:410, y:360, owner:"NW運用(DC)", deps:[]},
+    {id:"DCRT-02",  label:"DCRT-E1-02",         sub:"センタールータ",   cls:"n-inf", x:570, y:360, owner:"NW運用(DC)", deps:[]},
+    {id:"FW-DC-01", label:"FW-DC1-01",          sub:"センターFW",       cls:"n-inf", x:730, y:360, owner:"セキュリティG", deps:[]},
+    {id:"FW-DC-02", label:"FW-DC1-02",          sub:"センターFW",       cls:"n-inf", x:890, y:360, owner:"セキュリティG", deps:[]}
+  ];
+  var W = 140, H = 46, byId = {};
+  nodes.forEach(function(n){ byId[n.id] = n; });
+  var failed = {};
+  var svg = $("#demo"), NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for(var k in attrs) e.setAttribute(k, attrs[k]); if(parent) parent.appendChild(e); return e; }
+  var edges = [];
+  function drawDemo(){
+    svg.innerHTML = "";
+    var gE = el("g", {}, svg), gN = el("g", {}, svg);
+    edges = [];
+    nodes.forEach(function(n){
+      n.deps.forEach(function(g){
+        g.forEach(function(d){
+          var t = byId[d];
+          var line = el("line", {x1:n.x, y1:n.y+H, x2:t.x, y2:t.y, "class":"edge" + (g.length>1 ? " red" : "")}, gE);
+          edges.push({from:n.id, to:d, line:line});
+        });
+      });
+    });
+    nodes.forEach(function(n){
+      var g = el("g", {"class":"node", "data-id":n.id, tabindex:"0", role:"button"}, gN);
+      el("rect", {x:n.x-W/2, y:n.y, width:W, height:H, rx:8, "class":n.cls}, g);
+      var t1 = el("text", {x:n.x, y:n.y+19, "text-anchor":"middle", "class":"dg-t"}, g); t1.textContent = n.label;
+      var t2 = el("text", {x:n.x, y:n.y+36, "text-anchor":"middle", "class":"dg-s"}, g); t2.textContent = n.sub;
+      var tt = el("title", {}, g); tt.textContent = "クリックで故障/復旧を切替：" + n.label;
+      g.addEventListener("click", function(){ toggle(n.id); });
+      g.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(n.id); } });
+    });
+  }
+  function toggle(id){ if(failed[id]) delete failed[id]; else failed[id] = true; update(); }
+  function compute(){
+    var st = {};
+    nodes.forEach(function(n){ st[n.id] = failed[n.id] ? "down" : "ok"; });
+    var changed = true, guard = 0;
+    while(changed && guard++ < 60){
+      changed = false;
+      nodes.forEach(function(n){
+        if(failed[n.id]) return;
+        var s = "ok";
+        for(var i=0;i<n.deps.length;i++){
+          var g = n.deps[i];
+          var downs = g.filter(function(d){ return st[d]==="down"; }).length;
+          var degr = g.some(function(d){ return st[d]==="degraded"; });
+          if(downs === g.length){ s = "down"; break; }
+          if(downs > 0 || degr) s = "degraded";
+        }
+        if(st[n.id] !== s){ st[n.id] = s; changed = true; }
+      });
+    }
+    return st;
+  }
+  function update(){
+    var st = compute();
+    $$("#demo .node").forEach(function(g){
+      var id = g.getAttribute("data-id");
+      g.setAttribute("class", "node " + st[id] + (failed[id] ? " failed" : ""));
+    });
+    edges.forEach(function(e){
+      var hot = st[e.to] !== "ok" && st[e.from] !== "ok";
+      e.line.setAttribute("class", "edge" + (e.line.getAttribute("class").indexOf("red")>=0 ? " red" : "") + (hot ? " hot" : ""));
+    });
+    var f = Object.keys(failed);
+    var out = $("#demoResult");
+    if(!f.length){ out.innerHTML = "CIをクリックするか、シナリオボタンを押してください。"; return; }
+    var down = [], deg = [];
+    nodes.forEach(function(n){ if(failed[n.id]) return; if(st[n.id]==="down") down.push(n); else if(st[n.id]==="degraded") deg.push(n); });
+    var rows = function(arr, label){ return arr.map(function(n){ return "<tr><td>"+esc(n.label)+"</td><td>"+esc(n.sub)+"</td><td>"+label+"</td><td>"+esc(n.owner)+"</td></tr>"; }).join(""); };
+    var html = "<b>故障として選択したCI：</b>" + f.map(function(id){ return esc(byId[id].label); }).join("、") +
+      "<br><b>判定：</b>停止 " + down.length + " 件、縮退・冗長性喪失 " + deg.length + " 件";
+    if(down.length + deg.length){
+      html += "<table><thead><tr><th>影響CI</th><th>種別</th><th>状態</th><th>連絡・管理担当</th></tr></thead><tbody>" +
+        rows(down, '<span style="color:var(--bad)">停止</span>') + rows(deg, '<span style="color:var(--warn)">縮退</span>') + "</tbody></table>";
+    } else html += "<p>この故障で影響を受ける上位のCIはありません（ただし実機確認は必要です）。</p>";
+    var hasBS = down.some(function(n){ return n.cls==="n-bs"; });
+    html += '<p style="margin:6px 0 0">' + (hasBS ? "⚠ 業務サービスが停止しています。利用部門への連絡と優先的な復旧が必要です。" :
+      (deg.length ? "△ 業務は継続していますが冗長性を失っています。次の故障で停止するため、早めに復旧してください。" : "")) + "</p>";
+    out.innerHTML = html;
+  }
+  $$("[data-scn]").forEach(function(b){
+    b.addEventListener("click", function(){
+      failed = {}; var v = b.getAttribute("data-scn");
+      if(v) v.split(",").forEach(function(id){ failed[id] = true; });
+      update();
+    });
+  });
+  drawDemo(); update();
+
+  /* ---------- 印刷 ---------- */
+  var openedForPrint = [];
+  window.addEventListener("beforeprint", function(){
+    openedForPrint = $$("details:not([open])"); openedForPrint.forEach(function(d){ d.open = true; });
+  });
+  window.addEventListener("afterprint", function(){ openedForPrint.forEach(function(d){ d.open = false; }); openedForPrint = []; });
+  $("#printBtn").addEventListener("click", function(){ window.print(); });
+
+  /* ---------- 保存（ダウンロード） ---------- */
+  $("#dlBtn").addEventListener("click", function(){
+    var blob = new Blob([ORIGINAL], {type:"text/html;charset=utf-8"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "cmdb-guide.html";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); document.body.removeChild(a); }, 500);
+  });
+})();
+</script></body></html>
